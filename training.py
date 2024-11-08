@@ -4,7 +4,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 from torch.utils.data import random_split
 from torch.utils.data import TensorDataset
-import numpy
+# import numpy
 import pickle
 import lzma
 import matplotlib.pyplot as plt
@@ -17,33 +17,44 @@ def prepareData(datas):
     y = []
     for data in datas:
         for d in data:
-            x.append(d.image)
+            x.append(d.image.tolist())
             y.append(d.current_controls)
     return x, y
 
 
-preparedData = {"x": [], "y": []}
+preparedData = ()
 
 
 datas = []
 BASE_FOLDER = "data/"
-file_names = ["record_0.npz", "record_1.npz", "record_2.npz", "record_3.npz"]
+file_names = ["record_2.npz"]
 
 for f in file_names:
     datas.append(pickle.load(lzma.open(BASE_FOLDER + f, "rb")))
 preparedData = prepareData(datas)
 
 
-dataset = TensorDataset(
-    torch.tensor(preparedData["x"]), torch.tensor(preparedData["y"])
-)
+print(f"Data prepared, {len(preparedData[0])} samples")
 
-train_size = 0.8 * len(dataset)
+targetTensor = torch.tensor(preparedData[1], dtype=torch.uint8)
+print("Target tensor created")
+import ipdb
+
+ipdb.set_trace()
+sourceTensor = torch.tensor(preparedData[0], dtype=torch.float32)
+print("Source tensor created")
+
+dataset = TensorDataset(sourceTensor, targetTensor)
+
+print("Created tensors")
+
+train_size = int(0.8 * len(dataset))
 validate_size = len(dataset) - train_size
 
 train_data, validate_data = random_split(dataset, [train_size, validate_size])
-
+print("Data splitted")
 model = AlexNet()
+print("Model initialized")
 
 # Assuming you have your dataset prepared
 train_loader = DataLoader(train_data, batch_size=64)
@@ -55,6 +66,10 @@ optimizer = optim.Adam(model.parameters(), lr=0.01)
 # Training loop
 num_epochs = 50
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Device is : {device}")
+
+
+criterion.to(device)
 model.to(device)
 
 train_losses = []
