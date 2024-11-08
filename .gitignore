@@ -1,3 +1,5 @@
+myenv
+
 # Byte-compiled files
 __pycache__/
 *.py[cod]
