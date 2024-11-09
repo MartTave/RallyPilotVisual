@@ -9,4 +9,4 @@ def send(command):
             str_command.append(f"release {c}")
     
     return str_command
-print(send([1,0,0,1]))
+print(send([0,0,0,1]))
