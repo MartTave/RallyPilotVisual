@@ -1,19 +1,12 @@
-lastSendend = []
+lastSendend = [1,0,1,0]
 def send(command): 
-    str_command = ""
-    for new_command,last_command in zip(command, lastSendend): 
-        if new_command[0] == 1 and last_command[0]==0: 
-            str_command.append("push forward")
-        elif new_command[0] == 0 and last_command[0]==1: 
-            str_command.append("release forward")
-        if new_command[1] == 1 and last_command[1]==0: 
-            str_command.append("push backward")
-        elif new_command[0] == 0 and last_command[0]==1: 
-            str_command.append("release backward")
-        if new_command[2] == 1 and last_command[2]==0: 
-            str_command.append("push ")
-        elif new_command[2] == 0 and last_command[2]==1: 
-            str_command.append("release backward")
-
+    str_command = []
+    commandList = [(0, "forward"),(1, "backward"), (2, "left"), (3, "right")]
+    for i,c in commandList: 
+        if command[i] == 1 and lastSendend[i]==0: 
+            str_command.append(f"push {c}")
+        elif command[i] == 0 and lastSendend[i]==1: 
+            str_command.append(f"release {c}")
     
-    return []
+    return str_command
+print(send([1,0,0,1]))
