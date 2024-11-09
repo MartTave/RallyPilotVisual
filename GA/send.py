@@ -1,3 +1,6 @@
+from rallyrobopilot.remote import Remote
+
+
 lastSendend = [1,0,1,0]
 def send(command): 
     str_command = []
@@ -10,3 +13,4 @@ def send(command):
     
     return str_command
 print(send([0,0,0,1]))
+
