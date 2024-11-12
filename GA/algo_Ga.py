@@ -1,6 +1,7 @@
 import random
 from deap import base, creator, tools
 import flask
+from rallyrobopilot.remote import Remote
 
 class GaDataGeneration():
     def __init__(self, controls,startLine, endLine, pop_size=20, ngen=20, mutpb=0.02):
@@ -12,6 +13,11 @@ class GaDataGeneration():
         self.pop_size = pop_size
         self.ngen = ngen
         self.mutpb = mutpb
+        self.endLineA =  (endLine[1][1] - endLine[0][1])/(endLine[0][1] -endLine[0][0])
+        self.endLineB = endLine[0][1] - (self.endLineA*endLine[0][0])
+        self.positionX = 0.0
+        self.positionY = 0.0
+        self.remote =  Remote("http://127.0.0.1", 5000, lambda: self )
         self.setup_deap()
     
     def setup_deap(self): 
@@ -25,7 +31,13 @@ class GaDataGeneration():
         self.toolbox.register("mutate", tools.mutShuffleIndexes, indpb=self.mutpb) # allow the mutation step 
         self.toolbox.register("select", tools.selTournament, tournsize=3) # selectioon for the new population
         
+        
     def fitness_fonction(self, individual):
+        self.remote.startSensing()
+        for i in individual: 
+            self.remote.sendControl(i)
+            if 
+        self.remote.stopSensing()
         return (20,)
 
     def run_ga(self):
