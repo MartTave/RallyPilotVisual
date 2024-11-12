@@ -37,6 +37,7 @@ class Car(Entity):
         self.turning_speed = 5
         self.pivot_rotation_distance = 1
 
+        self.reset_speed = 0
         self.reset_position = (0, 0, 0)
         self.reset_rotation = (0, 0, 0)
 
@@ -71,14 +72,13 @@ class Car(Entity):
         self.trail_renderer2 = TrailRenderer(parent = self.particle_pivot, position = (-0.8, -0.2, 0), color = color.black, alpha = 0, thickness = 7, length = 200)
         self.trail_renderer3 = TrailRenderer(parent = self.trail_pivot, position = (0.8, -0.2, 0), color = color.black, alpha = 0, thickness = 7, length = 200)
         self.trail_renderer4 = TrailRenderer(parent = self.trail_pivot, position = (-0.8, -0.2, 0), color = color.black, alpha = 0, thickness = 7, length = 200)
-        
+
         self.trails = [self.trail_renderer1, self.trail_renderer2, self.trail_renderer3, self.trail_renderer4]
         self.start_trail = True
 
         # Collision
         self.copy_normals = False
         self.hitting_wall = False
-
 
         self.track = None
 
@@ -95,7 +95,7 @@ class Car(Entity):
 
         self.laps_text = Text(text = "", origin = (0, 0), size = 0.05, scale = (1.1, 1.1), position = (0, 0.43))
         self.reset_count_timer = Text(text = str(round(self.reset_count, 1)), origin = (0, 0), size = 0.05, scale = (1, 1), position = (-0.7, 0.43))
-        
+
         self.timer.disable()
 
         self.laps_text.disable()
@@ -162,7 +162,7 @@ class Car(Entity):
             self.camera_offset = (0, 60, -70)
             self.camera_speed = 4
             self.change_camera = False
-            #camera.rotation_x = self.camera_rotation
+            # camera.rotation_x = self.camera_rotation
             camera.world_position = self.camera_pivot.world_position
             camera.world_rotation_y = self.world_rotation_y
 
@@ -249,13 +249,12 @@ class Car(Entity):
             self.rotation_speed = self.max_rotation_speed
         if self.rotation_speed <= -self.max_rotation_speed:
             self.rotation_speed = -self.max_rotation_speed
-            
+
         # Cap the camera rotation
         if self.camera_rotation >= 40:
             self.camera_rotation = 40
         elif self.camera_rotation <= 30:
             self.camera_rotation = 30
-
 
     def update_vertical_position(self, y_ray, movementY):
         # Check if car is hitting the ground
@@ -278,7 +277,6 @@ class Car(Entity):
             else:
                 self.y += movementY * 50 * time.dt
                 self.velocity_y -= 50 * time.dt
-
 
     def update(self):
         # Exit if esc pressed.
@@ -349,7 +347,6 @@ class Car(Entity):
 
         #   Check collision via recast
 
-
         #   Return residual distance to travel and residual speed.
         def move_car(distance_to_travel, direction):
             front_collision = boxcast(origin = self.world_position, direction = self.forward * direction, thickness = (0.1, 0.1), distance = self.scale_x + distance_to_travel, ignore = [self, ])
@@ -396,15 +393,18 @@ class Car(Entity):
         """
         #   Project car directly on ground when resetting
         self.position = self.reset_position
-        #y_ray = raycast(origin = self.reset_position, direction = (0,-1,0), ignore = [self,])
-        #self.y = y_ray.world_point.y + 1.4
+        # y_ray = raycast(origin = self.reset_position, direction = (0,-1,0), ignore = [self,])
+        # self.y = y_ray.world_point.y + 1.4
         print(self.reset_orientation)
         self.rotation_y = self.reset_orientation[1]
+
+        print("Resting to car speed : ", self.reset_speed)
+
+        self.speed = self.reset_speed
 
         print("reseting at", str(self.position), " --> ", self.rotation_y)
 
         camera.world_rotation_y = self.rotation_y
-        self.speed = 0
         self.velocity_y = 0
         self.timer_running = False
         for trail in self.trails:
@@ -430,7 +430,7 @@ class Car(Entity):
         maxYB = entity.y + entity.scale_y - (entity.scale_y / 2)
         minZB = entity.z - entity.scale_z + (entity.scale_z / 2)
         maxZB = entity.z + entity.scale_z - (entity.scale_z / 2)
-        
+
         return (
             (minXA <= maxXB and maxXA >= minXB) and
             (minYA <= maxYB and maxYA >= minYB) and

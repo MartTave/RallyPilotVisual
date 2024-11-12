@@ -1,8 +1,7 @@
 import json
 import threading
-from time import sleep
+from time import sleep, time
 import requests
-
 
 class Remote:
 
@@ -10,13 +9,14 @@ class Remote:
     def getControlsFromData(x):
         return [x["forward"], x["backward"], x["left"], x["right"]]
 
-    def __init__(self, host, port, cb):
+    def __init__(self, host, port, cb, getPicture=False):
         self.lastSended = [0, 0, 0, 0]
         self.host = host
         self.port = port
         self.cb = cb
         self.sensing = False
         self.timer = None
+        self.getPicture = getPicture
         self.sendCommand("release all;")
 
     def sendCommand(self, command):
@@ -55,8 +55,11 @@ class Remote:
         self,
         position: tuple[float, float, float],
         angle: float,
-        speed: tuple[float, float, float],
+        speed: float,
     ):
+        """
+        *Do not use !*
+        """
         self.sendCommand(f"set position {position[0]},{position[1]},{position[2]};")
         self.sendCommand(f"set rotation {angle};")
         self.sendCommand(f"set speed {speed[0]},{speed[1]},{speed[2]};")
@@ -68,13 +71,47 @@ class Remote:
                 f"Received error response: {response.status_code} | with error : {response.json()['error']}"
             )
             return None
-        self.cb(response.json())
+        currData = response.json()
+        if self.getPicture:
+            response = requests.get(f"{self.host}:{self.port}/picture")
+            if response.status_code != 200:
+                print(
+                    f"Received error response: {response.status_code} | with error : {response.json()['error']}"
+                )
+                return None
+            currData["picture"] = response.json()["image"]
+        self.cb(currData)
 
     def _sensingLoop(self):
         if self.sensing:
-            self._getSensingData()
             self.timer = threading.Timer(0.1, self._sensingLoop)
             self.timer.start()
+            then = time()
+            self._getSensingData()
+            print(f"Time taken : {time() - then}")
+
+    def getDataForSolution(
+        self,
+        controlList: list[list[int]],
+        startPosition: tuple[float, float, float],
+        startAngle: float,
+        speed: float,
+    ) -> list[list[float]]:
+        response = requests.post(
+            f"{self.host}:{self.port}/GASolution",
+            json={
+                "controlList": controlList,
+                "startPosition": startPosition,
+                "startAngle": startAngle,
+                "startSpeed": speed,
+            },
+        )
+        if response.status_code != 200:
+            print(
+                f"Received error response: {response.status_code} with status {response.json()['error']}"
+            )
+            return False
+        return response.json()["result"]
 
     def startSensing(self):
         if not self.sensing:
@@ -90,16 +127,60 @@ class Remote:
 
 
 def gotNewFData(newData):
-    print(vars(newData))
     pass
 
 
-remote = Remote("http://127.0.0.1", 5000, gotNewFData)
+remote = Remote("http://127.0.0.1", 5000, gotNewFData, True)
 
-remote.sendControl([1, 0, 0, 0])
-sleep(1)
-remote.sendControl([1, 0, 0, 0])
-sleep(1)
-remote.sendControl([0, 0, 0, 0])
-sleep(1)
-remote._getSensingData()
+controls_list = [
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 1, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 1],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 1, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 1],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [1, 0, 1, 0],
+    [1, 0, 0, 0],
+    [1, 0, 0, 1],
+    [1, 0, 0, 0],
+    [1, 0, 0, 0],
+    [1, 0, 0, 0],
+    [1, 0, 0, 0],
+    [1, 0, 1, 0],
+    [1, 0, 0, 0],
+    [1, 0, 0, 1],
+    [1, 0, 0, 0],
+    [1, 0, 0, 0],
+    [1, 0, 0, 0],
+    [1, 0, 0, 0],
+    [1, 0, 1, 0],
+    [1, 0, 0, 0],
+    [1, 0, 0, 1],
+    [1, 0, 0, 0],
+    [1, 0, 0, 0],
+    [1, 0, 0, 0],
+    [1, 0, 0, 0],
+    [1, 0, 1, 0],
+    [1, 0, 0, 0],
+    [1, 0, 0, 1],
+    [1, 0, 0, 0],
+]
+res = remote.getDataForSolution(
+    controls_list,
+    (10, 0, 0),
+    90,
+    100,
+)
+
+print(res)

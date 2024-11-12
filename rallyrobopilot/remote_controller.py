@@ -1,4 +1,4 @@
-
+from time import sleep
 from ursina import *
 import socket
 import select
@@ -6,10 +6,14 @@ import numpy as np
 
 from flask import Flask, request, jsonify
 
+from rallyrobopilot.car import Car
+
 
 from .sensing_message import SensingSnapshot, SensingSnapshotManager
 from .remote_commands import RemoteCommandParser
 
+
+GRACE_TIME_GA = 5
 
 REMOTE_CONTROLLER_VERBOSE = False
 PERIOD_REMOTE_SENSING = 0.1
@@ -19,7 +23,8 @@ def printv(str):
         print(str)
 
 class RemoteController(Entity):
-    def __init__(self, car = None, connection_port = 7654, flask_app=None):
+
+    def __init__(self, car: Car = None, connection_port=7654, flask_app=None):
         super().__init__()
 
         self.ip_address = "127.0.0.1"
@@ -34,6 +39,10 @@ class RemoteController(Entity):
         self.reset_location = (0,0,0)
         self.reset_speed = (0,0,0)
         self.reset_rotation = 0
+
+        self.simuIndex = 0
+        self.simulating = False
+        self.simuResult = []
 
         #   Period for recording --> 0.1 secods = 10 times a second
         self.sensing_period = PERIOD_REMOTE_SENSING
@@ -54,48 +63,124 @@ class RemoteController(Entity):
                 return jsonify({"status": "Command received"}), 200
             except Exception as e:
                 return jsonify({"error": str(e)}), 500
-    
-        @flask_app.route('/sensing')
+
+        @flask_app.route("/picture", methods=["GET"])
+        def get_picture_route():
+            return jsonify({"image": self.lastImage.tolist()}), 200
+
+        @flask_app.route("/sensing")
         def get_sensing_route():
             return jsonify(self.get_sensing_data()), 200
 
+        @flask_app.route("/GASolution", methods=["POST"])
+        def testGaSolution():
+            data = request.json
+            if not data:
+                return jsonify({"error": "Invalid command data"}), 400
+            if self.simulating:
+                return jsonify({"error": "Already simulating"}), 400
+            self.controlList = data["controlList"]
+            startPosition = data["startPosition"]
+            startAngle = data["startAngle"]
+            startSpeed = data["startSpeed"]
+            self.car.reset_position = startPosition
+            self.car.reset_orientation = (0, startAngle, 0)
+            self.car.reset_speed = startSpeed
+            self.car.reset_car()
+            # TODO: Implement reset speed
+            self.simulating = True
+            # Sync of last sensing
+            self.last_sensing = time.time()
+            self.simuIndex = 0
+            self.simuResult = []
+            while self.simulating:
+                sleep(0.25)
+            return jsonify({"result": self.simuResult}), 200
+
+    def simulateGA(
+        self,
+    ):
+        if time.time() - self.last_sensing >= self.sensing_period:
+            # Here we need to run next control and save position
+            if self.simuIndex >= len(self.controlList) + GRACE_TIME_GA:
+                self.simulating = False
+                self.simuResult.append(
+                    [
+                        self.car.world_position[i]
+                        for i, v in enumerate(self.car.world_position)
+                    ]
+                )
+                return
+            currControl: list[int]
+            if self.simuIndex < len(self.controlList):
+                currControl = self.controlList[self.simuIndex]
+            else:
+                currControl = [0, 0, 0, 0]
+            mapping = {0: "w", 1: "s", 2: "a", 3: "d"}
+            for i, c in enumerate(currControl):
+                held_keys[mapping[i]] = c == 1
+            self.simuResult.append(
+                [
+                    self.car.world_position[i]
+                    for i, v in enumerate(self.car.world_position)
+                ]
+            )
+            self.simuIndex += 1
+            pass
+
     def update(self):
-        self.update_network()
-        self.process_remote_commands()
-        self.process_sensing()
+        if self.simulating:
+            self.simulateGA()
+        else:
+            self.update_network()
+            self.process_remote_commands()
+            self.process_sensing()
 
     def process_sensing(self):
-        if self.car is None or self.connected_client is None:
+        if self.car is None:
             return
 
         if time.time() - self.last_sensing >= self.sensing_period:
-            snapshot = SensingSnapshot()
-            snapshot.current_controls = (held_keys['w'] or held_keys["up arrow"],
-                                         held_keys['s'] or held_keys["down arrow"],
-                                         held_keys['a'] or held_keys["left arrow"],
-                                         held_keys['d'] or held_keys["right arrow"])
-            snapshot.car_position = self.car.world_position
-            snapshot.car_speed = self.car.speed
-            snapshot.car_angle = self.car.rotation_y
-            snapshot.raycast_distances = self.car.multiray_sensor.collect_sensor_values()
+            if self.connected_client is None:
+                tex = base.win.getDisplayRegion(0).getScreenshot()
+                arr = tex.getRamImageAs("RGB")
+                data = np.frombuffer(arr, np.uint8)
+                image = data.reshape(tex.getYSize(), tex.getXSize(), 3)
+                image = image[::-1, :, :]
+                self.lastImage = image
+                pass
+            else:
+                snapshot = SensingSnapshot()
+                snapshot.current_controls = (
+                    held_keys["w"] or held_keys["up arrow"],
+                    held_keys["s"] or held_keys["down arrow"],
+                    held_keys["a"] or held_keys["left arrow"],
+                    held_keys["d"] or held_keys["right arrow"],
+                )
+                snapshot.car_position = self.car.world_position
+                snapshot.car_speed = self.car.speed
+                snapshot.car_angle = self.car.rotation_y
+                snapshot.raycast_distances = (
+                    self.car.multiray_sensor.collect_sensor_values()
+                )
 
-            #   Collect last rendered image
-            tex = base.win.getDisplayRegion(0).getScreenshot()
-            arr = tex.getRamImageAs("RGB")
-            data = np.frombuffer(arr, np.uint8)
-            image = data.reshape(tex.getYSize(), tex.getXSize(), 3)
-            image = image[::-1, :, :]#   Image arrives with inverted Y axis
+                #   Collect last rendered image
+                tex = base.win.getDisplayRegion(0).getScreenshot()
+                arr = tex.getRamImageAs("RGB")
+                data = np.frombuffer(arr, np.uint8)
+                image = data.reshape(tex.getYSize(), tex.getXSize(), 3)
+                image = image[::-1, :, :]  #   Image arrives with inverted Y axis
+                self.lastImage = image
+                snapshot.image = image
 
-            snapshot.image = image
+                msg_mngr = SensingSnapshotManager()
+                data = msg_mngr.pack(snapshot)
 
-            msg_mngr = SensingSnapshotManager()
-            data = msg_mngr.pack(snapshot)
-
-            self.connected_client.settimeout(0.01)
-            try:
-                self.connected_client.sendall(data)
-            except socket.error as e:
-                print(f"Socket error: {e}")
+                self.connected_client.settimeout(0.01)
+                try:
+                    self.connected_client.sendall(data)
+                except socket.error as e:
+                    print(f"Socket error: {e}")
 
             self.last_sensing = time.time()
 
@@ -151,7 +236,7 @@ class RemoteController(Entity):
                         held_keys['d'] = commands[0] == b'push'
                     elif commands[1] == b'left':
                         held_keys['a'] = commands[0] == b'push'
-                              
+
                 # Release all
                 if commands[0] == b'release' and commands[1] == b'all':
                     print("received release all command")
@@ -159,7 +244,6 @@ class RemoteController(Entity):
                     held_keys['s'] = False
                     held_keys['d'] = False
                     held_keys['a'] = False
-
 
                 elif commands[0] == b'set':
                     if commands[1] == b'position':
@@ -188,7 +272,7 @@ class RemoteController(Entity):
                 while True:
                     recv_data = self.connected_client.recv(1024)
 
-                    #received nothing
+                    # received nothing
                     if len(recv_data) == 0:
                         break
                     self.client_commands.add(recv_data)
@@ -212,7 +296,6 @@ class RemoteController(Entity):
                 self.listen_socket = None
             except Exception as e:
                 printv(e)
-
 
     def open_connection_socket(self):
         print("Waiting for connections")
