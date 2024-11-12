@@ -7,7 +7,7 @@ class Remote:
 
     @staticmethod
     def getControlsFromData(x):
-        return [x["forward"], x["backward"], x["left"], x["right"]]
+        return [x["up"], x["down"], x["left"], x["right"]]
 
     def __init__(self, host, port, cb, getPicture=False):
         self.lastSended = [0, 0, 0, 0]
