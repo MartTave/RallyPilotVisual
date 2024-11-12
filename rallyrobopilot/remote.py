@@ -5,6 +5,11 @@ import requests
 
 
 class Remote:
+
+    @staticmethod
+    def getControlsFromData(x):
+        return [x["forward"], x["backward"], x["left"], x["right"]]
+
     def __init__(self, host, port, cb):
         self.lastSended = [0, 0, 0, 0]
         self.host = host
@@ -56,7 +61,7 @@ class Remote:
         self.sendCommand(f"set rotation {angle};")
         self.sendCommand(f"set speed {speed[0]},{speed[1]},{speed[2]};")
 
-    def getSensingData(self):
+    def _getSensingData(self):
         response = requests.get(f"{self.host}:{self.port}/sensing")
         if response.status_code != 200:
             print(
@@ -67,7 +72,7 @@ class Remote:
 
     def _sensingLoop(self):
         if self.sensing:
-            self.getSensingData()
+            self._getSensingData()
             self.timer = threading.Timer(0.1, self._sensingLoop)
             self.timer.start()
 
@@ -84,7 +89,12 @@ class Remote:
                 self.timer = None
 
 
-remote = Remote("http://127.0.0.1", 5000, lambda x: print(x["car_speed"] % 360))
+def gotNewFData(newData):
+    print(vars(newData))
+    pass
+
+
+remote = Remote("http://127.0.0.1", 5000, gotNewFData)
 
 remote.sendControl([1, 0, 0, 0])
 sleep(1)
@@ -92,3 +102,4 @@ remote.sendControl([1, 0, 0, 0])
 sleep(1)
 remote.sendControl([0, 0, 0, 0])
 sleep(1)
+remote._getSensingData()
