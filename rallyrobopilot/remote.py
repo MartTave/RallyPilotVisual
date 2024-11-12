@@ -176,11 +176,3 @@ controls_list = [
     [1, 0, 0, 1],
     [1, 0, 0, 0],
 ]
-res = remote.getDataForSolution(
-    controls_list,
-    (10, 0, 0),
-    90,
-    100,
-)
-
-print(res)
