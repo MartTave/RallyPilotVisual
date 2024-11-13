@@ -7,7 +7,7 @@ class Remote:
 
     @staticmethod
     def getControlsFromData(x):
-        return [x["forward"], x["backward"], x["left"], x["right"]]
+        return [x["up"], x["down"], x["left"], x["right"]]
 
     def __init__(self, host, port, cb, getPicture=False):
         self.lastSended = [0, 0, 0, 0]
@@ -176,11 +176,3 @@ controls_list = [
     [1, 0, 0, 1],
     [1, 0, 0, 0],
 ]
-res = remote.getDataForSolution(
-    controls_list,
-    (10, 0, 0),
-    90,
-    100,
-)
-
-print(res)
