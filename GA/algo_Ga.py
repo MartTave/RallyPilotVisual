@@ -7,7 +7,7 @@ from rallyrobopilot.remote import Remote
 import numpy as np
 
 class GaDataGeneration():
-    def __init__(self, controls,startPoint, endLine, angle, speed, pop_size=10, ngen=20, mutpb=0.5):
+    def __init__(self, controls,startPoint, endLine, angle, speed, pop_size=10, ngen=20):
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))  
         creator.create("Individual", list, fitness=creator.FitnessMax)
         self.controls = controls
@@ -17,14 +17,9 @@ class GaDataGeneration():
         self.angle= angle
         self.speed = speed
         self.ngen = ngen
-        self.mutpb = mutpb
         self.endLineA =  (endLine[1][2] - endLine[0][2])/(endLine[1][2] -endLine[0][0])
-        print(self.endLineA)
         self.endLineB = endLine[0][2] - (self.endLineA*endLine[0][0])
-        self.positionX = 0.0
-        self.positionY = 0.0
-            
-        
+                
         self.remote =  Remote("http://127.0.0.1", 5000, lambda x: x)
         self.setup_deap()
     
@@ -94,8 +89,9 @@ class GaDataGeneration():
             print(individual)
             population[:]=offspring
             fits = list(map(self.toolbox.evaluate, population))
+        return population
                      
 
         
 test = GaDataGeneration([[1,0,0,0] for n in range(50)],(10, 0, 0),[(70,0,-10),(70,0,11)],90,15)
-test.run_ga()
+pop = test.run_ga()
