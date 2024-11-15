@@ -5,29 +5,32 @@ from deap import base, creator, tools
 import flask
 from rallyrobopilot.remote import Remote
 import numpy as np
+import csv
+
 
 class GaDataGeneration():
-    def __init__(self, controls,startPoint, endLine, angle, speed, pop_size=10, ngen=20):
+    def __init__(self, controls,startLine, endLine, angle, speed, pop_size=10, ngen=20):
+        print(endLine)
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))  
         creator.create("Individual", list, fitness=creator.FitnessMax)
         self.controls = controls
-        self.startPoint = startPoint
+        self.startPoint = startLine[0]
         self.endLine = endLine
         self.pop_size = pop_size
         self.angle= angle
         self.speed = speed
         self.ngen = ngen
-        self.endLineA =  (endLine[1][2] - endLine[0][2])/(endLine[1][2] -endLine[0][0])
-        self.endLineB = endLine[0][2] - (self.endLineA*endLine[0][0])
+        print(endLine)
+        self.endLineA =  (endLine[1][2] - endLine[0][2])/(endLine[1][0] -endLine[0][0])
+        self.endLineB = endLine[1][2] - (self.endLineA*endLine[1][0])
                 
         self.remote =  Remote("http://127.0.0.1", 5000, lambda x: x)
         self.setup_deap()
     
     def setup_deap(self): 
         self.toolbox = base.Toolbox()
-        
-        self.toolbox.register("attr_controls",  lambda: [1, 0, 0 ,0])
-        self.toolbox.register("individual", tools.initRepeat, creator.Individual, self.toolbox.attr_controls, n=len(self.controls))
+        self.toolbox.register("attr_controls",  lambda: self.controls[0] )
+        self.toolbox.register("individual", tools.initRepeat, creator.Individual,  self.toolbox.attr_controls, n=len(self.controls))
         self.toolbox.register("population", tools.initRepeat, list, self.toolbox.individual)
         
         self.toolbox.register("evaluate", self.fitness_fonction) #evaluate allow to create a fitness fonction 
@@ -51,7 +54,7 @@ class GaDataGeneration():
         
     def fitness_fonction(self, individual):
         positions = self.remote.getDataForSolution(individual, self.startPoint, self.angle, self.speed)
-        initialDistance = self.computeDistance(self.startPoint[0], self.startPoint[2])
+        initialDistance = self.computeDistance(self.startPoint[0], self.startPoint[1])
         fitness_value = -1
 
         for p in range(0, len(positions)):
@@ -63,8 +66,9 @@ class GaDataGeneration():
 
     def run_ga(self):
         population = self.toolbox.population(n=self.pop_size)
+        print(self.toolbox.individual())
+
         for generation in range (self.ngen):
-            print(population) 
             # calculate fitness value
             fits = list(map(self.toolbox.evaluate, population))
             for fit, ind in zip(fits, population):
@@ -92,6 +96,4 @@ class GaDataGeneration():
         return population
                      
 
-        
-test = GaDataGeneration([[1,0,0,0] for n in range(50)],(10, 0, 0),[(70,0,-10),(70,0,11)],90,15)
-pop = test.run_ga()
+

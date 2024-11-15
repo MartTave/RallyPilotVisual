@@ -6,7 +6,7 @@ import numpy as np
 
 images = []
 controls = []
-
+speeds = []
 
 running = True
 
@@ -22,10 +22,11 @@ lastPicture = None
 freqIndex = 0
 
 def appendNewData(newData):
-    global images, controls, lastPicture, freqIndex
+    global images, controls, lastPicture, freqIndex, speeds
     x, y = Remote.convertFromMessageToTrainingData(newData)
     if lastPicture is not None:
         newX = np.concatenate((lastPicture, x), axis=0)
+        speeds.append(newData["car_speed"])
         images.append(newX)
         controls.append(y)
     lastPicture = x
@@ -58,6 +59,7 @@ controls = controls[START_TRIM:-END_TRIM]
 
 images = np.array(images)
 controls = np.array(controls)
+speeds = np.array(speeds)
 
 currIndex = 0
 full_path = DATA_FOLDER + str(currIndex) + FILENAME
@@ -65,6 +67,10 @@ while os.path.exists(full_path):
     currIndex += 1
     full_path = DATA_FOLDER + str(currIndex) + FILENAME
 
-np.savez(full_path, images=images, controls=controls)
+running = False
+np.savez(full_path, images=images, controls=controls, speeds=speeds)
 
 collector.reset()
+
+
+print(f"Saved file : {full_path}")

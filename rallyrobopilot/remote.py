@@ -17,7 +17,7 @@ class Remote:
         return x, y
 
     @staticmethod
-    def getControlsFromData(x):
+    def getControlsFromData(x): 
         return [x["up"], x["down"], x["left"], x["right"]]
 
     def __init__(self, host, port, cb, getPicture=False):
@@ -150,7 +150,7 @@ def gotNewFData(newData):
     pass
 
 
-remote = Remote("http://127.0.0.1", 5000, gotNewFData, True)
+#remote = Remote("http://127.0.0.1", 5000, gotNewFData, True)
 
 controls_list = [
     [0, 0, 0, 0],
