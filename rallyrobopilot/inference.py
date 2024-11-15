@@ -7,7 +7,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 print("Device is : ", device)
 
-model_number = 0
+model_number = 1
 
 model = AlexNetAtHome()
 model.load_state_dict(torch.load(f"./models/model_{model_number}/model.pth", map_location=device))
@@ -35,10 +35,10 @@ with torch.no_grad():
         if lastPic is not None:
             x = AlexNetAtHome.concatTwoPics(lastPic, pic)
             xTensor = torch.tensor(x, dtype=torch.float32).unsqueeze(0).to(device)
-            pred = model(xTensor)
-            probs = torch.sigmoid(pred)
-            print(probs[0].tolist())
-            controls = [1 if p > 0.5 else 0 for p in probs[0].tolist()]
+            classification, regression = model(xTensor)
+            probs = torch.sigmoid(classification)
+            probList = probs[0].tolist()
+            controls = [1 if p > 0.5 else 0 for p in probList]
             remote.sendControl(controls)
             inferCount += 1
         lastPic = pic

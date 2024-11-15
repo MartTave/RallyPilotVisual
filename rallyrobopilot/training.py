@@ -22,6 +22,8 @@ model = AlexNetAtHome()
 preparedData = ()
 
 
+regression_weight = 0.2
+
 num_epochs = 25
 
 BASE_FOLDER = "./data/"
@@ -129,7 +131,9 @@ for epoch in range(num_epochs):
             y_class, y_reg = model(inputs)
             class_loss = classification_loss(y_class, labels[:, :4])
             reg_loss = regression_loss(y_reg.squeeze(), labels[:, 4])
-            total_loss = class_loss + reg_loss
+            class_loss_norm = class_loss / class_loss.detach()
+            reg_loss_norm = reg_loss / reg_loss.detach()
+            total_loss = (class_loss_norm * (1 - regression_weight)) + (reg_loss_norm * regression_weight)
             if step == "train":
                 total_loss.backward()
                 optimizer.step()
