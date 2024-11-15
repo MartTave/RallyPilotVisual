@@ -14,7 +14,7 @@ from .sensing_message import SensingSnapshot, SensingSnapshotManager
 from .remote_commands import RemoteCommandParser
 
 
-GRACE_TIME_GA = 5
+GRACE_TIME_GA = 100
 
 REMOTE_CONTROLLER_VERBOSE = False
 PERIOD_REMOTE_SENSING = 0.1
@@ -137,9 +137,12 @@ class RemoteController(Entity):
             if self.simuIndex < len(self.controlList):
                 currControl = self.controlList[self.simuIndex]
             else:
+                print("End of list of controls")
                 currControl = [0, 0, 0, 0]
             mapping = {0: "w", 1: "s", 2: "a", 3: "d"}
             for i, c in enumerate(currControl):
+                if mapping[i] == "w" and c == 0:
+                    print("Releasing W")
                 held_keys[mapping[i]] = c == 1
             self.simuResult.append(
                 [

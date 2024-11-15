@@ -17,13 +17,11 @@ class GaDataGeneration():
         self.computeMaths = GaMaths(endLine,startPoint)
         self.controls = controls
         self.startPoint = startPoint
-        print(self.startPoint[0])
         self.endLine = endLine
         self.pop_size = pop_size
         self.angle= angle
         self.speed = speed
         self.ngen = ngen
-        print(endLine)
         self.endLineA =  self.computeMaths.endLineA
         self.endLineB = self.computeMaths.endLineB
                 
@@ -34,7 +32,12 @@ class GaDataGeneration():
         self.toolbox = base.Toolbox()
         self.toolbox.register("attr_controls",  lambda: self.controls[0] )
         self.toolbox.register("individual", tools.initRepeat, creator.Individual,  self.toolbox.attr_controls, n=len(self.controls))
-        self.toolbox.register("population", tools.initRepeat, list, self.toolbox.individual)
+        exampleInd = self.toolbox.individual()
+        for i, c in enumerate(self.controls):
+            exampleInd[i] = c
+        def getInd():
+            return self.toolbox.clone(exampleInd)
+        self.toolbox.register("population", tools.initRepeat, list, getInd)
         
         self.toolbox.register("evaluate", self.fitness_fonction) #evaluate allow to create a fitness fonction 
         self.toolbox.register("mate", tools.cxTwoPoint) #allow to choose a method for crossover
@@ -46,10 +49,11 @@ class GaDataGeneration():
         for i in indices_to_mutate:
             j = random.randint(0, 3)
             individual[i][j] = 1 if individual[i][j] == 0 else 0
-        print(individual)
         return (individual,)  
         
     def fitness_fonction(self, individual):
+        print(f"Simulating solution with length : {len(individual)}")
+        print(f"Ind is : {individual}")
         positions = self.remote.getDataForSolution(individual, self.startPoint, self.angle, self.speed)
         fitness_value = -1
 
@@ -57,12 +61,10 @@ class GaDataGeneration():
             if self.computeMaths.isArrivedToEndLine(positions[p][0], positions[p][2]): 
                 fitness_value = len(individual)
                 break 
-        print(fitness_value)
         return (fitness_value,)
 
     def run_ga(self):
         population = self.toolbox.population(n=self.pop_size)
-        print(self.toolbox.individual())
 
         for generation in range (self.ngen):
             # calculate fitness value

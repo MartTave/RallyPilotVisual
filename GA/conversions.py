@@ -2,15 +2,16 @@ import csv, json
 import os
 class Convertion():
     def __init__(self):
-        self.filePathPos ='positions.csv'
         self.filePathJson = './GA/ga_data'
+        
+    def generateJsons(self):
+        self.filePathPos ='positions.csv'
         with open(self.filePathPos, newline='') as csvfile:
             reader = csv.reader(csvfile)
             lines = list(reader)
             csvfile.close()
         lines[1:] = [[float(float(value)) for value in row] for row in lines[1:]]
         self.positions = lines
-    def generateJsons(self):
         c = 0
         for i in range(1, len(self.positions)-1,2):
             group = self.positions[i:i+2]
@@ -48,10 +49,9 @@ class Convertion():
     
     def readJsons(self):
         jsonData = []
-        json_directory = self.filePathJson
 
-        for folder_name in os.listdir(json_directory):
-            folder_path = os.path.join(json_directory, folder_name)
+        for folder_name in os.listdir(self.filePathJson):
+            folder_path = os.path.join(self.filePathJson, folder_name)
 
             if os.path.isdir(folder_path) and folder_name.startswith("ga_"):
                 metadata_file_path = os.path.join(folder_path, "metadata.json")
@@ -63,6 +63,7 @@ class Convertion():
                     jsonData.append(data)
             else:
                 print(f"{metadata_file_path} does not exist.")
-        print(jsonData)
         return jsonData
     
+if __name__ == '__main__':
+    Convertion().generateJsons()

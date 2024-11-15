@@ -2,6 +2,7 @@ import threading
 from time import time
 import requests
 
+
 class Remote:
 
     @staticmethod
@@ -28,6 +29,7 @@ class Remote:
         self.sensing = False
         self.timer = None
         self.getPicture = getPicture
+        self.inferCount = 0
         self.sendCommand("release all;")
 
     def sendCommand(self, command):
@@ -86,8 +88,16 @@ class Remote:
         self.sendCommand(f"set rotation {angle};")
         self.sendCommand(f"set speed {speed};")
 
+    def _evalPerf(self):
+        if not self.sensing:
+            return
+        print("Current frq: ", self.inferCount / 5, " infer/s")
+        self.inferCount = 0
+        threading.Timer(5, self._evalPerf).start()
+
     def _getSensingData(self):
         response = requests.get(f"{self.host}:{self.port}/sensing")
+        self.inferCount += 1
         if response.status_code != 200:
             print(
                 f"Received error response: {response.status_code} | with error : {response.json()['error']}"
@@ -136,6 +146,7 @@ class Remote:
     def startSensing(self):
         if not self.sensing:
             self.sensing = True
+            self._evalPerf()
             self._sensingLoop()
 
     def stopSensing(self):
