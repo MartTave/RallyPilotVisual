@@ -15,5 +15,5 @@ flask_thread.start()
 
 
 app, car = prepare_game_app()
-remote_controller = RemoteController(car = car, connection_port=7654, flask_app=flask_app)
+remote_controller = RemoteController(car = car, flask_app=flask_app)
 app.run()

@@ -61,6 +61,18 @@ class Remote:
     def reset(self):
         self.sendCommand("reset;")
 
+    def setStartPositionGAModel(self, position: tuple[float, float, float], angle: float, speed: float)->bool:
+        response = requests.post(
+            f"{self.host}:{self.port}/reset_wait_for_key", json={"startPosition": position, "startAngle": angle, "startSpeed": speed}
+        )
+        if response.status_code != 200:
+            print(
+                f"Received error response: {response.status_code} with status {response.json()['error']}"
+            )
+            return False
+        return True
+
+
     def setState(
         self,
         position: tuple[float, float, float],

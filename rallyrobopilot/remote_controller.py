@@ -1,4 +1,5 @@
 from time import sleep
+import time
 from ursina import *
 import socket
 import select
@@ -24,21 +25,15 @@ def printv(str):
 
 class RemoteController(Entity):
 
-    def __init__(self, car: Car = None, connection_port=7654, flask_app=None):
+    def __init__(self, car: Car = None, flask_app=None):
         super().__init__()
 
-        self.ip_address = "127.0.0.1"
-        self.port = connection_port
         self.car = car
 
         self.listen_socket = None
         self.connected_client = None
 
         self.client_commands = RemoteCommandParser()
-
-        self.reset_location = (0,0,0)
-        self.reset_speed = (0,0,0)
-        self.reset_rotation = 0
 
         self.lastScreenshot = None
         self.texYSize = 0
@@ -61,6 +56,9 @@ class RemoteController(Entity):
             command_data = request.json
             if not command_data or 'command' not in command_data:
                 return jsonify({"error": "Invalid command data"}), 400
+            
+            if self.simulating:
+                return jsonify({"error": "Please wait until simulation is over"}), 400
 
             try:
                 self.client_commands.add(command_data['command'].encode())
@@ -79,6 +77,23 @@ class RemoteController(Entity):
         @flask_app.route("/sensing")
         def get_sensing_route():
             return jsonify(self.get_sensing_data()), 200
+
+        @flask_app.route("/reset_wait_for_key", methods=["POST"])
+        def recordGaModel():
+            data = request.json
+            if not data:
+                return jsonify({"error": "Invalid command data"}), 400
+            if self.simulating:
+                return jsonify({"error": "Please wait until simulation is over"}), 400
+            startPosition = data["startPosition"]
+            startAngle = data["startAngle"]
+            startSpeed = data["startSpeed"]
+            self.car.waitForStart = True
+            self.car.reset_position = startPosition
+            self.car.reset_orientation = (0, startAngle, 0)
+            self.car.reset_speed = startSpeed
+            self.car.reset_car()
+            return jsonify({"status": "Position set"}), 200
 
         @flask_app.route("/GASolution", methods=["POST"])
         def testGaSolution():
@@ -139,7 +154,6 @@ class RemoteController(Entity):
         if self.simulating:
             self.simulateGA()
         else:
-            # self.update_network()
             self.process_remote_commands()
             self.updateScrenshot()
 
@@ -233,45 +247,6 @@ class RemoteController(Entity):
             #   Error is thrown when commands do not fit the model --> disconnect client
             except Exception as e:
                 print("Invalid command --> disconnecting : " + str(e))
-                self.connected_client.close()
-                self.connected_client = None
-
-    def update_network(self):
-        if self.connected_client is not None:
-            data = []
-            try:
-                while True:
-                    recv_data = self.connected_client.recv(1024)
-
-                    # received nothing
-                    if len(recv_data) == 0:
-                        break
-                    self.client_commands.add(recv_data)
-
-            except Exception as e:
-                printv(e)
-
-        #   No controller connected
-        else:
-            if self.listen_socket is None:
-                self.open_connection_socket()
-            try:
-                inc_client, address = self.listen_socket.accept()
-                print("Controller connecting from " + str(address))
-                self.connected_client = inc_client
-                # self.connected_client.setblocking(False)
-                self.connected_client.settimeout(0.01)
-
-                #   Close listen socket
-                self.listen_socket.close()
-                self.listen_socket = None
-            except Exception as e:
-                printv(e)
-
-    def open_connection_socket(self):
-        print("Waiting for connections")
-        self.listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.listen_socket.bind((self.ip_address, self.port))
-        # self.listen_socket.setblocking(False)
-        self.listen_socket.settimeout(0.01)
-        self.listen_socket.listen()
+                if self.connected_client is not None:
+                    self.connected_client.close()
+                    self.connected_client = None

@@ -37,6 +37,8 @@ class Car(Entity):
         self.turning_speed = 5
         self.pivot_rotation_distance = 1
 
+        self.waitForStart = False
+
         self.reset_speed = 0
         self.reset_position = (0, 0, 0)
         self.reset_rotation = (0, 0, 0)
@@ -285,101 +287,107 @@ class Car(Entity):
 
         self.check_respawn()
 
-        #   Process inputs & update speed
-        if held_keys[self.controls[0]] or held_keys["up arrow"]:
-            self.speed += self.acceleration * time.dt
-            self.driving = True
+        if self.waitForStart:
+            if held_keys[self.controls[0]] or held_keys["up arrow"]:
+                self.waitForStart = False
+                self.speed = self.reset_speed
 
-            self.display_particles()
-        else:
-            self.driving = False
-            if self.speed > 1:
-                self.speed -= self.friction * 5 * time.dt
-            elif self.speed < -1:
-                self.speed += self.friction * 5 * time.dt
+        if not self.waitForStart:
+            #   Process inputs & update speed
+            if held_keys[self.controls[0]] or held_keys["up arrow"]:
+                self.speed += self.acceleration * time.dt
+                self.driving = True
 
-        # Braking
-        if held_keys[self.controls[2] or held_keys["down arrow"]]:
-            if self.speed > 0:
-                self.speed -= self.braking_strenth * time.dt
+                #self.display_particles()
             else:
-                self.speed -= self.acceleration * time.dt
-            self.braking = True
-        else:
-            self.braking = False
+                self.driving = False
+                if self.speed > 1:
+                    self.speed -= self.friction * 5 * time.dt
+                elif self.speed < -1:
+                    self.speed += self.friction * 5 * time.dt
 
-        #   Check physical constrains
-        if self.speed > self.topspeed:
-            self.speed = self.topspeed
-        elif self.speed < self.minspeed:
-            self.speed = self.minspeed
-
-        if held_keys[self.controls[1]] or held_keys["left arrow"] or held_keys[self.controls[3]] or held_keys["right arrow"]:
-            turn_right = held_keys[self.controls[3]] or held_keys["right arrow"]
-            rotation_sign = (1 if turn_right else -1)
-
-            #   Max angular speed
-            normalized_speed = abs(self.speed / self.topspeed)
-            #   function to map unit speed (between 0 and max speed) to a rotation coefficient space.
-            #   Rotation radius is function of speed
-            def rotation_radius(normalized_speed):
-                smallest_radius = 1.5
-                biggest_radius = 25
-                return pow(normalized_speed, 1.5) * (biggest_radius-smallest_radius) + smallest_radius
-
-            #   Get rotation radius
-            radius = rotation_radius(normalized_speed)
-
-            #   Get travelled distance
-            travelled_dist = abs(self.speed * time.dt)
-            #   Project on circle radius & compute angle variation seen from the center of the circle
-            travelled_circle_center_angle = travelled_dist / radius
-            #   Compute variation in Y & X
-            dx = 1 - cos(travelled_circle_center_angle)
-            dy = sin(travelled_circle_center_angle)
-
-            da = atan2(dx, dy) / 3.14159 * 180
-
-            self.rotation_y += da * rotation_sign
-
-        #   Integrate speed into movement
-        total_dist_to_move = self.speed * time.dt
-
-        #   Check collision via recast
-
-        #   Return residual distance to travel and residual speed.
-        def move_car(distance_to_travel, direction):
-            front_collision = boxcast(origin = self.world_position, direction = self.forward * direction, thickness = (0.1, 0.1), distance = self.scale_x + distance_to_travel, ignore = [self, ])
-
-            #   Detect collision
-            if front_collision.distance < self.scale_x + distance_to_travel:
-                free_dist = front_collision.distance - self.scale_x + distance_to_travel
-
-                #   cancel speed going directly into the obstacle
-                next_forward = self.forward - (self.forward.dot(front_collision.world_normal)) * front_collision.world_normal
-                self.speed = self.speed * (0.5 + 0.5 * (self.forward.dot(front_collision.world_normal))) # Loose half speed on collision and some depending on the angle
-
-                self.rotation_y = atan2(next_forward[0], next_forward[2]) / 3.14159 * 180
-                dist_left_to_travel = distance_to_travel - free_dist
-
-                #   Move car away from obstacle to prevent overlap due to *¦@+!? physics system
-                OBSTACLE_DISPLACEMENT_MARGIN = 1
-                self.x += (front_collision.world_normal * OBSTACLE_DISPLACEMENT_MARGIN).x
-                self.z += (front_collision.world_normal * OBSTACLE_DISPLACEMENT_MARGIN).z
-
-                return 0
-
+            # Braking
+            if held_keys[self.controls[2] or held_keys["down arrow"]]:
+                if self.speed > 0:
+                    self.speed -= self.braking_strenth * time.dt
+                else:
+                    self.speed -= self.acceleration * time.dt
+                self.braking = True
             else:
-                self.x += self.forward[0] * distance_to_travel
-                self.z += self.forward[2] * distance_to_travel
+                self.braking = False
 
-                return 0
+            #   Check physical constrains
+            if self.speed > self.topspeed:
+                self.speed = self.topspeed
+            elif self.speed < self.minspeed:
+                self.speed = self.minspeed
 
-        for i in range(2):
-            total_dist_to_move = move_car(total_dist_to_move, 1 if self.speed > 0 else -1)
+            if held_keys[self.controls[1]] or held_keys["left arrow"] or held_keys[self.controls[3]] or held_keys["right arrow"]:
+                turn_right = held_keys[self.controls[3]] or held_keys["right arrow"]
+                rotation_sign = (1 if turn_right else -1)
 
-            if total_dist_to_move <= 0:
-                break
+                #   Max angular speed
+                normalized_speed = abs(self.speed / self.topspeed)
+                #   function to map unit speed (between 0 and max speed) to a rotation coefficient space.
+                #   Rotation radius is function of speed
+                def rotation_radius(normalized_speed):
+                    smallest_radius = 1.5
+                    biggest_radius = 25
+                    return pow(normalized_speed, 1.5) * (biggest_radius-smallest_radius) + smallest_radius
+
+                #   Get rotation radius
+                radius = rotation_radius(normalized_speed)
+
+                #   Get travelled distance
+                travelled_dist = abs(self.speed * time.dt)
+                #   Project on circle radius & compute angle variation seen from the center of the circle
+                travelled_circle_center_angle = travelled_dist / radius
+                #   Compute variation in Y & X
+                dx = 1 - cos(travelled_circle_center_angle)
+                dy = sin(travelled_circle_center_angle)
+
+                da = atan2(dx, dy) / 3.14159 * 180
+
+                self.rotation_y += da * rotation_sign
+
+            #   Integrate speed into movement
+            total_dist_to_move = self.speed * time.dt
+
+            #   Check collision via recast
+
+            #   Return residual distance to travel and residual speed.
+            def move_car(distance_to_travel, direction):
+                front_collision = boxcast(origin = self.world_position, direction = self.forward * direction, thickness = (0.1, 0.1), distance = self.scale_x + distance_to_travel, ignore = [self, ])
+
+                #   Detect collision
+                if front_collision.distance < self.scale_x + distance_to_travel:
+                    free_dist = front_collision.distance - self.scale_x + distance_to_travel
+
+                    #   cancel speed going directly into the obstacle
+                    next_forward = self.forward - (self.forward.dot(front_collision.world_normal)) * front_collision.world_normal
+                    self.speed = self.speed * (0.5 + 0.5 * (self.forward.dot(front_collision.world_normal))) # Loose half speed on collision and some depending on the angle
+
+                    self.rotation_y = atan2(next_forward[0], next_forward[2]) / 3.14159 * 180
+                    dist_left_to_travel = distance_to_travel - free_dist
+
+                    #   Move car away from obstacle to prevent overlap due to *¦@+!? physics system
+                    OBSTACLE_DISPLACEMENT_MARGIN = 1
+                    self.x += (front_collision.world_normal * OBSTACLE_DISPLACEMENT_MARGIN).x
+                    self.z += (front_collision.world_normal * OBSTACLE_DISPLACEMENT_MARGIN).z
+
+                    return 0
+
+                else:
+                    self.x += self.forward[0] * distance_to_travel
+                    self.z += self.forward[2] * distance_to_travel
+
+                    return 0
+
+            for i in range(2):
+                total_dist_to_move = move_car(total_dist_to_move, 1 if self.speed > 0 else -1)
+
+                if total_dist_to_move <= 0:
+                        break
 
         self.c_pivot.position = self.position
         self.c_pivot.rotation_y = self.rotation_y
@@ -393,16 +401,11 @@ class Car(Entity):
         """
         #   Project car directly on ground when resetting
         self.position = self.reset_position
-        # y_ray = raycast(origin = self.reset_position, direction = (0,-1,0), ignore = [self,])
-        # self.y = y_ray.world_point.y + 1.4
-        print(self.reset_orientation)
         self.rotation_y = self.reset_orientation[1]
 
-        print("Resting to car speed : ", self.reset_speed)
 
-        self.speed = self.reset_speed
-
-        print("reseting at", str(self.position), " --> ", self.rotation_y)
+        if not self.waitForStart:
+            self.speed = self.reset_speed
 
         camera.world_rotation_y = self.rotation_y
         self.velocity_y = 0
