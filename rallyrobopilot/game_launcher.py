@@ -7,7 +7,7 @@ def prepare_game_app():
 
     # Create Window
     window.vsync = True # Set to false to uncap FPS limit of 60
-    app = Ursina(size=(224, 224))
+    app = Ursina(size=(224, 224), position=(100, 100))
     print("Asset folder")
     print(application.asset_folder)
 

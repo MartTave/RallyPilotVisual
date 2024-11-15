@@ -5,6 +5,8 @@ import socket
 import select
 import numpy as np
 
+import pyscreenshot as ImageGrab
+
 from flask import Flask, request, jsonify
 
 from rallyrobopilot.car import Car
@@ -69,10 +71,8 @@ class RemoteController(Entity):
         @flask_app.route("/picture", methods=["GET"])
         def get_picture_route():
             data = self.lastScreenshot
-            image = data.reshape(self.texYSize, self.texXSize, 3)
-            image = image[::-1, :, :]
-            image = image.transpose((2, 0, 1))
-            return jsonify({"image": image.tolist()}), 200
+            arr = np.transpose(data, (2, 0, 1))
+            return jsonify({"image": arr.tolist()}), 200
 
         @flask_app.route("/sensing")
         def get_sensing_route():
@@ -161,13 +161,9 @@ class RemoteController(Entity):
         if self.car is None:
             return
         if time.time() - self.last_sensing >= self.sensing_period:
-            tex = base.win.getDisplayRegion(0).getScreenshot()
-            self.texYSize = tex.getYSize()
-            self.texXSize = tex.getXSize()
-            arr = tex.getRamImageAs("RGB")
-            data = np.frombuffer(arr, np.uint8)
-            self.lastScreenshot = data
-            self.last_sensing = time.time()
+            screenshot = ImageGrab.grab((100, 100, 324, 324), False)
+            arr = np.array(screenshot)
+            self.lastScreenshot = arr
 
     def get_sensing_data(self):
         current_controls = (held_keys['w'] or held_keys["up arrow"],
