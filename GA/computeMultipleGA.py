@@ -1,35 +1,21 @@
 import csv
 
 from GA.algo_Ga import GaDataGeneration
+from GA.conversions import Convertion
 class computeMultipleGA():
-    def __init__(self, filePathPos, filePathControls):
-        self.filePathPos = filePathPos
-        self.filePathControls = filePathControls
-    def readCSV(self, path): 
-        with open(path, newline='') as csvfile:
-            reader = csv.reader(csvfile)
-            lines = list(reader)
-            csvfile.close()
-        return lines
-    def getControls(self): 
-        controls = self.readCSV(self.filePathControls)
-        for i in range(0,len(controls)):
-            controls[i] = [int(value) for value in controls[i]]
-        return controls
-                
+    def __init__(self):
+        self.conversions= Convertion()
+        self.conversions.generateJsons()
+
     def runSimulations(self):
         pop = []
-        positions = self.readCSV(self.filePathPos)
-        controls = self.getControls()
-        positions[1:] = [[float(float(value)) for value in row] for row in positions[1:]]
-        for i in range(1, len(positions)-1,2):
-            group = positions[i:i+2]
-            print(group)
-            ga = GaDataGeneration(controls,[(group[0][3],group[0][4],group[0][5]),(group[0][6],group[0][7],group[0][8])],[(group[1][3],group[1][4],group[1][5]),(group[1][6],group[1][7],group[1][8])],group[0][9],group[0][10])
+        controls = [[1,0,0,0] for _ in range(50)]
+        dataGa = self.conversions.readJsons()
+        for i in range(len(dataGa)):
+            ga = GaDataGeneration(controls,(dataGa[i]['startPoint']['x'],dataGa[i]['startPoint']['z'],dataGa[i]['startPoint']['z']),[(dataGa[i]['endLine']['point1']['x'],dataGa[i]['endLine']['point1']['z'],dataGa[i]['endLine']['point1']['y']),(dataGa[i]['endLine']['point2']['x'],dataGa[i]['endLine']['point2']['z'],dataGa[i]['endLine']['point2']['y'])], dataGa[i]['startAngle'],dataGa[i]['startVelocity'])
             pop = ga.run_ga()
         return pop
-        
 
 
-test = computeMultipleGA( 'positions.csv', './gaData/controls1.csv')
+test = computeMultipleGA()
 test.runSimulations()

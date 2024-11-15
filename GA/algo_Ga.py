@@ -1,6 +1,7 @@
 from math import sqrt
 import random
 from time import sleep
+from GA.computeGAMaths import GaMaths
 from deap import base, creator, tools
 import flask
 from rallyrobopilot.remote import Remote
@@ -9,20 +10,22 @@ import csv
 
 
 class GaDataGeneration():
-    def __init__(self, controls,startLine, endLine, angle, speed, pop_size=10, ngen=20):
+    def __init__(self, controls,startPoint, endLine, angle, speed, pop_size=10, ngen=20):
         print(endLine)
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))  
         creator.create("Individual", list, fitness=creator.FitnessMax)
+        self.computeMaths = GaMaths(endLine,startPoint)
         self.controls = controls
-        self.startPoint = startLine[0]
+        self.startPoint = startPoint
+        print(self.startPoint[0])
         self.endLine = endLine
         self.pop_size = pop_size
         self.angle= angle
         self.speed = speed
         self.ngen = ngen
         print(endLine)
-        self.endLineA =  (endLine[1][2] - endLine[0][2])/(endLine[1][0] -endLine[0][0])
-        self.endLineB = endLine[1][2] - (self.endLineA*endLine[1][0])
+        self.endLineA =  self.computeMaths.endLineA
+        self.endLineB = self.computeMaths.endLineB
                 
         self.remote =  Remote("http://127.0.0.1", 5000, lambda x: x)
         self.setup_deap()
@@ -45,20 +48,13 @@ class GaDataGeneration():
             individual[i][j] = 1 if individual[i][j] == 0 else 0
         print(individual)
         return (individual,)  
-    
-    def computeDistance(self, posX , posY):
-        A = self.endLineA
-        B = -1
-        C = self.endLineB
-        return A * posX + B * posY + C / sqrt(A**2 + B**2)
         
     def fitness_fonction(self, individual):
         positions = self.remote.getDataForSolution(individual, self.startPoint, self.angle, self.speed)
-        initialDistance = self.computeDistance(self.startPoint[0], self.startPoint[1])
         fitness_value = -1
 
         for p in range(0, len(positions)):
-            if np.sign(self.computeDistance(positions[p][0],positions[p][2]))!= np.sign(initialDistance): 
+            if self.computeMaths.isArrivedToEndLine(positions[p][0], positions[p][2]): 
                 fitness_value = len(individual)
                 break 
         print(fitness_value)
