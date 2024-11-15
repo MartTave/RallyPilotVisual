@@ -161,7 +161,7 @@ class RemoteController(Entity):
         if self.car is None:
             return
         if time.time() - self.last_sensing >= self.sensing_period:
-            screenshot = ImageGrab.grab((100, 100, 324, 324), False)
+            screenshot = ImageGrab.grab((100 + 1920, 100 - (2160 - 1080), 100 + 1920 + 224, 100 - (2160 - 1080) + 224), False)
             arr = np.array(screenshot)
             self.lastScreenshot = arr
 
