@@ -1,4 +1,6 @@
 myenv
+data
+models
 
 # Byte-compiled files
 __pycache__/

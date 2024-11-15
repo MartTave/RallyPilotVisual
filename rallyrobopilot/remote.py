@@ -1,9 +1,20 @@
-import json
 import threading
-from time import sleep, time
+from time import time
 import requests
 
 class Remote:
+
+    @staticmethod
+    def convertFromMessageToTrainingData(data):
+        x = data["picture"]
+
+        y = [
+            data["up"],
+            data["down"],
+            data["left"],
+            data["right"],
+        ]
+        return x, y
 
     @staticmethod
     def getControlsFromData(x):
@@ -33,13 +44,12 @@ class Remote:
     def sendControl(self, command: list[int]):
         converted = self._convertControl(command)
         for c in converted:
-            print(f"Sending : {c}")
             self.sendCommand(c)
         return True
 
     def _convertControl(self, command: list[int]) -> list[str]:
         str_commands = []
-        commandList = [(0, "forward"), (1, "backward"), (2, "left"), (3, "right")]
+        commandList = [(0, "forward"), (1, "back"), (2, "left"), (3, "right")]
         for i, c in commandList:
             if command[i] == 1 and self.lastSended[i] == 0:
                 str_commands.append(f"push {c};")
@@ -62,7 +72,7 @@ class Remote:
         """
         self.sendCommand(f"set position {position[0]},{position[1]},{position[2]};")
         self.sendCommand(f"set rotation {angle};")
-        self.sendCommand(f"set speed {speed[0]},{speed[1]},{speed[2]};")
+        self.sendCommand(f"set speed {speed};")
 
     def _getSensingData(self):
         response = requests.get(f"{self.host}:{self.port}/sensing")
@@ -86,9 +96,7 @@ class Remote:
         if self.sensing:
             self.timer = threading.Timer(0.1, self._sensingLoop)
             self.timer.start()
-            then = time()
             self._getSensingData()
-            print(f"Time taken : {time() - then}")
 
     def getDataForSolution(
         self,

@@ -1,4 +1,3 @@
-
 """
 Command must be followed by a semi colon !
 
@@ -65,13 +64,19 @@ class RemoteControlCommand:
 
 remote_control_commands = [
     #   Car control
-    RemoteControlCommand(contains(b'push', b'release'), contains(b'forward', b'left', b'right', b'back', b'all')),
+    RemoteControlCommand(
+        contains(b"push", b"release"),
+        contains(b"forward", b"left", b"right", b"back", b"all"),
+    ),
     #   Reset
-    RemoteControlCommand(equals(b'reset')),
+    RemoteControlCommand(equals(b"reset")),
     #   Reset parameters command
-    RemoteControlCommand(equals(b'set'), contains(b"position", b"speed"), float_tuple),
-    RemoteControlCommand(equals(b'set'), equals(b"rotation"), is_float),
-    RemoteControlCommand(equals(b'set'), equals(b"ray"), contains(b'visible', b'hidden'))
+    RemoteControlCommand(equals(b"set"), contains(b"position"), float_tuple),
+    RemoteControlCommand(equals(b"set"), contains(b"speed"), is_float),
+    RemoteControlCommand(equals(b"set"), equals(b"rotation"), is_float),
+    RemoteControlCommand(
+        equals(b"set"), equals(b"ray"), contains(b"visible", b"hidden")
+    ),
 ]
 
 class RemoteCommandParser:
