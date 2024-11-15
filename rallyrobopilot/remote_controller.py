@@ -40,6 +40,10 @@ class RemoteController(Entity):
         self.reset_speed = (0,0,0)
         self.reset_rotation = 0
 
+        self.lastScreenshot = None
+        self.texYSize = 0
+        self.texXSize = 0
+
         self.simuIndex = 0
         self.simulating = False
         self.simuResult = []
@@ -66,7 +70,11 @@ class RemoteController(Entity):
 
         @flask_app.route("/picture", methods=["GET"])
         def get_picture_route():
-            return jsonify({"image": self.lastImage.tolist()}), 200
+            data = self.lastScreenshot
+            image = data.reshape(self.texYSize, self.texXSize, 3)
+            image = image[::-1, :, :]
+            image = image.transpose((2, 0, 1))
+            return jsonify({"image": image.tolist()}), 200
 
         @flask_app.route("/sensing")
         def get_sensing_route():
@@ -87,7 +95,6 @@ class RemoteController(Entity):
             self.car.reset_orientation = (0, startAngle, 0)
             self.car.reset_speed = startSpeed
             self.car.reset_car()
-            # TODO: Implement reset speed
             self.simulating = True
             # Sync of last sensing
             self.last_sensing = time.time()
@@ -132,56 +139,20 @@ class RemoteController(Entity):
         if self.simulating:
             self.simulateGA()
         else:
-            self.update_network()
+            # self.update_network()
             self.process_remote_commands()
-            self.process_sensing()
+            self.updateScrenshot()
 
-    def process_sensing(self):
+    def updateScrenshot(self):
         if self.car is None:
             return
-
         if time.time() - self.last_sensing >= self.sensing_period:
-            if self.connected_client is None:
-                tex = base.win.getDisplayRegion(0).getScreenshot()
-                arr = tex.getRamImageAs("RGB")
-                data = np.frombuffer(arr, np.uint8)
-                image = data.reshape(tex.getYSize(), tex.getXSize(), 3)
-                image = image[::-1, :, :]
-                self.lastImage = image
-                pass
-            else:
-                snapshot = SensingSnapshot()
-                snapshot.current_controls = (
-                    held_keys["w"] or held_keys["up arrow"],
-                    held_keys["s"] or held_keys["down arrow"],
-                    held_keys["a"] or held_keys["left arrow"],
-                    held_keys["d"] or held_keys["right arrow"],
-                )
-                snapshot.car_position = self.car.world_position
-                snapshot.car_speed = self.car.speed
-                snapshot.car_angle = self.car.rotation_y
-                snapshot.raycast_distances = (
-                    self.car.multiray_sensor.collect_sensor_values()
-                )
-
-                #   Collect last rendered image
-                tex = base.win.getDisplayRegion(0).getScreenshot()
-                arr = tex.getRamImageAs("RGB")
-                data = np.frombuffer(arr, np.uint8)
-                image = data.reshape(tex.getYSize(), tex.getXSize(), 3)
-                image = image[::-1, :, :]  #   Image arrives with inverted Y axis
-                self.lastImage = image
-                snapshot.image = image
-
-                msg_mngr = SensingSnapshotManager()
-                data = msg_mngr.pack(snapshot)
-
-                self.connected_client.settimeout(0.01)
-                try:
-                    self.connected_client.sendall(data)
-                except socket.error as e:
-                    print(f"Socket error: {e}")
-
+            tex = base.win.getDisplayRegion(0).getScreenshot()
+            self.texYSize = tex.getYSize()
+            self.texXSize = tex.getXSize()
+            arr = tex.getRamImageAs("RGB")
+            data = np.frombuffer(arr, np.uint8)
+            self.lastScreenshot = data
             self.last_sensing = time.time()
 
     def get_sensing_data(self):
@@ -251,7 +222,7 @@ class RemoteController(Entity):
                     elif commands[1] == b'rotation':
                         self.car.reset_orientation = (0, commands[2], 0)
                     elif commands[1] == b'speed':
-                        # Todo
+                        self.car.reset_speed = commands[2]
                         pass
                     elif commands[1] == b'ray':
                         self.car.multiray_sensor.set_enabled_rays(commands[2] == b'visible')

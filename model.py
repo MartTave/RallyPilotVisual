@@ -1,13 +1,18 @@
 import torch
 import torch.nn as nn
+import numpy as np
 
+class AlexNetAtHome(nn.Module):
 
-class AlexNet(nn.Module):
-    def __init__(self, num_classes=1000):
-        super(AlexNet, self).__init__()
+    @staticmethod
+    def concatTwoPics(pic1, pic2):
+        return np.concatenate((pic1, pic2), axis=0).tolist()
+
+    def __init__(self):
+        super(AlexNetAtHome, self).__init__()
 
         self.features = nn.Sequential(
-            nn.Conv2d(3, 96, kernel_size=11, stride=4, padding=2),
+            nn.Conv2d(6, 96, kernel_size=11, stride=4, padding=2),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2),
             nn.Conv2d(96, 256, kernel_size=5, padding=2),
@@ -21,35 +26,19 @@ class AlexNet(nn.Module):
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2),
         )
-
-        self.classifier = nn.Sequential(
+        self.predictor = nn.Sequential(
             nn.Dropout(0.5),
-            nn.Linear(256 * 6 * 6, 4096),
-            nn.ReLU(inplace=True),
+            nn.Linear(9216, 4096),
+            nn.ReLU(),
             nn.Dropout(0.5),
-            nn.Linear(4096, 4096),
-            nn.ReLU(inplace=True),
-            nn.Linear(4096, num_classes),
-        )
-
-        self.driver = nn.Sequential(
-            nn.Linear(num_classes, 750),
-            nn.ReLU(),
-            nn.Linear(750, 500),
-            nn.ReLU(),
-            nn.Linear(500, 100),
+            nn.Linear(4096, 100),
             nn.ReLU(),
             nn.Linear(100, 4),
-            nn.Sigmoid(),
         )
 
     def forward(self, x):
         x = self.features(x)
+        # TODO: Maybe add a avgPool ?
         x = torch.flatten(x, 1)
-        x = self.classifier(x)
-        x = self.driver(x)
+        x = self.predictor(x)
         return x
-
-
-# Create an instance of AlexNet
-model = AlexNet(num_classes=1000)

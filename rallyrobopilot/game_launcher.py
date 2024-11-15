@@ -20,7 +20,7 @@ def prepare_game_app():
     window.borderless = False
     window.show_ursina_splash = False
     window.cog_button.disable()
-    window.fps_counter.enable()
+    # window.fps_counter.enable()
     window.exit_button.disable()
 
     #   Global models & textures
@@ -30,7 +30,7 @@ def prepare_game_app():
     global_texs = [ "assets/cars/garage/sports-car/sports-red.png", "sports-blue.png", "sports-green.png", "sports-orange.png", "sports-white.png", "particle_forest_track.png", "red.png"]
 
     # load assets
-    track_name = "VisualTrack"
+    track_name = "SimpleTrack"
     track = Track(track_name)
     print("loading assets after track creation")
     track.load_assets(global_models, global_texs)
@@ -45,10 +45,10 @@ def prepare_game_app():
     car.multiray_sensor.enable()
 
     # Lighting + shadows
-    sun = SunLight(direction = (-0.7, -0.9, 0.5), resolution = 3072, car = car)
-    ambient = AmbientLight(color = Vec4(0.5, 0.55, 0.66, 0) * 0.75)
+    # sun = SunLight(direction = (-0.7, -0.9, 0.5), resolution = 3072, car = car)
+    # ambient = AmbientLight(color = Vec4(0.5, 0.55, 0.66, 0) * 0.75)
 
-    render.setShaderAuto()
+    # render.setShaderAuto()
 
     # Sky
     Sky(texture = "sky")
