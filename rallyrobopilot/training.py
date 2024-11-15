@@ -1,3 +1,4 @@
+from multiprocessing import Pool
 import os
 import torch
 import torch.optim as optim
@@ -24,7 +25,7 @@ preparedData = ()
 num_epochs = 25
 
 BASE_FOLDER = "./data/"
-indexes = [0, 1]
+indexes = [0, 1, 2]
 BASE_FILENAME = "record"
 BASE_EXTENSION = ".npz"
 file_names = [BASE_FILENAME + str(i) + BASE_EXTENSION for i in indexes]
@@ -32,20 +33,35 @@ file_names = [BASE_FILENAME + str(i) + BASE_EXTENSION for i in indexes]
 xData = []
 yData = []
 
-
 def prepareData(npData):
-    lastPic = None
-    x = npData["images"].tolist()
-    assert x[0][0][0] != 0
-    y = npData["controls"].tolist()
+    x = npData["images"]
+    print(x.shape)
+    assert x[0][0][0][0] != 0
+    y = np.concatenate((npData["controls"], npData["speeds"][:].reshape(-1, 1)), axis=1)
+    return x, y
+
+def loadFile(filename):
+    loaded = np.load(BASE_FOLDER + filename)
+    print("Preparing file : ", filename)
+    x, y = prepareData(loaded)
+    assert len(x) == len(y)
     return x, y
 
 
-for f in file_names:
-    loaded = np.load(BASE_FOLDER + f)
-    x, y = prepareData(loaded)
-    xData += x
-    yData += y
+with Pool() as pool:
+    results = pool.map(loadFile, file_names)
+    for x, y in results:
+        xData += x.tolist()
+        yData += y.tolist()
+
+# for f in file_names:
+#     loaded = np.load(BASE_FOLDER + f)
+#     print("Preparing file : ", f)
+#     x, y = prepareData(loaded)
+#     assert len(x) == len(y)
+#     xData += x
+#     yData += y
+#     print("Done... Added ", len(x), " samples")
 
 assert len(xData) == len(yData)
 
@@ -70,7 +86,8 @@ train_loader = DataLoader(train_data, batch_size=32)
 validate_loader = DataLoader(validate_data, batch_size=32)
 
 # Define loss function and optimizer
-criterion = nn.BCEWithLogitsLoss(torch.tensor([0.5, 2.5, 1, 1], dtype=torch.float32))
+classification_loss = nn.BCEWithLogitsLoss(torch.tensor([0.5, 2.5, 1, 1], dtype=torch.float32))
+regression_loss = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=0.0001)
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer, mode="min", factor=0.1, patience=2, verbose=True
@@ -80,7 +97,8 @@ scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Device is : {device}")
 
-criterion.to(device)
+classification_loss.to(device)
+regression_loss.to(device)
 model.to(device)
 
 losses = {
@@ -108,14 +126,16 @@ for epoch in range(num_epochs):
             inputs, labels = inputs.to(device), labels.to(device)
 
             optimizer.zero_grad()
-            y_pred = model(inputs)
-            loss = criterion(y_pred, labels)
+            y_class, y_reg = model(inputs)
+            class_loss = classification_loss(y_class, labels[:, :4])
+            reg_loss = regression_loss(y_reg.squeeze(), labels[:, 4])
+            total_loss = class_loss + reg_loss
             if step == "train":
-                loss.backward()
+                total_loss.backward()
                 optimizer.step()
-            curr_loss += loss.item()
-            y_pred = (y_pred > 0.5).float()
-            correct += (y_pred == labels).sum().item()
+            curr_loss += total_loss.item()
+            y_class = (y_class > 0.5).float()
+            correct += (y_class == labels[:, :4]).sum().item()
             total += labels.size(0) * labels.size(1)
             nbr_items += 1
         if step == "eval":
@@ -123,7 +143,7 @@ for epoch in range(num_epochs):
         losses[step].append(curr_loss / nbr_items)
         accuracies[step].append(correct / total)
 
-    print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}")
+    print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {class_loss.item():.4f}")
 
 
 MODEL_BASE_PATH = "./models/"
@@ -132,6 +152,8 @@ MODEL_BASE_PATH = "./models/"
 def saveResults():
     currIndex = 0
     currPath: str
+    if not os.path.exists(MODEL_BASE_PATH):
+        os.mkdir(MODEL_BASE_PATH)
     while True:
         currPath = MODEL_BASE_PATH + f"model_{currIndex}"
         if not os.path.exists(currPath):

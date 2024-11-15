@@ -33,7 +33,12 @@ class AlexNetAtHome(nn.Module):
             nn.Dropout(0.5),
             nn.Linear(4096, 100),
             nn.ReLU(),
+        )
+        self.classification_head = nn.Sequential(
             nn.Linear(100, 4),
+        )
+        self.regression_head = nn.Sequential(
+            nn.Linear(100, 1),
         )
 
     def forward(self, x):
@@ -41,4 +46,6 @@ class AlexNetAtHome(nn.Module):
         # TODO: Maybe add a avgPool ?
         x = torch.flatten(x, 1)
         x = self.predictor(x)
-        return x
+        classification = self.classification_head(x)
+        regression = self.regression_head(x)
+        return classification, regression
