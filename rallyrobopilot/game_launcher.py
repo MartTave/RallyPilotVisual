@@ -41,8 +41,8 @@ def prepare_game_app():
     # Tracks
     car.set_track(track)
 
-    car.multiray_sensor = MultiRaySensor(car, 15, 90)
-    car.multiray_sensor.enable()
+    # car.multiray_sensor = MultiRaySensor(car, 15, 90)
+    # car.multiray_sensor.enable()
 
     # Lighting + shadows
     # sun = SunLight(direction = (-0.7, -0.9, 0.5), resolution = 3072, car = car)

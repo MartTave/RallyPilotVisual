@@ -298,7 +298,7 @@ class Car(Entity):
                 self.speed += self.acceleration * time.dt
                 self.driving = True
 
-                #self.display_particles()
+                # self.display_particles()
             else:
                 self.driving = False
                 if self.speed > 1:
@@ -356,44 +356,60 @@ class Car(Entity):
             #   Check collision via recast
 
             #   Return residual distance to travel and residual speed.
-            def move_car(distance_to_travel, direction):
-                front_collision = boxcast(origin = self.world_position, direction = self.forward * direction, thickness = (0.1, 0.1), distance = self.scale_x + distance_to_travel, ignore = [self, ])
-
-                #   Detect collision
-                if front_collision.distance < self.scale_x + distance_to_travel:
-                    free_dist = front_collision.distance - self.scale_x + distance_to_travel
-
-                    #   cancel speed going directly into the obstacle
-                    next_forward = self.forward - (self.forward.dot(front_collision.world_normal)) * front_collision.world_normal
-                    self.speed = self.speed * (0.5 + 0.5 * (self.forward.dot(front_collision.world_normal))) # Loose half speed on collision and some depending on the angle
-
-                    self.rotation_y = atan2(next_forward[0], next_forward[2]) / 3.14159 * 180
-                    dist_left_to_travel = distance_to_travel - free_dist
-
-                    #   Move car away from obstacle to prevent overlap due to *¦@+!? physics system
-                    OBSTACLE_DISPLACEMENT_MARGIN = 1
-                    self.x += (front_collision.world_normal * OBSTACLE_DISPLACEMENT_MARGIN).x
-                    self.z += (front_collision.world_normal * OBSTACLE_DISPLACEMENT_MARGIN).z
-
-                    return 0
-
-                else:
-                    self.x += self.forward[0] * distance_to_travel
-                    self.z += self.forward[2] * distance_to_travel
-
-                    return 0
-
             for i in range(2):
-                total_dist_to_move = move_car(total_dist_to_move, 1 if self.speed > 0 else -1)
+                total_dist_to_move = self.move_car(
+                    total_dist_to_move, 1 if self.speed > 0 else -1
+                )
 
                 if total_dist_to_move <= 0:
-                        break
+                    break
 
         self.c_pivot.position = self.position
         self.c_pivot.rotation_y = self.rotation_y
         self.update_camera()
 
         self.pivot.position = self.position
+
+    def move_car(self, distance_to_travel, direction):
+        front_collision = boxcast(
+            origin=self.world_position,
+            direction=self.forward * direction,
+            thickness=(0.1, 0.1),
+            distance=self.scale_x + distance_to_travel,
+            ignore=[
+                self,
+            ],
+        )
+
+        #   Detect collision
+        if front_collision.distance < self.scale_x + distance_to_travel:
+            free_dist = front_collision.distance - self.scale_x + distance_to_travel
+
+            #   cancel speed going directly into the obstacle
+            next_forward = (
+                self.forward
+                - (self.forward.dot(front_collision.world_normal))
+                * front_collision.world_normal
+            )
+            self.speed = self.speed * (
+                0.5 + 0.5 * (self.forward.dot(front_collision.world_normal))
+            )  # Loose half speed on collision and some depending on the angle
+
+            self.rotation_y = atan2(next_forward[0], next_forward[2]) / 3.14159 * 180
+            dist_left_to_travel = distance_to_travel - free_dist
+
+            #   Move car away from obstacle to prevent overlap due to *¦@+!? physics system
+            OBSTACLE_DISPLACEMENT_MARGIN = 1
+            self.x += (front_collision.world_normal * OBSTACLE_DISPLACEMENT_MARGIN).x
+            self.z += (front_collision.world_normal * OBSTACLE_DISPLACEMENT_MARGIN).z
+
+            return 0
+
+        else:
+            self.x += self.forward[0] * distance_to_travel
+            self.z += self.forward[2] * distance_to_travel
+
+            return 0
 
     def reset_car(self):
         """
@@ -402,7 +418,6 @@ class Car(Entity):
         #   Project car directly on ground when resetting
         self.position = self.reset_position
         self.rotation_y = self.reset_orientation[1]
-
 
         if not self.waitForStart:
             self.speed = self.reset_speed

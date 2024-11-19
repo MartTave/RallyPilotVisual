@@ -1,10 +1,13 @@
 from rallyrobopilot import prepare_game_app, RemoteController
 from flask import Flask, request, jsonify
 from threading import Thread
+from pygame.time import Clock
 
 import logging
 
 logging.getLogger("werkzeug").disabled = True
+
+FRAMERATE = 25
 
 # Setup Flask
 flask_app = Flask(__name__)
@@ -16,4 +19,6 @@ flask_thread.start()
 
 app, car = prepare_game_app()
 remote_controller = RemoteController(car = car, flask_app=flask_app)
-app.run()
+while True:
+    app.step()
+    Clock().tick(FRAMERATE)
