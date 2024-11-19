@@ -27,8 +27,8 @@ regression_weight = 0.2
 num_epochs = 25
 
 BASE_FOLDER = "./data/"
-indexes = [0, 1, 2]
-BASE_FILENAME = "record"
+indexes = [0]
+BASE_FILENAME = "record_trimmed"
 BASE_EXTENSION = ".npz"
 file_names = [BASE_FILENAME + str(i) + BASE_EXTENSION for i in indexes]
 
@@ -39,7 +39,7 @@ def prepareData(npData):
     x = npData["images"]
     print(x.shape)
     assert x[0][0][0][0] != 0
-    y = np.concatenate((npData["controls"], npData["speeds"][:].reshape(-1, 1)), axis=1)
+    y = npData["controls"]
     return x, y
 
 def loadFile(filename):
@@ -55,15 +55,6 @@ with Pool() as pool:
     for x, y in results:
         xData += x.tolist()
         yData += y.tolist()
-
-# for f in file_names:
-#     loaded = np.load(BASE_FOLDER + f)
-#     print("Preparing file : ", f)
-#     x, y = prepareData(loaded)
-#     assert len(x) == len(y)
-#     xData += x
-#     yData += y
-#     print("Done... Added ", len(x), " samples")
 
 assert len(xData) == len(yData)
 
@@ -88,11 +79,12 @@ train_loader = DataLoader(train_data, batch_size=32)
 validate_loader = DataLoader(validate_data, batch_size=32)
 
 # Define loss function and optimizer
-classification_loss = nn.BCEWithLogitsLoss(torch.tensor([0.5, 2.5, 1, 1], dtype=torch.float32))
-regression_loss = nn.MSELoss()
+classification_loss = nn.BCEWithLogitsLoss(
+    torch.tensor([0.5, 2.5, 1, 1], dtype=torch.float32)
+)
 optimizer = optim.Adam(model.parameters(), lr=0.0001)
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-    optimizer, mode="min", factor=0.1, patience=2, verbose=True
+    optimizer, mode="min", factor=0.1, patience=3
 )
 
 # Training loop
@@ -100,7 +92,6 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Device is : {device}")
 
 classification_loss.to(device)
-regression_loss.to(device)
 model.to(device)
 
 losses = {
@@ -128,16 +119,12 @@ for epoch in range(num_epochs):
             inputs, labels = inputs.to(device), labels.to(device)
 
             optimizer.zero_grad()
-            y_class, y_reg = model(inputs)
+            y_class = model(inputs)
             class_loss = classification_loss(y_class, labels[:, :4])
-            reg_loss = regression_loss(y_reg.squeeze(), labels[:, 4])
-            class_loss_norm = class_loss / class_loss.detach()
-            reg_loss_norm = reg_loss / reg_loss.detach()
-            total_loss = (class_loss_norm * (1 - regression_weight)) + (reg_loss_norm * regression_weight)
             if step == "train":
-                total_loss.backward()
+                class_loss.backward()
                 optimizer.step()
-            curr_loss += total_loss.item()
+            curr_loss += class_loss.item()
             y_class = (y_class > 0.5).float()
             correct += (y_class == labels[:, :4]).sum().item()
             total += labels.size(0) * labels.size(1)
