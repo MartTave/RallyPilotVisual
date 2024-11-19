@@ -27,13 +27,17 @@ regression_weight = 0.2
 num_epochs = 25
 
 BASE_FOLDER = "./data/"
-indexes = [0]
-BASE_FILENAME = "record_trimmed"
+indexes = [0, 1, 2]
+BASE_FILENAME = "record"
 BASE_EXTENSION = ".npz"
 file_names = [BASE_FILENAME + str(i) + BASE_EXTENSION for i in indexes]
 
 xData = []
 yData = []
+
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Device is : {device}")
 
 def prepareData(npData):
     x = npData["images"]
@@ -61,8 +65,10 @@ assert len(xData) == len(yData)
 print(f"Data prepared, {len(xData)} samples")
 
 targetTensor = torch.tensor(yData, dtype=torch.float32)
+targetTensor.to(device)
 print("Target tensor created")
 sourceTensor = torch.tensor(xData, dtype=torch.float32)
+sourceTensor.to(device)
 print("Source tensor created")
 
 dataset = TensorDataset(sourceTensor, targetTensor)
@@ -87,10 +93,6 @@ scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer, mode="min", factor=0.1, patience=3
 )
 
-# Training loop
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(f"Device is : {device}")
-
 classification_loss.to(device)
 model.to(device)
 
@@ -102,6 +104,9 @@ accuracies = {
     "train": [],
     "eval": [],
 }
+
+# Training loop
+
 
 for epoch in range(num_epochs):
 
@@ -134,7 +139,9 @@ for epoch in range(num_epochs):
         losses[step].append(curr_loss / nbr_items)
         accuracies[step].append(correct / total)
 
-    print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {class_loss.item():.4f}")
+    print(
+        f"Epoch [{epoch+1}/{num_epochs}], Loss: {class_loss.item():.4f}, Acc : {accuracies['eval'][-1]:.4f}"
+    )
 
 
 MODEL_BASE_PATH = "./models/"
