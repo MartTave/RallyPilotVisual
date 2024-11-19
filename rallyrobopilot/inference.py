@@ -7,7 +7,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 print("Device is : ", device)
 
-model_number = 4
+model_number = 2
 
 model = AlexNetAtHome()
 model.load_state_dict(torch.load(f"./models/model_{model_number}/model.pth", map_location=device))
