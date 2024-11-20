@@ -4,6 +4,8 @@ from ursina import *
 import socket
 import select
 import numpy as np
+from pygame.time import Clock
+
 
 from flask import Flask, request, jsonify
 
@@ -28,7 +30,15 @@ class RemoteController(Entity):
     def __init__(self, car: Car = None, flask_app=None):
         super().__init__()
 
+        self.clock = Clock()
+
         self.car = car
+
+        self.lastSensingSanity = time.time()
+
+        self.record = []
+        self.recording = False
+        self.recordPictures = False
 
         self.listen_socket = None
         self.connected_client = None
@@ -56,7 +66,7 @@ class RemoteController(Entity):
             command_data = request.json
             if not command_data or 'command' not in command_data:
                 return jsonify({"error": "Invalid command data"}), 400
-            
+
             if self.simulating:
                 return jsonify({"error": "Please wait until simulation is over"}), 400
 
@@ -65,6 +75,34 @@ class RemoteController(Entity):
                 return jsonify({"status": "Command received"}), 200
             except Exception as e:
                 return jsonify({"error": str(e)}), 500
+
+        @flask_app.route("/record", methods=["GET"])
+        def start_recording():
+            if self.car is None:
+                return jsonify({"error": "No car connected"}), 400
+
+            if self.simulating:
+                return jsonify({"error": "Please wait until simulation is over"}), 400
+
+            if self.recording:
+                return jsonify({"error": "Already recording"}), 400
+
+            self.record = []
+            return jsonify({"status": "Recording started"}), 200
+
+        @flask_app.route("/stop_record", methods=["GET"])
+        def stop_recording():
+            if self.car is None:
+                return jsonify({"error": "No car connected"}), 400
+
+            if self.simulating:
+                return jsonify({"error": "Please wait until simulation is over"}), 400
+
+            if not self.recording:
+                return jsonify({"error": "Not recording"}), 400
+
+            self.recording = False
+            return jsonify({"status": "Recording stopped", "data": self.record}), 200
 
         @flask_app.route("/picture", methods=["GET"])
         def get_picture_route():
@@ -76,6 +114,16 @@ class RemoteController(Entity):
 
         @flask_app.route("/sensing")
         def get_sensing_route():
+            self.clock.tick(10)
+            now = time.time()
+            elapsed = now - self.lastSensingSanity
+            if not elapsed > 1 and elapsed < 0.09 or elapsed > 0.11:
+                print(
+                    "Losing sync ! Las sensing was ",
+                    elapsed,
+                    " seconds ago",
+                )
+            self.lastSensingSanity = now
             return jsonify(self.get_sensing_data()), 200
 
         @flask_app.route("/reset_wait_for_key", methods=["POST"])
@@ -112,7 +160,8 @@ class RemoteController(Entity):
             self.car.reset_car()
             self.simulating = True
             # Sync of last sensing
-            self.last_sensing = time.time()
+            # For it to start playing controls back immediately
+            self.last_sensing = time.time() - self.sensing_period
             self.simuIndex = 0
             self.simuResult = []
             while self.simulating:
@@ -122,7 +171,7 @@ class RemoteController(Entity):
     def simulateGA(
         self,
     ):
-        if time.time() - self.last_sensing >= self.sensing_period - 0.02:
+        if time.time() - self.last_sensing >= self.sensing_period:
             # Here we need to run next control and save position
             if self.simuIndex >= len(self.controlList) + GRACE_TIME_GA:
                 self.simulating = False
@@ -137,12 +186,9 @@ class RemoteController(Entity):
             if self.simuIndex < len(self.controlList):
                 currControl = self.controlList[self.simuIndex]
             else:
-                print("End of list of controls")
                 currControl = [0, 0, 0, 0]
             mapping = {0: "w", 1: "s", 2: "a", 3: "d"}
             for i, c in enumerate(currControl):
-                if mapping[i] == "w" and c == 0:
-                    print("Releasing W")
                 held_keys[mapping[i]] = c == 1
             self.simuResult.append(
                 [
@@ -154,11 +200,16 @@ class RemoteController(Entity):
             pass
 
     def update(self):
+        if self.car is None:
+            return
         if self.simulating:
             self.simulateGA()
         else:
             self.process_remote_commands()
-            self.updateScrenshot()
+            if self.recordPictures:
+                self.updateScrenshot()
+            if self.recording:
+                self.record.append(self.get_sensing_data())
 
     def updateScrenshot(self):
         if self.car is None:

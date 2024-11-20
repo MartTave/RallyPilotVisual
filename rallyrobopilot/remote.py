@@ -22,6 +22,7 @@ class Remote:
         return [x["up"], x["down"], x["left"], x["right"]]
 
     def __init__(self, host, port, cb, getPicture=False):
+        self.lastSensing = time()
         self.lastSended = [0, 0, 0, 0]
         self.host = host
         self.port = port
@@ -74,7 +75,6 @@ class Remote:
             return False
         return True
 
-
     def setState(
         self,
         position: tuple[float, float, float],
@@ -88,17 +88,14 @@ class Remote:
         self.sendCommand(f"set rotation {angle};")
         self.sendCommand(f"set speed {speed};")
 
-    def _evalPerf(self):
-        if not self.sensing:
-            return
-        print("Current frq: ", self.inferCount / 5, " infer/s")
-        self.inferCount = 0
-        threading.Timer(5, self._evalPerf).start()
-
     def _getSensingData(self):
         response = requests.get(f"{self.host}:{self.port}/sensing")
-        self.inferCount += 1
+        # We are more tolerant if the requests are too quick as it depends more on the time we take to process things
+        if time() - self.lastSensing > 0.11 or time() - self.lastSensing < 0.09:
+            print("Losing sync ! Time elapsed : ", time() - self.lastSensing)
+        self.lastSensing = time()
         if response.status_code != 200:
+            print(response)
             print(
                 f"Received error response: {response.status_code} | with error : {response.json()['error']}"
             )
@@ -113,11 +110,7 @@ class Remote:
                 return None
             currData["picture"] = response.json()["image"]
         self.cb(currData)
-
-    def _sensingLoop(self):
         if self.sensing:
-            self.timer = threading.Timer(0.1, self._sensingLoop)
-            self.timer.start()
             self._getSensingData()
 
     def getDataForSolution(
@@ -146,8 +139,7 @@ class Remote:
     def startSensing(self):
         if not self.sensing:
             self.sensing = True
-            self._evalPerf()
-            self._sensingLoop()
+            self._getSensingData()
 
     def stopSensing(self):
         if self.sensing:
@@ -161,7 +153,10 @@ def gotNewFData(newData):
     pass
 
 
-#remote = Remote("http://127.0.0.1", 5000, gotNewFData, True)
+remote = Remote("http://127.0.0.1", 5000, gotNewFData, False)
+
+
+remote.startSensing()
 
 controls_list = [
     [0, 0, 0, 0],
