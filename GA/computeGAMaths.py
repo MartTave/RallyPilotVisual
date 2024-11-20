@@ -14,4 +14,5 @@ class GaMaths():
         return A * posX + B * posY + C / sqrt(A**2 + B**2)
     
     def isArrivedToEndLine(self, posX, posY):
+        print(self.computeDistance(posX,posY), self.computeDistance(self.startCarPosition[0], self.startCarPosition[2]))
         return np.sign(self.computeDistance(posX,posY))!= np.sign(self.computeDistance(self.startCarPosition[0], self.startCarPosition[2]))

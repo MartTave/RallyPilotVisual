@@ -14,7 +14,7 @@ from .sensing_message import SensingSnapshot, SensingSnapshotManager
 from .remote_commands import RemoteCommandParser
 
 
-GRACE_TIME_GA = 100
+GRACE_TIME_GA = 10
 
 REMOTE_CONTROLLER_VERBOSE = False
 PERIOD_REMOTE_SENSING = 0.1
@@ -122,7 +122,7 @@ class RemoteController(Entity):
     def simulateGA(
         self,
     ):
-        if time.time() - self.last_sensing >= self.sensing_period:
+        if time.time() - self.last_sensing >= self.sensing_period - 0.02:
             # Here we need to run next control and save position
             if self.simuIndex >= len(self.controlList) + GRACE_TIME_GA:
                 self.simulating = False
@@ -163,14 +163,15 @@ class RemoteController(Entity):
     def updateScrenshot(self):
         if self.car is None:
             return
-        if time.time() - self.last_sensing >= self.sensing_period:
+        now = time.time()
+        if now - self.last_sensing >= self.sensing_period - 0.02:
             tex = base.win.getDisplayRegion(0).getScreenshot()
             self.texYSize = tex.getYSize()
             self.texXSize = tex.getXSize()
             arr = tex.getRamImageAs("RGB")
             data = np.frombuffer(arr, np.uint8)
             self.lastScreenshot = data
-            self.last_sensing = time.time()
+            self.last_sensing = now
 
     def get_sensing_data(self):
         current_controls = (held_keys['w'] or held_keys["up arrow"],
@@ -180,7 +181,6 @@ class RemoteController(Entity):
         car_position = self.car.world_position
         car_speed = self.car.speed
         car_angle = self.car.rotation_y
-        raycast_distances = self.car.multiray_sensor.collect_sensor_values()
         return {'up': current_controls[0],
                 'down': current_controls[1],
                 'left': current_controls[2], 
@@ -189,22 +189,7 @@ class RemoteController(Entity):
                 'car_position y': car_position[1],
                 'car_position z': car_position[2],
                 'car_speed': car_speed,
-                'car_angle': car_angle,
-                'raycast_distances 0': raycast_distances[0],
-                'raycast_distances 1': raycast_distances[1],
-                'raycast_distances 2': raycast_distances[2],
-                'raycast_distances 3': raycast_distances[3],
-                'raycast_distances 4': raycast_distances[4],
-                'raycast_distances 5': raycast_distances[5],
-                'raycast_distances 6': raycast_distances[6],
-                'raycast_distances 7': raycast_distances[7],
-                'raycast_distances 8': raycast_distances[8],
-                'raycast_distances 9': raycast_distances[9],
-                'raycast_distances 10': raycast_distances[10],
-                'raycast_distances 11': raycast_distances[11],
-                'raycast_distances 12': raycast_distances[12],
-                'raycast_distances 13': raycast_distances[13],
-                'raycast_distances 14': raycast_distances[14]
+                'car_angle': car_angle
                 }
 
     def process_remote_commands(self):

@@ -35,6 +35,7 @@ class GaDataGeneration():
         exampleInd = self.toolbox.individual()
         for i, c in enumerate(self.controls):
             exampleInd[i] = c
+       
         def getInd():
             return self.toolbox.clone(exampleInd)
         self.toolbox.register("population", tools.initRepeat, list, getInd)
@@ -43,7 +44,9 @@ class GaDataGeneration():
         self.toolbox.register("mate", tools.cxTwoPoint) #allow to choose a method for crossover
         self.toolbox.register("mutate", self.custom_mutate) # allow the mutation step 
         self.toolbox.register("select", tools.selTournament, tournsize=3) # selectioon for the new population
-    def custom_mutate(self,individual, num_flips=3):
+    def custom_mutate(self,individual, num_flips=2):
+        if random.randint(0, 3) != 0:
+            return (individual, )
         indices_to_mutate = random.sample(range(len(individual)), min(num_flips, len(individual)))
     
         for i in indices_to_mutate:
@@ -52,46 +55,69 @@ class GaDataGeneration():
         return (individual,)  
         
     def fitness_fonction(self, individual):
-        print(f"Simulating solution with length : {len(individual)}")
-        print(f"Ind is : {individual}")
         positions = self.remote.getDataForSolution(individual, self.startPoint, self.angle, self.speed)
         fitness_value = -1
-
-        for p in range(0, len(positions)):
-            if self.computeMaths.isArrivedToEndLine(positions[p][0], positions[p][2]): 
-                fitness_value = len(individual)
-                break 
+        for i, p in enumerate(positions):
+            if self.computeMaths.isArrivedToEndLine(p[0], p[2]):
+                fitness_value = i
+                break
+        print("Finished in ", fitness_value)
         return (fitness_value,)
 
     def run_ga(self):
         population = self.toolbox.population(n=self.pop_size)
-
-        for generation in range (self.ngen):
-            # calculate fitness value
+        offspring = []
+        offspring[:] = population
+        for individual in offspring:
+            self.toolbox.mutate(individual)
+        population[:] = offspring
+        for generation in range(self.ngen):
+            # Calculate fitness values
+            print("Length now is : ", len(population))
             fits = list(map(self.toolbox.evaluate, population))
             for fit, ind in zip(fits, population):
-                ind.fitness.values = fit
-            # select the best individual according with fitness value
-            individuals =  sorted(population, key=len)
-            index_best_individual = len(individuals)
-            for i in range(1, len(individuals)):
-                if fits[i] != fits[i - 1]:
-                    index_best_individual = i
-                    break
-            print("best ind")
-            best_individuals =  individuals[:index_best_individual]
-            #new pop
-            offspring = list(map(self.toolbox.clone,self.toolbox.select(best_individuals,k=len(population))))
-            #crossover
+                ind.fitness.values = fit  # Assign fitness values to individuals
+
+            # Zip and sort by fitness values
+            paired = list(zip(fits, population))
+            paired_sorted = filter(lambda x:x[0][0] != -1, sorted(paired, key=lambda x: x[0][0]))  # Sort by fitness value
+            fitness_values_sorted, individuals_sorted = zip(*paired_sorted)
+            print(fitness_values_sorted)
+
+            TARGET = 5
+
+            # Getting the length of the third best solution - best equilibrium between genocide and exploration
+            targetLength = fitness_values_sorted[TARGET - 1][0]
+            genocidResult = []
+            for i, ind in enumerate(individuals_sorted):
+                individual = creator.Individual(ind[:targetLength])
+                individual.fitness.values = ind.fitness.values
+                genocidResult.append(individual)
+            # Select the best individuals
+            best_individuals = genocidResult[:TARGET]
+            print(f"For generation : {generation}")
+            for b in best_individuals:
+                print(f"Best ind got length = {len(b)} and fit : {b.fitness.values[0]}")
+            # Create new population
+            offspring = list(map(self.toolbox.clone, self.toolbox.select(best_individuals, k=len(population))))
+            print("pop len", len(offspring))
+            # Apply crossover
             for child1, child2 in zip(offspring[::2], offspring[1::2]):
-                self.toolbox.mate(child1,child2)
-            #mutation
+                self.toolbox.mate(child1, child2)
+
+            # Apply mutation
             for individual in offspring:
                 self.toolbox.mutate(individual)
-            print(individual)
-            population[:]=offspring
-            fits = list(map(self.toolbox.evaluate, population))
+
+            population = []
+            population = offspring
+
+            # Recalculate fitness
+            #fits = list(map(self.toolbox.evaluate, population))
+
         return population
-                     
 
 
+controls = [[1,0,0,0] for _ in range(250)]              
+#ga = GaDataGeneration(controls,(0.0, 0.0, 0.0),[(-166.49599104143704,0.0,74.12973000725437),(-185.91828508160984,0.0,78.90199301520657)],-90.0,0)
+#p = ga.run_ga()

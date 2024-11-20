@@ -23,14 +23,18 @@ class ControlsExamplesGA():
             json.dump(data, json_file, indent=4)
 
     def computeSimulations(self):
+        print(self.jsonsData)
         for i in range(len(self.jsonsData)):
             detectedF = False
             endLineReached = False
             self.data = []
+            endLine = [(self.jsonsData[i]['endLine']['point1']['x'], self.jsonsData[i]['endLine']['point1']['z'],self.jsonsData[i]['endLine']['point1']['y']),(self.jsonsData[i]['endLine']['point2']['x'],self.jsonsData[i]['endLine']['point2']['z'],self.jsonsData[i]['endLine']['point2']['y'])]
+            pos  = [self.jsonsData[i]['startPoint']['x'],self.jsonsData[i]['startPoint']['z'], self.jsonsData[i]['startPoint']['y']]
+            computeMaths = GaMaths(endLine,pos)
+
             def getData(x):
                 nonlocal detectedF, endLineReached, remote
                 if not detectedF and x["up"] == 1 :
-                    print("here") 
                     detectedF = True
                 if detectedF and not endLineReached:
                     self.data.append([x["up"], x["down"], x["left"], x["right"]])
@@ -40,17 +44,17 @@ class ControlsExamplesGA():
                         print(f"I got {len(self.positions)} position for {time.time() - self.then} seconds")
                         endLineReached = True
                         remote.stopSensing()
-               
+       
             remote = Remote("http://127.0.0.1", 5000, getData)
-            endLine = [(self.jsonsData[i]['endLine']['point1']['x'], self.jsonsData[i]['endLine']['point1']['z'],self.jsonsData[i]['endLine']['point1']['y']),(self.jsonsData[i]['endLine']['point2']['x'],self.jsonsData[i]['endLine']['point2']['z'],self.jsonsData[i]['endLine']['point2']['y'])]
-            pos  = [self.jsonsData[i]['startPoint']['x'],self.jsonsData[i]['startPoint']['z'], self.jsonsData[i]['startPoint']['y']]
+            
             remote.setStartPositionGAModel(pos, self.jsonsData[i]['startAngle'], self.jsonsData[i]['startVelocity'])
-            computeMaths = GaMaths(endLine,pos)
             self.then = time.time()
+    
             remote.startSensing()
             while True:
                 sleep(1)
                 if endLineReached:
+                    print("ff")
                     self.writeControlsJson(i)
                     print("Written !")
                     break

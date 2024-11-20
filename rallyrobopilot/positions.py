@@ -47,7 +47,7 @@ while True:
         remote._getSensingData()
         print(positionData)
         positions = Positions(carPosX=positionData[0][0], carPosY=positionData[0][1], carAngle=positionData[1], carSpeed=positionData[2])
-        positions.write_positions_to_csv(distance=10)
+        positions.write_positions_to_csv(distance=40)
         positionData = []
         print("Saved position")
 
