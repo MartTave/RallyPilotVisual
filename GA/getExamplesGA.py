@@ -10,7 +10,7 @@ import time
 
 class ControlsExamplesGA():
     def __init__(self):
- 
+
         self.jsonsData = Convertion().readJsons()
         self.data = []      
         self.positions = []    
@@ -35,30 +35,32 @@ class ControlsExamplesGA():
             def getData(x):
                 nonlocal detectedF, endLineReached, remote
                 if not detectedF and x["up"] == 1 :
+                    self.then = time.time()
                     detectedF = True
                 if detectedF and not endLineReached:
                     self.data.append([x["up"], x["down"], x["left"], x["right"]])
                     self.positions.append([x['car_position x'], x["car_position z"], x["car_position y"]])
-                    if computeMaths.isArrivedToEndLine(self.positions[-1][0], self.positions[-1][2]):
-                        print("Got to endline !")
+                    if computeMaths.isArrivedToEndLine(
+                        self.positions[-1][0], self.positions[-1][2]
+                    ):
                         print(f"I got {len(self.positions)} position for {time.time() - self.then} seconds")
                         endLineReached = True
                         remote.stopSensing()
-       
+
             remote = Remote("http://127.0.0.1", 5000, getData)
-            
-            remote.setStartPositionGAModel(pos, self.jsonsData[i]['startAngle'], self.jsonsData[i]['startVelocity'])
-            self.then = time.time()
-    
+
+            remote.setStartPositionGAModel(
+                pos, self.jsonsData[i]["startAngle"], self.jsonsData[i]["startVelocity"]
+            )
+
             remote.startSensing()
             while True:
                 sleep(1)
                 if endLineReached:
-                    print("ff")
                     self.writeControlsJson(i)
                     print("Written !")
                     break
-  
+
 
 test = ControlsExamplesGA()
 test.computeSimulations()
