@@ -232,7 +232,7 @@ class RemoteController(Entity):
         tex = base.win.getDisplayRegion(0).getScreenshot()
         self.texYSize = tex.getYSize()
         self.texXSize = tex.getXSize()
-        arr = tex.getRamImageAs("RGB")
+        arr = tex.getRamImageAs("rgb")
         data = np.frombuffer(arr, np.uint8)
         if period > self.sensing_period + 0.02:
             print("[GAME] Update of screenshot is late ! ", period, " s")

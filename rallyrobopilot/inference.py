@@ -1,13 +1,16 @@
 import threading
+from time import sleep
 import torch
 from model import AlexNetAtHome
 from remote import Remote
+import numpy as np
+from convert_to_bw import convertToBwSingle
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 print("Device is : ", device)
 
-model_number = 0 
+model_number = 1 
 
 model = AlexNetAtHome()
 model.load_state_dict(torch.load(f"./models/model_{model_number}/model.pth", map_location=device))
@@ -20,10 +23,11 @@ model.eval()
 with torch.no_grad():
 
     def sensingNewData(newData):
-        global lastPic, inferCoun
+        global lastPic
         if "picture" not in newData:
             return
-        pic = newData["picture"]
+        pic = np.array(newData["picture"])
+        pic = convertToBwSingle(pic)
         if lastPic is not None:
             x = AlexNetAtHome.concatTwoPics(lastPic, pic)
             xTensor = torch.tensor(x, dtype=torch.float32).unsqueeze(0).to(device)
@@ -35,6 +39,7 @@ with torch.no_grad():
         lastPic = pic
 
     remote = Remote("http://127.0.0.1", 5000, sensingNewData, True)
-    remote.startSensing()
+    remote._getSensingData()
     print("Press enter to quit...")
     input()
+    remote.stopSensing()

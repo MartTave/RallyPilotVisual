@@ -27,11 +27,12 @@ freqIndex = 0
 def appendNewData(newData):
     global images, controls, lastPicture, freqIndex, speeds, firstSensing
     if firstSensing:
+        print("Data collector amorced")
         firstSensing = False
         return
     x, y = Remote.convertFromMessageToTrainingData(newData)
     if lastPicture is not None:
-        newX = np.concatenate((lastPicture, x), axis=0)
+        newX = np.stack((lastPicture, x), axis=0)
         speeds.append(newData["car_speed"])
         images.append(newX)
         controls.append(y)
@@ -50,6 +51,7 @@ def freqCalc():
 
 collector = Remote("http://127.0.0.1", 5000, appendNewData, True)
 # Cold starting the remote sensing
+# (It is there to tell the game that it need to save screenshots...)
 collector._getSensingData()
 collector.reset()
 print("Waiting for enter to start recording...")
