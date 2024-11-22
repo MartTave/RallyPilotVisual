@@ -12,6 +12,9 @@ from torchvision import transforms
 import numpy as np
 import pickle
 import lzma
+import matplotlib
+matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
 
 from model import AlexNetAtHome
@@ -24,10 +27,10 @@ preparedData = ()
 
 regression_weight = 0.2
 
-num_epochs = 25
+num_epochs = 30
 
 BASE_FOLDER = "./data/"
-indexes = [0, 1, 2]
+indexes = [0, 1]
 BASE_FILENAME = "record"
 BASE_EXTENSION = ".npz"
 file_names = [BASE_FILENAME + str(i) + BASE_EXTENSION for i in indexes]

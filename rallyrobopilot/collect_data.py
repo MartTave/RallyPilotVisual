@@ -1,6 +1,7 @@
 import os
 import threading
 from time import sleep
+import time
 from remote import Remote
 import numpy as np
 
@@ -16,13 +17,18 @@ START_TRIM = 10
 END_TRIM = 10
 
 
+firstSensing = True
+
 lastPicture = None
 
 
 freqIndex = 0
 
 def appendNewData(newData):
-    global images, controls, lastPicture, freqIndex, speeds
+    global images, controls, lastPicture, freqIndex, speeds, firstSensing
+    if firstSensing:
+        firstSensing = False
+        return
     x, y = Remote.convertFromMessageToTrainingData(newData)
     if lastPicture is not None:
         newX = np.concatenate((lastPicture, x), axis=0)
@@ -43,16 +49,19 @@ def freqCalc():
 
 
 collector = Remote("http://127.0.0.1", 5000, appendNewData, True)
-
+# Cold starting the remote sensing
+collector._getSensingData()
 collector.reset()
 print("Waiting for enter to start recording...")
 input()
+then = time.time()
 collector.startSensing()
 freqCalc()
 print("Waiting for enter to stop recording...")
 input()
 collector.stopSensing()
-print(f"Saving data... {len(images)} frames")
+now = time.time()
+print(f"Saving data... {len(images)} frames for ", now - then, " seconds")
 sleep(1)
 images = images[START_TRIM:-END_TRIM]
 controls = controls[START_TRIM:-END_TRIM]

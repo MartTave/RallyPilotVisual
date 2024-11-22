@@ -7,7 +7,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 print("Device is : ", device)
 
-model_number = 2
+model_number = 0 
 
 model = AlexNetAtHome()
 model.load_state_dict(torch.load(f"./models/model_{model_number}/model.pth", map_location=device))
@@ -17,20 +17,12 @@ model = model.to(device)
 
 model.eval()
 
-inferCount = 0
-
-
-def evalPerf():
-    global inferCount
-    print("Current frq: ", inferCount / 5, " infer/s")
-    inferCount = 0
-    threading.Timer(5, evalPerf).start()
-
-
 with torch.no_grad():
 
     def sensingNewData(newData):
-        global lastPic, inferCount
+        global lastPic, inferCoun
+        if "picture" not in newData:
+            return
         pic = newData["picture"]
         if lastPic is not None:
             x = AlexNetAtHome.concatTwoPics(lastPic, pic)
@@ -40,11 +32,9 @@ with torch.no_grad():
             probList = probs[0].tolist()
             controls = [1 if p > 0.5 else 0 for p in probList]
             remote.sendControl(controls)
-            inferCount += 1
         lastPic = pic
 
     remote = Remote("http://127.0.0.1", 5000, sensingNewData, True)
     remote.startSensing()
-    evalPerf()
     print("Press enter to quit...")
     input()

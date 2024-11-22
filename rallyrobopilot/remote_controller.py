@@ -227,14 +227,17 @@ class RemoteController(Entity):
         if self.car is None:
             return
         now = time.time()
-        if now - self.last_sensing >= self.sensing_period - 0.02:
-            tex = base.win.getDisplayRegion(0).getScreenshot()
-            self.texYSize = tex.getYSize()
-            self.texXSize = tex.getXSize()
-            arr = tex.getRamImageAs("RGB")
-            data = np.frombuffer(arr, np.uint8)
-            self.lastScreenshot = data
-            self.last_sensing = now
+        period = now - self.last_sensing
+        # if period >= self.sensing_period - 0.02:
+        tex = base.win.getDisplayRegion(0).getScreenshot()
+        self.texYSize = tex.getYSize()
+        self.texXSize = tex.getXSize()
+        arr = tex.getRamImageAs("RGB")
+        data = np.frombuffer(arr, np.uint8)
+        if period > self.sensing_period + 0.02:
+            print("[GAME] Update of screenshot is late ! ", period, " s")
+        self.lastScreenshot = data
+        self.last_sensing = now
 
     def get_sensing_data(self):
         current_controls = (held_keys['w'] or held_keys["up arrow"],
