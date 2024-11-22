@@ -11,6 +11,8 @@ RUN apt-get install 'ffmpeg'\
 WORKDIR /app
 RUN apt-get update && apt-get install -y git && apt-get clean
 RUN git clone https://github.com/MartTave/RallyPilotVisual.git .
+RUN git checkout GA
+
 
 RUN set -xe \
     && apt-get update \
