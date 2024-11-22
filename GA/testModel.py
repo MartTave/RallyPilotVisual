@@ -3,7 +3,7 @@ from rallyrobopilot.remote import Remote
 
 remote = Remote("http://127.0.0.1", 5000, lambda x: x)
 
-remote.getDataForSolution(
+p = remote.getDataForSolution(
     [
         [1, 0, 0, 0],
         [1, 0, 0, 0],
