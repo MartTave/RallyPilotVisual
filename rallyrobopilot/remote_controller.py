@@ -117,14 +117,26 @@ class RemoteController(Entity):
             self.clock.tick(10)
             now = time.time()
             elapsed = now - self.lastSensingSanity
-            if not elapsed > 1 and elapsed < 0.09 or elapsed > 0.11:
+            picture = request.args.get("picture")
+            if not elapsed > 1 and (elapsed < 0.09 or elapsed > 0.11):
                 print(
-                    "Losing sync ! Las sensing was ",
+                    "[GAME] Losing sync ! Last sensing was ",
                     elapsed,
                     " seconds ago",
                 )
+            data = self.get_sensing_data()
+            if picture and picture == "True":
+                self.recordPictures = True
+                if self.lastScreenshot is not None:
+                    arr = self.lastScreenshot
+                    image = arr.reshape(self.texYSize, self.texXSize, 3)
+                    image = image[::-1, :, :]
+                    image = image.transpose((2, 0, 1))
+                    data["picture"] = image.tolist()
+            else:
+                self.recordPictures = False
             self.lastSensingSanity = now
-            return jsonify(self.get_sensing_data()), 200
+            return jsonify(data), 200
 
         @flask_app.route("/reset_wait_for_key", methods=["POST"])
         def recordGaModel():
