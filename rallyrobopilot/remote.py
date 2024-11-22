@@ -1,5 +1,5 @@
 import threading
-from time import time
+from time import sleep, time
 import requests
 
 
@@ -28,9 +28,9 @@ class Remote:
         self.port = port
         self.cb = cb
         self.sensing = False
-        self.timer = None
         self.getPicture = getPicture
         self.inferCount = 0
+        self.thread = None
         self.sendCommand("release all;")
 
     def sendCommand(self, command):
@@ -89,10 +89,12 @@ class Remote:
         self.sendCommand(f"set speed {speed};")
 
     def _getSensingData(self):
-        response = requests.get(f"{self.host}:{self.port}/sensing")
+        response = requests.get(
+            f"{self.host}:{self.port}/sensing", params={"picture": self.getPicture}
+        )
         # We are more tolerant if the requests are too quick as it depends more on the time we take to process things
         if time() - self.lastSensing > 0.11 or time() - self.lastSensing < 0.09:
-            print("Losing sync ! Time elapsed : ", time() - self.lastSensing)
+            print("[REMOTE] Losing sync ! Time elapsed : ", time() - self.lastSensing)
         self.lastSensing = time()
         if response.status_code != 200:
             print(response)
@@ -101,14 +103,6 @@ class Remote:
             )
             return None
         currData = response.json()
-        if self.getPicture:
-            response = requests.get(f"{self.host}:{self.port}/picture")
-            if response.status_code != 200:
-                print(
-                    f"Received error response: {response.status_code} | with error : {response.json()['error']}"
-                )
-                return None
-            currData["picture"] = response.json()["image"]
         self.cb(currData)
         if self.sensing:
             self._getSensingData()
@@ -138,67 +132,29 @@ class Remote:
 
     def startSensing(self):
         if not self.sensing:
+            print("[REMOTE] Starting sensing")
             self.sensing = True
-            self._getSensingData()
+            self.thread = threading.Thread(target=self._getSensingData)
+            self.thread.start()
 
     def stopSensing(self):
         if self.sensing:
+            print("[REMOTE] Stopping sensing")
             self.sensing = False
-            if self.timer:
-                self.timer.cancel()
-                self.timer = None
 
+count = 0
 
 def gotNewFData(newData):
+    global count
+    count += 1
     pass
 
 
-remote = Remote("http://127.0.0.1", 5000, gotNewFData, False)
+remote = Remote("http://127.0.0.1", 5000, gotNewFData, True)
 
-
+then = time()
 remote.startSensing()
-
-controls_list = [
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 1, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 1],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 1, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 1],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [1, 0, 1, 0],
-    [1, 0, 0, 0],
-    [1, 0, 0, 1],
-    [1, 0, 0, 0],
-    [1, 0, 0, 0],
-    [1, 0, 0, 0],
-    [1, 0, 0, 0],
-    [1, 0, 1, 0],
-    [1, 0, 0, 0],
-    [1, 0, 0, 1],
-    [1, 0, 0, 0],
-    [1, 0, 0, 0],
-    [1, 0, 0, 0],
-    [1, 0, 0, 0],
-    [1, 0, 1, 0],
-    [1, 0, 0, 0],
-    [1, 0, 0, 1],
-    [1, 0, 0, 0],
-    [1, 0, 0, 0],
-    [1, 0, 0, 0],
-    [1, 0, 0, 0],
-    [1, 0, 1, 0],
-    [1, 0, 0, 0],
-    [1, 0, 0, 1],
-    [1, 0, 0, 0],
-]
+sleep(1)
+remote.stopSensing()
+print("Got ", count, " data in ", time() - then, " seconds")
+sleep(1)
