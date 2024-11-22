@@ -6,7 +6,7 @@ def prepare_game_app():
     from ursina import window, Ursina
 
     # Create Window
-    window.vsync = True # Set to false to uncap FPS limit of 60
+    window.vsync = False  # Set to false to uncap FPS limit of 60
     app = Ursina(size=(224, 224))
     print("Asset folder")
     print(application.asset_folder)
@@ -20,7 +20,7 @@ def prepare_game_app():
     window.borderless = False
     window.show_ursina_splash = False
     window.cog_button.disable()
-    # window.fps_counter.enable()
+    window.fps_counter.disable()
     window.exit_button.disable()
 
     #   Global models & textures
@@ -45,10 +45,10 @@ def prepare_game_app():
     # car.multiray_sensor.enable()
 
     # Lighting + shadows
-    #sun = SunLight(direction = (-0.7, -0.9, 0.5), resolution = 3072, car = car)
-    #ambient = AmbientLight(color = Vec4(0.5, 0.55, 0.66, 0) * 0.75)
+    # sun = SunLight(direction = (-0.7, -0.9, 0.5), resolution = 3072, car = car)
+    # ambient = AmbientLight(color = Vec4(0.5, 0.55, 0.66, 0) * 0.75)
 
-    #render.setShaderAuto()
+    # render.setShaderAuto()
 
     # Sky
     Sky(texture = "sky")

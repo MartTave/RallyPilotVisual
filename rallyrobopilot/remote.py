@@ -7,8 +7,11 @@ class Remote:
 
     @staticmethod
     def convertFromMessageToTrainingData(data):
-        x = data["picture"]
-
+        x = []
+        if "picture" in data:
+            x = data["picture"]
+        else:
+            print("[REMOTE] No pics in data !")
         y = [
             data["up"],
             data["down"],
