@@ -32,10 +32,10 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
   
 WORKDIR /usr/bin
-COPY xvfb-startup.sh .
-RUN chmod +x xvfb-startup.sh
+COPY startup.sh .
+RUN chmod +x startup.sh
 
-RUN sed -i 's/\r$//' xvfb-startup.sh
+RUN sed -i 's/\r$//' startup.sh
 ARG RESOLUTION="1920x1080x24"
 ENV XVFB_RES="${RESOLUTION}"
 ENV DISPLAY=":99"
@@ -44,4 +44,4 @@ RUN apt-get update -y \
   && apt-get install --no-install-recommends -y mesa-utils
 
 EXPOSE 5000
-CMD ["docker/startup.sh"]
+CMD ["startup.sh"]
