@@ -22,6 +22,8 @@ from model import AlexNetAtHome
 model = AlexNetAtHome()
 
 
+USE_SYMETRIC = True
+
 preparedData = ()
 
 
@@ -30,10 +32,14 @@ regression_weight = 0.2
 num_epochs = 30
 
 BASE_FOLDER = "./data/"
-indexes = [0, 1]
+indexes = [0, 1, 2, 3]
 BASE_FILENAME = "record"
 BASE_EXTENSION = ".npz"
 file_names = [BASE_FILENAME + str(i) + BASE_EXTENSION for i in indexes]
+if USE_SYMETRIC:
+    file_names += [
+        BASE_FILENAME + "_flipped" + str(i) + BASE_EXTENSION for i in indexes
+    ]
 
 xData = []
 yData = []
@@ -44,7 +50,6 @@ print(f"Device is : {device}")
 
 def prepareData(npData):
     x = npData["images"]
-    print(x.shape)
     assert x[0][0][0][0] != 0
     y = npData["controls"]
     return x, y
@@ -53,15 +58,15 @@ def loadFile(filename):
     loaded = np.load(BASE_FOLDER + filename)
     print("Preparing file : ", filename)
     x, y = prepareData(loaded)
+    print(x.shape, " for file ", filename)
     assert len(x) == len(y)
     return x, y
 
 
 with Pool() as pool:
     results = pool.map(loadFile, file_names)
-    for x, y in results:
-        xData += x.tolist()
-        yData += y.tolist()
+    xData = np.concatenate([x for x, _ in results])
+    yData = np.concatenate([y for _, y in results])
 
 assert len(xData) == len(yData)
 
@@ -163,6 +168,7 @@ def saveResults():
 
     os.mkdir(currPath)
     torch.save(model.state_dict(), currPath + "/model.pth")
+    print("Saved model to ", currPath)
     plt.figure()
     plt.plot(losses["train"], label="Training loss")
     plt.plot(losses["eval"], label="Validation loss")

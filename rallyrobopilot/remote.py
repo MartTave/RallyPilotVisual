@@ -1,7 +1,8 @@
 import threading
 from time import sleep, time
 import requests
-
+import numpy as np
+from convert_to_bw import convertToBwSingle
 
 class Remote:
 
@@ -9,7 +10,7 @@ class Remote:
     def convertFromMessageToTrainingData(data):
         x = []
         if "picture" in data:
-            x = data["picture"]
+            x = convertToBwSingle(np.array(data["picture"], dtype=np.uint8))
         else:
             print("[REMOTE] No pics in data !")
         y = [
@@ -107,8 +108,6 @@ class Remote:
             return None
         currData = response.json()
         self.cb(currData)
-        if self.sensing:
-            self._getSensingData()
 
     def getDataForSolution(
         self,
@@ -133,11 +132,15 @@ class Remote:
             return False
         return response.json()["result"]
 
+    def sensingLoop(self):
+        while self.sensing:
+            self._getSensingData()
+
     def startSensing(self):
         if not self.sensing:
             print("[REMOTE] Starting sensing")
             self.sensing = True
-            self.thread = threading.Thread(target=self._getSensingData)
+            self.thread = threading.Thread(target=self.sensingLoop)
             self.thread.start()
 
     def stopSensing(self):
