@@ -150,11 +150,11 @@ def gotNewFData(newData):
     pass
 
 
-remote = Remote("http://127.0.0.1", 5000, gotNewFData, True)
+# remote = Remote("http://127.0.0.1", 5000, gotNewFData, True)
 
-then = time()
-remote.startSensing()
-sleep(1)
-remote.stopSensing()
-print("Got ", count, " data in ", time() - then, " seconds")
-sleep(1)
+# then = time()
+# remote.startSensing()
+# sleep(1)
+# remote.stopSensing()
+# print("Got ", count, " data in ", time() - then, " seconds")
+# sleep(1)
