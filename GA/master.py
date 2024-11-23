@@ -19,17 +19,19 @@ class Master :
             print(f"Image {self.image_name} not found locally, pulling from Docker Hub...")
         self.client.images.pull(self.image_name)
     
-    def checkFreePorts(self): 
+    def getFreePort(self): 
         while True:
             for key, value in self.ports.items():
                 if value  == True: 
                     return key
             print("all ports are taken ...")
             sleep(3)
-        
+      
+    def checkFreePorts(self):
+        pass  
 
     def runSimulation(self,individual):
-        port = self.checkFreePorts()
+        port = self.getFreePort()
         self.ports[port] = False
         container = self.client.containers.run(
         self.image_name,       

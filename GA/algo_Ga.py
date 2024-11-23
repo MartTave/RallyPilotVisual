@@ -1,4 +1,6 @@
+from concurrent.futures import ProcessPoolExecutor
 from math import sqrt
+from multiprocessing import Pool
 import random
 from time import sleep
 from GA.computeGAMaths import GaMaths
@@ -7,7 +9,10 @@ import flask
 from rallyrobopilot.remote import Remote
 import numpy as np
 import csv
-
+def getx(x):
+    return x
+def get_first_control(controls):
+    return controls[0]
 
 class GaDataGeneration():
     def __init__(self, controls,startPoint, endLine, angle, speed, pop_size=10, ngen=20):
@@ -26,21 +31,23 @@ class GaDataGeneration():
         self.ngen = ngen
         self.endLineA =  self.computeMaths.endLineA
         self.endLineB = self.computeMaths.endLineB
-                
-        self.remote =  Remote("http://127.0.0.1", 5000, lambda x: x)
+        self.exampleInd = []     
+        self.remote =  Remote("http://127.0.0.1", 5000, getx)
         self.setup_deap()
-    
+    def getInd(self):
+   
+        return self.toolbox.clone(self.exampleInd)
+
     def setup_deap(self): 
         self.toolbox = base.Toolbox()
-        self.toolbox.register("attr_controls",  lambda: self.controls[0] )
+        self.toolbox.register("attr_controls",  get_first_control, controls )
         self.toolbox.register("individual", tools.initRepeat, creator.Individual,  self.toolbox.attr_controls, n=len(self.controls))
-        exampleInd = self.toolbox.individual()
+        self.exampleInd = self.toolbox.individual()
         for i, c in enumerate(self.controls):
-            exampleInd[i] = c
+            self.exampleInd[i] = c
        
-        def getInd():
-            return self.toolbox.clone(exampleInd)
-        self.toolbox.register("population", tools.initRepeat, list, getInd)
+
+        self.toolbox.register("population", tools.initRepeat, list, self.getInd)
         
         self.toolbox.register("evaluate", self.fitness_fonction) #evaluate allow to create a fitness fonction 
         self.toolbox.register("mate", tools.cxTwoPoint) #allow to choose a method for crossover
@@ -76,7 +83,8 @@ class GaDataGeneration():
         for generation in range(self.ngen):
             # Calculate fitness values
             print("Length now is : ", len(population))
-            fits = list(map(self.toolbox.evaluate, population))
+            with ProcessPoolExecutor(max_workers=4) as executor:
+                fits = list(executor.map(self.toolbox.evaluate, population))
             for fit, ind in zip(fits, population):
                 ind.fitness.values = fit  # Assign fitness values to individuals
 

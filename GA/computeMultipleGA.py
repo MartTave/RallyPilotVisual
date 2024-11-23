@@ -15,6 +15,7 @@ class computeMultipleGA():
             pop = ga.run_ga()
         return pop
 
+if __name__ == '__main__':
 
-test = computeMultipleGA()
-test.runSimulations()
+    test = computeMultipleGA()
+    test.runSimulations()
