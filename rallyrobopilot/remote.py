@@ -154,14 +154,7 @@ def gotNewFData(newData):
     pass
 
 
-remote = Remote("http://127.0.0.1", 5000, gotNewFData, True)
 
-remote.startSensing()
-remote.sendControl([1,0,0,0])
-sleep(3)
-remote.sendControl([0,0,0,0])
-sleep(2)
-remote.stopSensing()
 # then = time()
 # remote.startSensing()
 # sleep(1)

@@ -18,6 +18,8 @@ class GaDataGeneration():
         self.controls = controls
         self.startPoint = startPoint
         self.endLine = endLine
+        print(self.startPoint,self.endLine)
+
         self.pop_size = pop_size
         self.angle= angle
         self.speed = speed
