@@ -4,7 +4,7 @@ import numpy as np
 class GaMaths(): 
     def __init__(self, endLine, startCarPosition):
         self.endLineA = (endLine[1][2] - endLine[0][2])/(endLine[1][0] -endLine[0][0])
-        self.endLineB = endLine[1][2] - (self.endLineA*endLine[1][0])
+        self.endLineB = endLine[0][2] - (self.endLineA*endLine[0][0])
         self.startCarPosition = startCarPosition
 
     def computeDistance(self, posX , posY):
