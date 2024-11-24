@@ -50,13 +50,13 @@ class Master:
         print(f"Stopping container {container.name} on port {port}...")
         container.stop()
         container.remove()
-        sleep(0.5)
         with self.lock:  
             self.ports[port] = True
+        sleep(1)
+
         return positions
     
     def checkFreePorts(self): 
         with self.lock:  # Ensure thread-safe access
             free_ports = sum(1 for value in self.ports.values() if value)
         return free_ports
-        pass
