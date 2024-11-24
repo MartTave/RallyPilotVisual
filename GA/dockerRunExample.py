@@ -12,24 +12,25 @@ except docker.errors.ImageNotFound:
     print(f"Image {image_name} not found locally, pulling from Docker Hub...")
     client.images.pull(image_name)
 
-container = client.containers.run(
+container1 = client.containers.run(
     image_name,       
     detach=True,     
     ports={'5000/tcp': 5005},  
 )
 
-print(f"Container {container.name} is running")
+container2 = client.containers.run(
+    image_name,       
+    detach=True,     
+    ports={'5000/tcp': 5002},  
+)
+
+print(f"Container {container1.name} is running")
 
 
-logs = container.logs()
-container.reload()
-print(logs.decode("utf-8"))
-container_info = container.attrs
-ports = container_info.get('NetworkSettings', {}).get('Ports', {})
-print(ports)
-sleep(10)  
+container1.stop()
 
-print(f"Stopping container {container.name}...")
-container.stop()
+container1.remove()
 
-container.remove()
+container2.stop()
+
+container2.remove()

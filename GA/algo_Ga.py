@@ -1,9 +1,10 @@
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from math import sqrt
 from multiprocessing import Pool
 import random
 from time import sleep
 from GA.computeGAMaths import GaMaths
+from GA.master import Master
 from deap import base, creator, tools
 import flask
 from rallyrobopilot.remote import Remote
@@ -15,7 +16,7 @@ def get_first_control(controls):
     return controls[0]
 
 class GaDataGeneration():
-    def __init__(self, controls,startPoint, endLine, angle, speed, pop_size=10, ngen=20):
+    def __init__(self, controls,startPoint, endLine, angle, speed, pop_size=20, ngen=6):
         print(endLine)
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))  
         creator.create("Individual", list, fitness=creator.FitnessMax)
@@ -23,19 +24,17 @@ class GaDataGeneration():
         self.controls = controls
         self.startPoint = startPoint
         self.endLine = endLine
-        print(self.startPoint,self.endLine)
-
+                
         self.pop_size = pop_size
         self.angle= angle
         self.speed = speed
         self.ngen = ngen
         self.endLineA =  self.computeMaths.endLineA
         self.endLineB = self.computeMaths.endLineB
-        self.exampleInd = []     
-        self.remote =  Remote("http://127.0.0.1", 5000, getx)
+        self.exampleInd = []    
+        self.master = Master(self.startPoint, self.angle, self.speed)  
         self.setup_deap()
     def getInd(self):
-   
         return self.toolbox.clone(self.exampleInd)
 
     def setup_deap(self): 
@@ -53,18 +52,17 @@ class GaDataGeneration():
         self.toolbox.register("mate", tools.cxTwoPoint) #allow to choose a method for crossover
         self.toolbox.register("mutate", self.custom_mutate) # allow the mutation step 
         self.toolbox.register("select", tools.selTournament, tournsize=3) # selectioon for the new population
-    def custom_mutate(self,individual, num_flips=2):
+    def custom_mutate(self,individual, num_flips=1):
         if random.randint(0, 3) != 0:
             return (individual, )
         indices_to_mutate = random.sample(range(len(individual)), min(num_flips, len(individual)))
-    
         for i in indices_to_mutate:
             j = random.randint(0, 3)
             individual[i][j] = 1 if individual[i][j] == 0 else 0
         return (individual,)  
         
     def fitness_fonction(self, individual):
-        positions = self.remote.getDataForSolution(individual, self.startPoint, self.angle, self.speed)
+        positions = self.master.runSimulation(individual)
         fitness_value = -1
         for i, p in enumerate(positions):
             if self.computeMaths.isArrivedToEndLine(p[0], p[2]):
@@ -83,8 +81,11 @@ class GaDataGeneration():
         for generation in range(self.ngen):
             # Calculate fitness values
             print("Length now is : ", len(population))
-            with ProcessPoolExecutor(max_workers=4) as executor:
-                fits = list(executor.map(self.toolbox.evaluate, population))
+            with ThreadPoolExecutor(max_workers=4) as executor:
+                futures = [executor.submit(self.toolbox.evaluate, individual) for individual in population]
+        
+        # Wait for all futures to finish and gather results
+                fits = [future.result() for future in futures]
             for fit, ind in zip(fits, population):
                 ind.fitness.values = fit  # Assign fitness values to individuals
 
