@@ -183,7 +183,11 @@ class RemoteController(Entity):
     def simulateGA(
         self,
     ):
-        if time.time() - self.last_sensing >= self.sensing_period:
+        now = time.time()
+        period = now - self.last_sensing
+        if period >= self.sensing_period:
+            if period > self.sensing_period + 0.05:
+                print("We're too late !")
             # Here we need to run next control and save position
             if self.simuIndex >= len(self.controlList) + GRACE_TIME_GA:
                 self.simulating = False
@@ -209,6 +213,7 @@ class RemoteController(Entity):
                 ]
             )
             self.simuIndex += 1
+            self.last_sensing = time.time()
             pass
 
     def update(self):

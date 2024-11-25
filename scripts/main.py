@@ -7,7 +7,7 @@ import logging
 
 logging.getLogger("werkzeug").disabled = True
 
-FRAMERATE = 50
+FRAMERATE = 60
 
 # Setup Flask
 flask_app = Flask(__name__)

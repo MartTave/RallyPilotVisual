@@ -2,7 +2,6 @@ from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from math import sqrt
 from multiprocessing import Pool
 import random
-from time import sleep
 from GA.computeGAMaths import GaMaths
 from GA.master import Master
 from deap import base, creator, tools
@@ -16,24 +15,41 @@ def get_first_control(controls):
     return controls[0]
 
 class GaDataGeneration():
-    def __init__(self, controls,startPoint, endLine, angle, speed, pop_size=20, ngen=6):
-        print(endLine)
+    def __init__(self, jsonData, master: Master, pop_size=20, ngen=6):        
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))  
         creator.create("Individual", list, fitness=creator.FitnessMax)
-        self.computeMaths = GaMaths(endLine,startPoint)
-        self.controls = controls
-        self.startPoint = startPoint
-        self.endLine = endLine
+        
+        
+        self.parseJsonData(jsonData)
+        
                 
         self.pop_size = pop_size
-        self.angle= angle
-        self.speed = speed
         self.ngen = ngen
-        self.endLineA =  self.computeMaths.endLineA
-        self.endLineB = self.computeMaths.endLineB
-        self.exampleInd = []    
-        self.master = Master(self.startPoint, self.angle, self.speed)  
+        self.exampleInd = []
+        self.master = master
+        self.master.free = False
         self.setup_deap()
+        
+        
+    def parseJsonData(self, jsonData):
+        self.controls = jsonData["baseControls"]
+        self.startPoint = (
+            jsonData["startPoint"]["x"],
+            jsonData["startPoint"]["y"],
+            jsonData["startPoint"]["z"],
+        )
+        self.endLine = [
+            (
+                jsonData["endLine"][x]['x'],
+                jsonData["endLine"][x]['y'],
+                jsonData["endLine"][x]['z'],
+            )
+            for x in ["point1", "point2"]
+        ]
+        self.computeMaths = GaMaths(self.endLine,self.startPoint)
+        self.angle = jsonData["startAngle"]
+        self.speed = jsonData["startVelocity"]
+        
     def getInd(self):
         return self.toolbox.clone(self.exampleInd)
 
@@ -62,7 +78,7 @@ class GaDataGeneration():
         return (individual,)  
         
     def fitness_fonction(self, individual):
-        positions = self.master.runSimulation(individual)
+        positions = self.master.runSimulation(individual, self.startPoint, self.angle, self.speed)
         fitness_value = -1
         for i, p in enumerate(positions):
             if self.computeMaths.isArrivedToEndLine(p[0], p[2]):
@@ -81,7 +97,7 @@ class GaDataGeneration():
         for generation in range(self.ngen):
             # Calculate fitness values
             print("Length now is : ", len(population))
-            with ThreadPoolExecutor(max_workers=4) as executor:
+            with ThreadPoolExecutor(max_workers=self.master.availableSimuMax) as executor:
                 futures = [executor.submit(self.toolbox.evaluate, individual) for individual in population]
         
         # Wait for all futures to finish and gather results
@@ -92,6 +108,10 @@ class GaDataGeneration():
             # Zip and sort by fitness values
             paired = list(zip(fits, population))
             paired_sorted = filter(lambda x:x[0][0] != -1, sorted(paired, key=lambda x: x[0][0]))  # Sort by fitness value
+            
+            if generation == self.ngen -1:
+                continue
+            
             fitness_values_sorted, individuals_sorted = zip(*paired_sorted)
             print(fitness_values_sorted)
 
@@ -125,7 +145,8 @@ class GaDataGeneration():
 
             # Recalculate fitness
             #fits = list(map(self.toolbox.evaluate, population))
-
+        self.master.stopContainer()
+        self.master.free = True
         return population
 
 

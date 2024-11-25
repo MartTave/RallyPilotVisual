@@ -9,14 +9,11 @@ def getx(x):
     return x
 
 class Master:
-    def __init__(self, startPoint, angle, speed):
-        self.startPoint = startPoint
-        self.angle = angle
-        self.speed = speed
-        
-        self.ports = {key: True for key in range(5001, 5101)}
-        self.lock = threading.Lock()  # Initialize the lock
-        
+    def __init__(self, portsRange):        
+        self.ports = {key: True for key in portsRange}
+        self.containers = []
+        self.remotes = []
+        self.free = True
         self.client = docker.from_env()
         print(self.client)
         self.image_name = "app"  
@@ -24,36 +21,57 @@ class Master:
             self.client.images.get(self.image_name)
         except docker.errors.ImageNotFound:
             print(f"Image {self.image_name} not found locally, pulling from Docker Hub...")
-            self.client.images.pull(self.image_name)
+            #self.client.images.pull(self.image_name)
+        self.availableSimuMax = len(self.ports)
+        self.startContainer()
+        sleep(20)
+        self.createRemotes()
     
-    def getFreePort(self): 
+    
+    def createRemotes(self):
+        for p in self.ports:
+            remote = Remote("http://127.0.0.1", p, lambda :'')
+            self.remotes.append({
+                'remote': remote,
+                'free': True
+            })
+    
+    def startContainer(self):
+        for p in self.ports:
+            container = self.client.containers.run(
+                self.image_name,
+                detach=True,
+                ports={'5000': p},  
+            )
+            self.containers.append(container)
+        allRunning = False
+        while not allRunning:
+            allRunning = True
+            for c in self.containers:
+                if self.client.containers.get(c.attrs["Id"]).attrs["State"]["Running"] == False:
+                    allRunning = False
+                    print("All container are not started, waiting...")
+                    sleep(1)
+                    break
+    
+    def stopContainer(self):
+        for c in self.containers:
+            c.stop()
+            c.remove()
+    
+    def getFreeRemote(self): 
         while True:
-            with self.lock:  # Ensure only one thread modifies `self.ports` at a time
-                for key, value in self.ports.items():
-                    if value:  # Check if the port is free
-                        self.ports[key] = False  # Mark the port as taken
-                        return key
-            print("All ports are taken...")
-            sleep(3)
+            for remoteObj in self.remotes:
+                if remoteObj["free"] == True:
+                    remoteObj["free"] = False
+                    return remoteObj
+            sleep(1)
       
-    def runSimulation(self, individual):
-        port = self.getFreePort()  
-        container = self.client.containers.run(
-            self.image_name,
-            detach=True,
-            ports={'5000': port},  
-        )
-        print(f"Starting container {container.name} on port {port}...")
-        sleep(5)
-        remote = Remote("http://127.0.0.1", port, getx)
-        positions = remote.getDataForSolution(individual, self.startPoint, self.angle, self.speed)
-        print(f"Stopping container {container.name} on port {port}...")
-        container.stop()
-        container.remove()
-        with self.lock:  
-            self.ports[port] = True
-        sleep(1)
-
+    def runSimulation(self, individual, startPoint, angle, speed):
+        print("Running simulation")
+        remoteObj = self.getFreeRemote()
+        positions = remoteObj["remote"].getDataForSolution(individual, startPoint, angle, speed)
+        remoteObj["free"] = True
         return positions
     
     def checkFreePorts(self): 

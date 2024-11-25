@@ -150,11 +150,15 @@ count = 0
 def gotNewFData(newData):
     global count
     count += 1
+    print(newData["car_angle"])
     print(newData["car_position x"])
+    print(newData["car_position z"])
     pass
 
+remote = Remote("http://127.0.0.1", 5000, gotNewFData)
 
 
+remote._getSensingData()
 # then = time()
 # remote.startSensing()
 # sleep(1)
