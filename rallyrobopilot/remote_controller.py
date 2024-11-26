@@ -5,6 +5,7 @@ import socket
 import select
 import numpy as np
 from pygame.time import Clock
+import pyscreenshot as ImageGrab
 
 
 from flask import Flask, request, jsonify
@@ -128,11 +129,9 @@ class RemoteController(Entity):
             if picture and picture == "True":
                 self.recordPictures = True
                 if self.lastScreenshot is not None:
-                    arr = self.lastScreenshot
-                    image = arr.reshape(self.texYSize, self.texXSize, 3)
-                    image = image[::-1, :, :]
-                    image = image.transpose((2, 0, 1))
-                    data["picture"] = image.tolist()
+                    data = self.lastScreenshot
+                    arr = np.transpose(data, (2, 0, 1))
+                    data["picture"] = arr.tolist()
             else:
                 self.recordPictures = False
             self.lastSensingSanity = now
@@ -229,14 +228,11 @@ class RemoteController(Entity):
         now = time.time()
         period = now - self.last_sensing
         # if period >= self.sensing_period - 0.02:
-        tex = base.win.getDisplayRegion(0).getScreenshot()
-        self.texYSize = tex.getYSize()
-        self.texXSize = tex.getXSize()
-        arr = tex.getRamImageAs("rgb")
-        data = np.frombuffer(arr, np.uint8)
+        screenshot = ImageGrab.grab((100 + 1920, 100 - (2160 - 1080), 100 + 1920 + 224, 100 - (2160 - 1080) + 224), False)
+        arr = np.array(screenshot)
+        self.lastScreenshot = arr
         if period > self.sensing_period + 0.02:
             print("[GAME] Update of screenshot is late ! ", period, " s")
-        self.lastScreenshot = data
         self.last_sensing = now
 
     def get_sensing_data(self):
