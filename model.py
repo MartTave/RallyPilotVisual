@@ -19,6 +19,8 @@ class AlexNetAtHome(nn.Module):
         # Calculate the input size of the predictor layer, this is the size of the last layer of the features flattenend
         predictorInputSize = 2304
 
+        # Maybe diminish stride -> reduce kernel size and
+
         self.features = nn.Sequential(
             nn.Conv2d(2, firstLayerSize, kernel_size=11, stride=4, padding=2),
             nn.BatchNorm2d(firstLayerSize),
@@ -42,6 +44,9 @@ class AlexNetAtHome(nn.Module):
         self.predictor = nn.Sequential(
             nn.Dropout(0.5),
             nn.Linear(predictorInputSize, 256),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(256, 256),
             nn.ReLU(),
             nn.Dropout(0.5),
             nn.Linear(256, 4),

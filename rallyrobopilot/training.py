@@ -96,7 +96,9 @@ validate_loader = DataLoader(validate_data, batch_size=32)
 classification_loss = nn.BCEWithLogitsLoss(
     torch.tensor([0.5, 2.5, 1, 1], dtype=torch.float32)
 )
-optimizer = optim.Adam(model.parameters(), lr=0.0001)
+
+# Keep weight decays really small
+optimizer = optim.Adam(model.parameters(), lr=1e-4, weight_decay=1e-6)
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     optimizer, mode="min", factor=0.1, patience=3
 )
