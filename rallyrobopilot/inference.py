@@ -1,3 +1,4 @@
+import sys
 import threading
 from time import sleep
 import torch
@@ -10,10 +11,15 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 print("Device is : ", device)
 
-model_number = 1 
+MODEL_NUMBER = 0
+
+if len(sys.argv) > 1:
+    MODEL_NUMBER = int(sys.argv[1])
 
 model = AlexNetAtHome()
-model.load_state_dict(torch.load(f"./models/model_{model_number}/model.pth", map_location=device))
+model.load_state_dict(
+    torch.load(f"./models/model_{MODEL_NUMBER}/model.pth", map_location=device)
+)
 lastPic = None
 
 model = model.to(device)
@@ -39,7 +45,7 @@ with torch.no_grad():
         lastPic = pic
 
     remote = Remote("http://127.0.0.1", 5000, sensingNewData, True)
-    remote._getSensingData()
+    remote.startSensing()
     print("Press enter to quit...")
     input()
     remote.stopSensing()

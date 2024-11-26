@@ -1,5 +1,6 @@
 from multiprocessing import Pool
 import os
+import sys
 import torch
 import torch.optim as optim
 from torch.optim.lr_scheduler import ExponentialLR
@@ -22,7 +23,15 @@ from model import AlexNetAtHome
 model = AlexNetAtHome()
 
 
+DATA_INDEXES = [0, 1, 2, 3]
+
 USE_SYMETRIC = True
+
+if len(sys.argv) > 1:
+    USE_SYMETRIC = bool(sys.argv[1])
+    if len(sys.argv) > 2:
+        DATA_INDEXES = [int(i) for i in sys.argv[2:]]
+
 
 preparedData = ()
 
@@ -32,13 +41,13 @@ regression_weight = 0.2
 num_epochs = 30
 
 BASE_FOLDER = "./data/"
-indexes = [0, 1, 2, 3]
+
 BASE_FILENAME = "record"
 BASE_EXTENSION = ".npz"
-file_names = [BASE_FILENAME + str(i) + BASE_EXTENSION for i in indexes]
+file_names = [BASE_FILENAME + str(i) + BASE_EXTENSION for i in DATA_INDEXES]
 if USE_SYMETRIC:
     file_names += [
-        BASE_FILENAME + "_flipped" + str(i) + BASE_EXTENSION for i in indexes
+        BASE_FILENAME + "_flipped" + str(i) + BASE_EXTENSION for i in DATA_INDEXES
     ]
 
 xData = []
@@ -94,7 +103,7 @@ validate_loader = DataLoader(validate_data, batch_size=32)
 
 # Define loss function and optimizer
 classification_loss = nn.BCEWithLogitsLoss(
-    torch.tensor([0.5, 2.5, 1, 1], dtype=torch.float32)
+    torch.tensor([0.4, 1, 1, 1], dtype=torch.float32)
 )
 
 # Keep weight decays really small
