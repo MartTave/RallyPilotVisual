@@ -129,8 +129,7 @@ class RemoteController(Entity):
             if picture and picture == "True":
                 self.recordPictures = True
                 if self.lastScreenshot is not None:
-                    data = self.lastScreenshot
-                    arr = np.transpose(data, (2, 0, 1))
+                    arr = np.transpose(self.lastScreenshot, (2, 0, 1))
                     data["picture"] = arr.tolist()
             else:
                 self.recordPictures = False
