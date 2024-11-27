@@ -13,9 +13,9 @@ python scripts/main.py [-h] [-t <float>] [-f <int>] [-r]
         )
         return
     if "-t" in args:
-        res["time"] = args[args.index("-t") + 1]
+        res["time"] = float(args[args.index("-t") + 1])
     if "-f" in args:
-        res["framerate"] = args[args.index("-f") + 1]
+        res["framerate"] = int(args[args.index("-f") + 1])
     if "-r" in args:
         res["realTime"] = True
     return res
