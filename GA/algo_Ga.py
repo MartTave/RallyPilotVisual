@@ -19,7 +19,7 @@ def log(*args):
     print("[GA] ", *args)
 
 class GaDataGeneration():
-    def __init__(self, jsonData, master: Master, pop_size=20, ngen=6, patience=20):        
+    def __init__(self, jsonData, master: Master, pop_size=20, ngen=6, patience=15):        
         self.fitness_values = []
         
         self.parseJsonData(jsonData)
