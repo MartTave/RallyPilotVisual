@@ -4,10 +4,12 @@ from conversions import Convertion
 
 remote = Remote("http://127.0.0.1", 5000, lambda x: x)
 
-jsonFile = Convertion("ga_0").readJson()
-controls= Convertion("ga_0").readResults()
+file = Convertion("ga_1")
+
+jsonFile = file.readJson()
+# controls= file.readResults()
 p = remote.getDataForSolution(
-    controls["2"],
+    jsonFile["baseControls"],
     (jsonFile["startPoint"]["x"], jsonFile["startPoint"]["y"], jsonFile["startPoint"]["z"]),
     jsonFile["startAngle"],
  

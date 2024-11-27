@@ -81,7 +81,7 @@ class RemoteController(Entity):
             except Exception as e:
                 return jsonify({"error": str(e)}), 500
 
-        @flask_app.route("/record", methods=["GET"])
+        @flask_app.route("/record", methods=["POST"])
         def start_recording():
             if self.car is None:
                 return jsonify({"error": "No car connected"}), 400
@@ -91,11 +91,11 @@ class RemoteController(Entity):
 
             if self.recording:
                 return jsonify({"error": "Already recording"}), 400
-
+            self.recording = True
             self.record = []
             return jsonify({"status": "Recording started"}), 200
 
-        @flask_app.route("/stop_record", methods=["GET"])
+        @flask_app.route("/stop_record", methods=["POST"])
         def stop_recording():
             if self.car is None:
                 return jsonify({"error": "No car connected"}), 400

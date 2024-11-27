@@ -16,7 +16,6 @@ class ControlsExamplesGA():
         self.positions = []    
 
     def computeSimulation(self):
-        print(self.jsonData)
         detectedF = False
         endLineReached = False
         self.data = []
@@ -24,34 +23,33 @@ class ControlsExamplesGA():
         pos  = [self.jsonData['startPoint']['x'],self.jsonData['startPoint']['y'], self.jsonData['startPoint']['z']]
         computeMaths = GaMaths(endLine,pos)
 
-        def getData(x):
-            nonlocal detectedF, endLineReached, remote
-            if not detectedF and x["up"] == 1 :
-                self.then = time.time()
-                detectedF = True
-            if detectedF and not endLineReached:
-                self.data.append([x["up"], x["down"], x["left"], x["right"]])
-                self.positions.append([x['car_position x'], x["car_position y"], x["car_position z"]])
-                if computeMaths.isArrivedToEndLine(self.positions[-1][0], self.positions[-1][2]):
-                    print(f"I got {len(self.positions)} position for {time.time() - self.then} seconds")
-                    endLineReached = True
-                    remote.stopSensing()
-
-        remote = Remote("http://127.0.0.1", 5000, getData)
+        remote = Remote("http://127.0.0.1", 5000, lambda :'')
 
         remote.setStartPositionGAModel(
             pos, self.jsonData["startAngle"], self.jsonData["startVelocity"]
         )
-        remote.startSensing()
-        while True:
-            sleep(1)
-            if endLineReached:
-                self.jsonFile.writeControls(self.data)
-                print("Written !")
-                break
+        remote.startRecording()
+        print("Press enter to stop recording")
+        input()
+        res = remote.stopRecording()
+        detectedF = False
+        for p in res:
+            if not detectedF and p["up"] == 1 :
+                detectedF = True
+            if detectedF:
+                self.data.append([p["up"], p["down"], p["left"], p["right"]])
+                self.positions.append([p['car_position x'], p["car_position y"], p["car_position z"]])
+                if computeMaths.isArrivedToEndLine(self.positions[-1][0], self.positions[-1][2]):
+                    endLineReached = True
+                    break
+        if endLineReached:
+            self.jsonFile.writeControls(self.data)
+            print("Written !")
+        else:
+            print("End line not reached ! - File not saved !!!")
 
 
-FOLDERNAME = "ga_0"
+FOLDERNAME = "ga_1"
 
 test = ControlsExamplesGA(FOLDERNAME)
 test.computeSimulation()
