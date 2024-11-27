@@ -34,7 +34,7 @@ class RemoteController(Entity):
 
         self.car = car
 
-        if self.car.time_manager.dt != 0.1:
+        if self.car.timeManager.dt != 0.1:
             print(
                 "\n================================\n[REMOTE CONTROLLER] Simulating GA wihtout a dt of 0.1 will not work !!!!\n================================\n"
             )
@@ -188,34 +188,34 @@ class RemoteController(Entity):
     def simulateGA(
         self,
     ):
-        if self.car.time_manager.executeNow(10):
+        #if self.car.timeManager.executeNow(10):
             # Here we need to run next control and save position
-            if self.simuIndex >= len(self.controlList) + GRACE_TIME_GA:
-                self.simulating = False
-                self.simuResult.append(
-                    [
-                        self.car.world_position[i]
-                        for i, v in enumerate(self.car.world_position)
-                    ]
-                )
-                return
-            currControl: list[int]
-            if self.simuIndex < len(self.controlList):
-                currControl = self.controlList[self.simuIndex]
-            else:
-                currControl = [0, 0, 0, 0]
-            mapping = {0: "w", 1: "s", 2: "a", 3: "d"}
-            for i, c in enumerate(currControl):
-                held_keys[mapping[i]] = c == 1
+        if self.simuIndex >= len(self.controlList) + GRACE_TIME_GA:
+            self.simulating = False
             self.simuResult.append(
                 [
                     self.car.world_position[i]
                     for i, v in enumerate(self.car.world_position)
                 ]
             )
-            self.simuIndex += 1
-            self.last_sensing = time.time()
-            pass
+            return
+        currControl: list[int]
+        if self.simuIndex < len(self.controlList):
+            currControl = self.controlList[self.simuIndex]
+        else:
+            currControl = [0, 0, 0, 0]
+        mapping = {0: "w", 1: "s", 2: "a", 3: "d"}
+        for i, c in enumerate(currControl):
+            held_keys[mapping[i]] = c == 1
+        self.simuResult.append(
+            [
+                self.car.world_position[i]
+                for i, v in enumerate(self.car.world_position)
+            ]
+        )
+        self.simuIndex += 1
+        self.last_sensing = time.time()
+        pass
 
     def update(self):
         if self.car is None:

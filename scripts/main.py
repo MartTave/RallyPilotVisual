@@ -42,9 +42,7 @@ remote_controller = RemoteController(car = car, flask_app=flask_app)
 if time.fps > 0:
     while True:
         app.step()
-        time.step()
         Clock().tick(time.fps)
 else:
     while True:
-        time.step()
         app.step()

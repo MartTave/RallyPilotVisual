@@ -5,9 +5,9 @@ from rallyrobopilot.time_manager import Time
 
 class Particles(Entity):
 
-    time_manager: Time
+    timeManager: Time
 
-    def __init__(self, time_manager: Time, car, position):
+    def __init__(self, timeManager: Time, car, position):
         super().__init__(
             model = "particles.obj",
             scale = 0.1,
@@ -15,7 +15,7 @@ class Particles(Entity):
             rotation_y = random.random() * 360
         )
 
-        self.time_manager = time_manager
+        self.timeManager = timeManager
 
         self.car = car
         self.direction = Vec3(random.random(), random.random(), random.random())

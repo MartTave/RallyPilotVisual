@@ -14,7 +14,7 @@ Text.default_resolution = 1080 * Text.size
 
 class Car(Entity):
 
-    time_manager: Time
+    timeManager: Time
 
     def __init__(
         self,
@@ -207,7 +207,7 @@ class Car(Entity):
         if self.particle_time >= self.particle_amount:
             self.particle_time = 0
             self.particles = Particles(
-                self.time_manager, self, self.particle_pivot.world_position - (0, 1, 0)
+                self.timeManager, self, self.particle_pivot.world_position - (0, 1, 0)
             )
             self.particles.destroy(1)
 
