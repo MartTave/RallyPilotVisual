@@ -1,15 +1,22 @@
 from ursina import *
 from ursina import curve
 
+from rallyrobopilot.time_manager import Time
+
 class Particles(Entity):
-    def __init__(self, car, position):
+
+    time_manager: Time
+
+    def __init__(self, time_manager: Time, car, position):
         super().__init__(
             model = "particles.obj",
             scale = 0.1,
             position = position, 
             rotation_y = random.random() * 360
         )
-        
+
+        self.time_manager = time_manager
+
         self.car = car
         self.direction = Vec3(random.random(), random.random(), random.random())
 
@@ -17,13 +24,12 @@ class Particles(Entity):
             if car.forest_track.enabled:
                 self.texture = "particle_forest_track.png"
 
-
     def update(self):
-        self.position += self.direction * 5 * time.dt
+        self.position += self.direction * 5 * self.timeManager.dt
         if hasattr(self.car, "graphics"):
             if self.car.graphics != "fancy":
-                self.scale_x += 0.1 * time.dt
-                self.scale_y += 0.1 * time.dt
+                self.scale_x += 0.1 * self.timeManager.dt
+                self.scale_y += 0.1 * self.timeManager.dt
 
     def destroy(self, delay = 1):
         self.fade_out(duration = 0.2, delay = 0.7, curve = curve.linear)
@@ -42,7 +48,7 @@ class TrailRenderer(Entity):
 
     def update(self):
         if self.trailing:
-            self._t += time.dt
+            self._t += self.timeManager.dt
             if self._t >= self.update_step:
                 self._t = 0
                 self.renderer.model.vertices.pop(0)
@@ -57,7 +63,7 @@ class TrailRenderer(Entity):
             thickness = self.thickness,
             static = False,
         ), color = color.rgba(10, 10, 10, 90))
-    
+
     def end_trail(self, now = False):
         if not now:
             self.renderer.fade_out(duration = 1, delay = 8, curve = curve.linear)
@@ -70,7 +76,7 @@ class TrailRenderer(Entity):
 #     def __init__(self, position, rotation_y, amount_of_smoke):
 #         super().__init__(
 #             model = "smoke.obj",
-#             texture = "smoke.png", 
+#             texture = "smoke.png",
 #             scale = 3,
 #             position = position,
 #             rotation_y = rotation_y,
@@ -84,7 +90,7 @@ class TrailRenderer(Entity):
 #         self.direction = Vec3(random.random(), random.random(), random.random()) * self.amount_of_smoke
 
 #     def update(self):
-#         self.position += self.direction * 120 * time.dt
+#         self.position += self.direction * 120 * self.timeManager.dt
 
 #         if self.amount_of_smoke >= 0.1:
 #             self.amount_of_smoke = 0.1
