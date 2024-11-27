@@ -16,13 +16,10 @@ def get_first_control(controls):
 
 class GaDataGeneration():
     def __init__(self, jsonData, master: Master, pop_size=20, ngen=6):        
-        creator.create("FitnessMax", base.Fitness, weights=(1.0,))  
-        creator.create("Individual", list, fitness=creator.FitnessMax)
         self.fitness_values = []
         
         self.parseJsonData(jsonData)
-        
-                
+                        
         self.pop_size = pop_size
         self.ngen = ngen
         self.exampleInd = []
@@ -55,21 +52,23 @@ class GaDataGeneration():
 
     def setup_deap(self): 
         self.toolbox = base.Toolbox()
+        creator.create("FitnessMin", base.Fitness, weights=(-1.0,))  
+        creator.create("Individual", list, fitness=creator.FitnessMin)
         self.toolbox.register("attr_controls",  get_first_control, controls )
         self.toolbox.register("individual", tools.initRepeat, creator.Individual,  self.toolbox.attr_controls, n=len(self.controls))
         self.exampleInd = self.toolbox.individual()
         for i, c in enumerate(self.controls):
             self.exampleInd[i] = c
        
-
+        self.toolbox.register("takeBest", tools.selBest)
         self.toolbox.register("population", tools.initRepeat, list, self.getInd)
         
         self.toolbox.register("evaluate", self.fitness_fonction) #evaluate allow to create a fitness fonction 
         self.toolbox.register("mate", tools.cxTwoPoint) #allow to choose a method for crossover
         self.toolbox.register("mutate", self.custom_mutate) # allow the mutation step 
-        self.toolbox.register("select", tools.selTournament, tournsize=3) # selectioon for the new population
-    def custom_mutate(self,individual, num_flips=2):
-        if random.randint(0, 3) != 0:
+        self.toolbox.register("select", tools.selTournament, tournsize=6) # selectioon for the new population
+    def custom_mutate(self,individual, num_flips=1):
+        if random.randint(0, 2) != 0:
             return (individual, )
         indices_to_mutate = random.sample(range(len(individual)), min(num_flips, len(individual)))
         for i in indices_to_mutate:
@@ -104,41 +103,43 @@ class GaDataGeneration():
                 pool = self.master.availableSimuMax
             with ThreadPoolExecutor(max_workers= pool) as executor:
                 futures = [executor.submit(self.toolbox.evaluate, individual) for individual in population]
-        
-        # Wait for all futures to finish and gather results
+                # Wait for all futures to finish and gather results
                 fits = [future.result() for future in futures]
             for fit, ind in zip(fits, population):
                 ind.fitness.values = fit  # Assign fitness values to individuals
 
-            # Zip and sort by fitness values
-            paired = list(zip(fits, population))
-            paired_sorted = filter(lambda x:x[0][0] != -1, sorted(paired, key=lambda x: x[0][0]))  # Sort by fitness value
-            
-         
-            
-            fitness_values_sorted, individuals_sorted = zip(*paired_sorted)
-            print(fitness_values_sorted)
+            # Save fitness values for plotting
             self.fitness_values.append([x[0] for x in fits])
 
-            TARGET = 5
+            # Sort by fitness values
+            pop_filtered = filter(lambda x:x[1][0] != -1, zip(population, fits))  # Sort by fitness value
+            
+            pop_filtered_fitness = []
 
-            # Getting the length of the third best solution - best equilibrium between genocide and exploration
-            targetLength = fitness_values_sorted[TARGET - 1][0]
-            genocidResult = []
-            for i, ind in enumerate(individuals_sorted):
-                individual = creator.Individual(ind[:targetLength])
-                individual.fitness.values = ind.fitness.values
-                genocidResult.append(individual)
-            # Select the best individuals
-            best_individuals = genocidResult[:TARGET]
-            print(f"For generation : {generation}")
-            for b in best_individuals:
-                print(f"Best ind got length = {len(b)} and fit : {b.fitness.values[0]}")
+            for t in pop_filtered:
+                ind = creator.Individual(t[0])
+                ind.fitness.values = t[1]
+                pop_filtered_fitness.append(ind)
+
+            import ipdb
+            ipdb.set_trace()
+
+            ELITE_SIZE = 5
+
+            for i, p in enumerate(pop_filtered):
+                pop_filtered[i].fitness.values = (population.fitness.values[0],)
+
+            elites = self.toolbox.takeBest(pop_filtered_fitness, k=ELITE_SIZE)
+
+            
+
+
+            # Don't crossover/mutate if it's the last gen !
             if generation == self.ngen -1:
                 continue
-            # Create new population
-            offspring = list(map(self.toolbox.clone, self.toolbox.select(best_individuals, k=len(population))))
-            print("pop len", len(offspring))
+                
+            # Create new population with tournament selection
+            offspring = list(map(self.toolbox.clone, self.toolbox.select(pop_filtered, k=len(population - ELITE_SIZE))))
             # Apply crossover
             for child1, child2 in zip(offspring[::2], offspring[1::2]):
                 self.toolbox.mate(child1, child2)
@@ -147,14 +148,18 @@ class GaDataGeneration():
             for individual in offspring:
                 self.toolbox.mutate(individual)
 
+            # Truncating all population to longest one of them
+            max_length = max([len(ind) for ind in offspring])
+            # Getting the length of the third best solution - best equilibrium between genocide and exploration
             population = []
-            population = offspring
+            for ind in offspring:
+                individual = creator.Individual(ind[:max_length])
+                population.append(individual)
 
-            # Recalculate fitness
-            #fits = list(map(self.toolbox.evaluate, population))
         if not self.master.isLocal: 
             self.master.stopContainer()
         self.master.free = True
+        best_individuals = sorted(population, key=lambda x: x.fitness.values[0], reverse=True)
         return best_individuals, self.fitness_values
 
 

@@ -2,7 +2,7 @@ import threading
 from time import sleep, time
 import requests
 import numpy as np
-from convert_to_bw import convertToBwSingle
+from rallyrobopilot.convert_to_bw import convertToBwSingle
 
 class Remote:
 

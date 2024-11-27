@@ -43,8 +43,9 @@ class StatsGA():
     def getBestScores(self): 
         savePath = f"./GA/ga_data/{self.folder}"
         bestScores = []
-        for gen in self.fitnessValues: 
-            bestScores.append(gen[0])   
+        for gen in self.fitnessValues:
+            filtered = list(filter(lambda x: x != -1, gen))
+            bestScores.append(min(filtered))   
         plt.plot(bestScores)
         plt.title("Best Scores Per Generation")
         plt.xlabel("Generation Number")  
@@ -58,6 +59,6 @@ class StatsGA():
 
      
 stat = StatsGA("ga_0")
-stat.getGetNumberEndedSim()
-stat.getNumOfNotEndedSim()
+#stat.getGetNumberEndedSim()
+#stat.getNumOfNotEndedSim()
 stat.getBestScores()
