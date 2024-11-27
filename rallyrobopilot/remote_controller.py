@@ -188,7 +188,7 @@ class RemoteController(Entity):
     def simulateGA(
         self,
     ):
-        if self.car.time_manager.executeNow(0.1):
+        if self.car.time_manager.executeNow(10):
             # Here we need to run next control and save position
             if self.simuIndex >= len(self.controlList) + GRACE_TIME_GA:
                 self.simulating = False
