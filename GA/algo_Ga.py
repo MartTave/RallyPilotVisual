@@ -121,13 +121,7 @@ class GaDataGeneration():
                 ind.fitness.values = t[1]
                 pop_filtered_fitness.append(ind)
 
-            import ipdb
-            ipdb.set_trace()
-
             ELITE_SIZE = 5
-
-            for i, p in enumerate(pop_filtered):
-                pop_filtered[i].fitness.values = (population.fitness.values[0],)
 
             elites = self.toolbox.takeBest(pop_filtered_fitness, k=ELITE_SIZE)
 
@@ -139,7 +133,7 @@ class GaDataGeneration():
                 continue
                 
             # Create new population with tournament selection
-            offspring = list(map(self.toolbox.clone, self.toolbox.select(pop_filtered, k=len(population - ELITE_SIZE))))
+            offspring = list(map(self.toolbox.clone, self.toolbox.select(pop_filtered_fitness, k=len(population) - ELITE_SIZE)))
             # Apply crossover
             for child1, child2 in zip(offspring[::2], offspring[1::2]):
                 self.toolbox.mate(child1, child2)
