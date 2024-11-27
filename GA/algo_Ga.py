@@ -19,7 +19,7 @@ def log(*args):
     print("[GA] ", *args)
 
 class GaDataGeneration():
-    def __init__(self, jsonData, master: Master, pop_size=20, ngen=6, patience=8):        
+    def __init__(self, jsonData, master: Master, pop_size=20, ngen=6, patience=20):        
         self.fitness_values = []
         
         self.parseJsonData(jsonData)
@@ -71,9 +71,7 @@ class GaDataGeneration():
         self.toolbox.register("mate", tools.cxTwoPoint) #allow to choose a method for crossover
         self.toolbox.register("mutate", self.custom_mutate) # allow the mutation step 
         self.toolbox.register("select", tools.selTournament, tournsize=3) # selectioon for the new population
-    def custom_mutate(self,individual, num_flips=1):
-        if random.randint(0, 2) != 0:
-            return (individual, )
+    def custom_mutate(self,individual, num_flips=random.randint(0, 5)):
         indices_to_mutate = random.sample(range(len(individual)), min(num_flips, len(individual)))
         for i in indices_to_mutate:
             j = random.randint(0, 3)
