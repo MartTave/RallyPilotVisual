@@ -34,6 +34,11 @@ class RemoteController(Entity):
 
         self.car = car
 
+        if self.car.time_manager.dt != 0.1:
+            print(
+                "\n================================\n[REMOTE CONTROLLER] Simulating GA wihtout a dt of 0.1 will not work !!!!\n================================\n"
+            )
+
         self.lastSensingSanity = time.time()
 
         self.record = []
@@ -183,7 +188,7 @@ class RemoteController(Entity):
     def simulateGA(
         self,
     ):
-        if time.time() - self.last_sensing >= self.sensing_period:
+        if self.car.time_manager.executeNow(0.1):
             # Here we need to run next control and save position
             if self.simuIndex >= len(self.controlList) + GRACE_TIME_GA:
                 self.simulating = False

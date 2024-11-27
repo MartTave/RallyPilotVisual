@@ -1,8 +1,10 @@
 from rallyrobopilot import Car, Track, SunLight, MultiRaySensor
 from ursina import *
 
+from rallyrobopilot.time_manager import Time
 
-def prepare_game_app():
+
+def prepare_game_app(time: Time):
     from ursina import window, Ursina
 
     # Create Window
@@ -36,7 +38,7 @@ def prepare_game_app():
     track.load_assets(global_models, global_texs)
 
     # Car
-    car = Car()
+    car = Car(time)
     car.sports_car()
     # Tracks
     car.set_track(track)
