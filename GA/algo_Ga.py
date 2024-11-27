@@ -14,12 +14,16 @@ def getx(x):
 def get_first_control(controls):
     return controls[0]
 
+
+def log(*args):
+    print("[GA] ", *args)
+
 class GaDataGeneration():
-    def __init__(self, jsonData, master: Master, pop_size=20, ngen=6):        
+    def __init__(self, jsonData, master: Master, pop_size=20, ngen=6, patience=8):        
         self.fitness_values = []
         
         self.parseJsonData(jsonData)
-                        
+        self.patience = patience        
         self.pop_size = pop_size
         self.ngen = ngen
         self.exampleInd = []
@@ -66,7 +70,7 @@ class GaDataGeneration():
         self.toolbox.register("evaluate", self.fitness_fonction) #evaluate allow to create a fitness fonction 
         self.toolbox.register("mate", tools.cxTwoPoint) #allow to choose a method for crossover
         self.toolbox.register("mutate", self.custom_mutate) # allow the mutation step 
-        self.toolbox.register("select", tools.selTournament, tournsize=6) # selectioon for the new population
+        self.toolbox.register("select", tools.selTournament, tournsize=3) # selectioon for the new population
     def custom_mutate(self,individual, num_flips=1):
         if random.randint(0, 2) != 0:
             return (individual, )
@@ -83,7 +87,6 @@ class GaDataGeneration():
             if self.computeMaths.isArrivedToEndLine(p[0], p[2]):
                 fitness_value = i
                 break
-        print("Finished in ", fitness_value)
         return (fitness_value,)
 
     def run_ga(self):
@@ -93,9 +96,10 @@ class GaDataGeneration():
         for individual in offspring:
             self.toolbox.mutate(individual)
         population[:] = offspring
+        currBestScore = -1
+        currPatience = 0
         for generation in range(self.ngen):
             # Calculate fitness values
-            print("Length now is : ", len(population))
             pool = 0 
             if self.master.isLocal : 
                 pool = 1 
@@ -125,9 +129,6 @@ class GaDataGeneration():
 
             elites = self.toolbox.takeBest(pop_filtered_fitness, k=ELITE_SIZE)
 
-            
-
-
             # Don't crossover/mutate if it's the last gen !
             if generation == self.ngen -1:
                 continue
@@ -144,14 +145,37 @@ class GaDataGeneration():
 
             # Truncating all population to longest one of them
             max_length = max([len(ind) for ind in offspring])
+            max_score = min([ind.fitness.values[0] for ind in elites])
+            if currBestScore == -1:
+                currBestScore = max_score
+            if max_score == currBestScore:
+                currPatience += 1
+            if max_score < currBestScore:
+                currBestScore = max_score
+                currPatience = 0
+            if max_score > currBestScore:
+                log("Best score increased ! ", max_score, " > ", currBestScore)
+                currBestScore = max_score
+                currPatience = 0
+            if currPatience == self.patience:
+                log("Early stopping at generation ", generation)
+                break
             # Getting the length of the third best solution - best equilibrium between genocide and exploration
             population = elites
             for ind in offspring:
                 individual = creator.Individual(ind[:max_length])
                 population.append(individual)
+            log("")
+            log("=====================================")
+            log("Generation : ", generation + 1, "/", self.ngen)
+            log("Best score is : ", min([x.fitness.values[0] for x in elites]))
+            log("Current patience is : ", currPatience, "/", self.patience)
+            log("DNF count : ", len(population) - len(pop_filtered_fitness))
+            log("Fitness values for elites : ", [x.fitness.values[0] for x in elites])
+            log("=====================================")
+            log("")
 
-        if not self.master.isLocal: 
-            self.master.stopContainer()
+        self.master.stopContainers()
         self.master.free = True
         best_individuals = sorted(population, key=lambda x: x.fitness.values[0], reverse=True)
         return best_individuals, self.fitness_values

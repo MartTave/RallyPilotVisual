@@ -1,4 +1,5 @@
-from multiprocessing import Lock
+from concurrent.futures import ThreadPoolExecutor
+from multiprocessing import Lock, Pool
 import threading
 from time import sleep
 import docker
@@ -8,6 +9,9 @@ from rallyrobopilot.remote import Remote
 def getx(x): 
     return x
 
+def log(*args):
+    print("[MASTER] ", *args)
+
 class Master:
     def __init__(self, portsRange, isLocal):  
         self.isLocal = isLocal      
@@ -16,15 +20,14 @@ class Master:
         self.remotes = []
         self.free = True
         self.client = docker.from_env()
-        print(self.client)
         self.image_name = "app"  
         try:
             self.client.images.get(self.image_name)
         except docker.errors.ImageNotFound:
-            print(f"Image {self.image_name} not found locally, pulling from Docker Hub...")
+            log(f"Image {self.image_name} not found locally, pulling from Docker Hub...")
             #self.client.images.pull(self.image_name)
         self.availableSimuMax = len(self.ports)
-        self.startContainer()
+        self.startContainers()
         if not self.isLocal:
             sleep(20)
         self.createRemotes()
@@ -38,30 +41,43 @@ class Master:
                 'free': True
             })
     
-    def startContainer(self):
+    def startContainers(self):
         if self.isLocal:
-            print("[MASTER] Running in local - Not starting any container")
+            log("Running in local - Not starting any container")
             return
-        for p in self.ports:
+        def startContainer(port):
             container = self.client.containers.run(
                 self.image_name,
                 detach=True,
-                ports={'5000': p},  
+                ports={'5000': port},  
             )
-            self.containers.append(container)
+            return container
+
+        log(f"Starting {len(self.ports)} containers")
+        with ThreadPoolExecutor(max_workers=len(self.ports)) as executor:
+                futures = [executor.submit(startContainer, port) for port in self.ports]
+                # Wait for all futures to finish and gather results
+                self.containers = [future.result() for future in futures]
         allRunning = False
         while not allRunning:
             allRunning = True
             for c in self.containers:
                 if self.client.containers.get(c.attrs["Id"]).attrs["State"]["Running"] == False:
                     allRunning = False
-                    print("All container are not started, waiting...")
+                    log("All container are not started, waiting...")
                     sleep(1)
                     break    
-    def stopContainer(self):
-        for c in self.containers:
+    def stopContainers(self):
+        if self.isLocal:
+            return
+        def stopContainer(c):
             c.stop()
             c.remove()
+        log(f"Stopping {len(self.containers)} containers")
+        with ThreadPoolExecutor(max_workers=len(self.ports)) as executor:
+            futures = [executor.submit(stopContainer, c) for c in self.containers]
+            # Wait for all futures to finish and gather results
+            [future.result() for future in futures]
     
     def getFreeRemote(self): 
         while True:
@@ -72,7 +88,6 @@ class Master:
             sleep(1)
       
     def runSimulation(self, individual, startPoint, angle, speed):
-        print("Running simulation")
         remoteObj = self.getFreeRemote()
         positions = remoteObj["remote"].getDataForSolution(individual, startPoint, angle, speed)
         remoteObj["free"] = True

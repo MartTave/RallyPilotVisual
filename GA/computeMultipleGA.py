@@ -23,7 +23,7 @@ class computeMultipleGA():
                 print("No masters available... Waiting !")
                 sleep(5)
 
-            ga = GaDataGeneration(jsonData, m, pop_size=100, ngen=100)
+            ga = GaDataGeneration(jsonData, m, pop_size=12, ngen=10)
             res,fitness_values = ga.run_ga()
 
             conv.writeJsonFile(res)
@@ -32,7 +32,7 @@ class computeMultipleGA():
 if __name__ == '__main__':
 
     masters = [
-        Master(range(5000, 5050), False)
+        Master(range(5000, 5004), False)
     ]
     
     test = computeMultipleGA(masters, ["ga_0"])
