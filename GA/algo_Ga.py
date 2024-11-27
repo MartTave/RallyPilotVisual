@@ -145,7 +145,7 @@ class GaDataGeneration():
             # Truncating all population to longest one of them
             max_length = max([len(ind) for ind in offspring])
             # Getting the length of the third best solution - best equilibrium between genocide and exploration
-            population = []
+            population = elites
             for ind in offspring:
                 individual = creator.Individual(ind[:max_length])
                 population.append(individual)
