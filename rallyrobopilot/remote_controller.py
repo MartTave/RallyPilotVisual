@@ -16,7 +16,7 @@ from .sensing_message import SensingSnapshot, SensingSnapshotManager
 from .remote_commands import RemoteCommandParser
 
 
-GRACE_TIME_GA = 10
+GRACE_TIME_GA = 0
 
 REMOTE_CONTROLLER_VERBOSE = False
 PERIOD_REMOTE_SENSING = 0.1

@@ -7,9 +7,10 @@ remote = Remote("http://127.0.0.1", 5000, lambda x: x)
 file = Convertion("ga_1")
 
 jsonFile = file.readJson()
-# controls= file.readResults()
+controls= file.readResults()
 p = remote.getDataForSolution(
-    jsonFile["baseControls"],
+    # jsonFile["baseControls"]
+    controls["2"],
     (jsonFile["startPoint"]["x"], jsonFile["startPoint"]["y"], jsonFile["startPoint"]["z"]),
     jsonFile["startAngle"],
  
