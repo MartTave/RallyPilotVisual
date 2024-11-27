@@ -161,14 +161,14 @@ class GaDataGeneration():
                 log("Early stopping at generation ", generation)
                 break
             # Getting the length of the third best solution - best equilibrium between genocide and exploration
-            population = elites
+            population = [x for x in elites]
             for ind in offspring:
                 individual = creator.Individual(ind[:max_length])
                 population.append(individual)
             log("")
             log("=====================================")
             log("Generation : ", generation + 1, "/", self.ngen)
-            log("Best score is : ", min([x.fitness.values[0] for x in elites]))
+            log("Best score is : ", max_score)
             log("Current patience is : ", currPatience, "/", self.patience)
             log("DNF count : ", len(population) - len(pop_filtered_fitness))
             log("Fitness values for elites : ", [x.fitness.values[0] for x in elites])

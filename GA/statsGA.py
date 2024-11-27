@@ -59,6 +59,6 @@ class StatsGA():
 
      
 stat = StatsGA("ga_0")
-#stat.getGetNumberEndedSim()
-#stat.getNumOfNotEndedSim()
+stat.getGetNumberEndedSim()
+stat.getNumOfNotEndedSim()
 stat.getBestScores()
