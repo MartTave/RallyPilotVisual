@@ -214,6 +214,7 @@ class RemoteController(Entity):
                 ]
             )
             self.simuIndex += 1
+            self.last_sensing = time.time()
             pass
 
     def update(self):
@@ -270,7 +271,6 @@ class RemoteController(Entity):
         while len(self.client_commands) > 0:
             try:
                 commands = self.client_commands.parse_next_command()
-                print("Processing command", commands)
                 if commands[0] == b'push' or commands[0] == b'release':
                     if commands[1] == b'forward':
                         held_keys['w'] = commands[0] == b'push'
@@ -283,7 +283,6 @@ class RemoteController(Entity):
 
                 # Release all
                 if commands[0] == b'release' and commands[1] == b'all':
-                    print("received release all command")
                     held_keys['w'] = False
                     held_keys['s'] = False
                     held_keys['d'] = False

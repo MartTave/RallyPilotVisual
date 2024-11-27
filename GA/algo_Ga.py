@@ -1,44 +1,68 @@
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from math import sqrt
+from multiprocessing import Pool
 import random
-from time import sleep
-from GA.computeGAMaths import GaMaths
+from computeGAMaths import GaMaths
+from master import Master
 from deap import base, creator, tools
 import flask
 from rallyrobopilot.remote import Remote
 import numpy as np
 import csv
-
+def getx(x):
+    return x
+def get_first_control(controls):
+    return controls[0]
 
 class GaDataGeneration():
-    def __init__(self, controls,startPoint, endLine, angle, speed, pop_size=10, ngen=20):
-        print(endLine)
+    def __init__(self, jsonData, master: Master, pop_size=20, ngen=6):        
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))  
         creator.create("Individual", list, fitness=creator.FitnessMax)
-        self.computeMaths = GaMaths(endLine,startPoint)
-        self.controls = controls
-        self.startPoint = startPoint
-        self.endLine = endLine
-        self.pop_size = pop_size
-        self.angle= angle
-        self.speed = speed
-        self.ngen = ngen
-        self.endLineA =  self.computeMaths.endLineA
-        self.endLineB = self.computeMaths.endLineB
+        self.fitness_values = []
+        
+        self.parseJsonData(jsonData)
+        
                 
-        self.remote =  Remote("http://127.0.0.1", 5000, lambda x: x)
+        self.pop_size = pop_size
+        self.ngen = ngen
+        self.exampleInd = []
+        self.master = master
+        self.master.free = False
         self.setup_deap()
-    
+        
+        
+    def parseJsonData(self, jsonData):
+        self.controls = jsonData["baseControls"]
+        self.startPoint = (
+            jsonData["startPoint"]["x"],
+            jsonData["startPoint"]["y"],
+            jsonData["startPoint"]["z"],
+        )
+        self.endLine = [
+            (
+                jsonData["endLine"][x]['x'],
+                jsonData["endLine"][x]['y'],
+                jsonData["endLine"][x]['z'],
+            )
+            for x in ["point1", "point2"]
+        ]
+        self.computeMaths = GaMaths(self.endLine,self.startPoint)
+        self.angle = jsonData["startAngle"]
+        self.speed = jsonData["startVelocity"]
+        
+    def getInd(self):
+        return self.toolbox.clone(self.exampleInd)
+
     def setup_deap(self): 
         self.toolbox = base.Toolbox()
-        self.toolbox.register("attr_controls",  lambda: self.controls[0] )
+        self.toolbox.register("attr_controls",  get_first_control, controls )
         self.toolbox.register("individual", tools.initRepeat, creator.Individual,  self.toolbox.attr_controls, n=len(self.controls))
-        exampleInd = self.toolbox.individual()
+        self.exampleInd = self.toolbox.individual()
         for i, c in enumerate(self.controls):
-            exampleInd[i] = c
+            self.exampleInd[i] = c
        
-        def getInd():
-            return self.toolbox.clone(exampleInd)
-        self.toolbox.register("population", tools.initRepeat, list, getInd)
+
+        self.toolbox.register("population", tools.initRepeat, list, self.getInd)
         
         self.toolbox.register("evaluate", self.fitness_fonction) #evaluate allow to create a fitness fonction 
         self.toolbox.register("mate", tools.cxTwoPoint) #allow to choose a method for crossover
@@ -48,14 +72,13 @@ class GaDataGeneration():
         if random.randint(0, 3) != 0:
             return (individual, )
         indices_to_mutate = random.sample(range(len(individual)), min(num_flips, len(individual)))
-    
         for i in indices_to_mutate:
             j = random.randint(0, 3)
             individual[i][j] = 1 if individual[i][j] == 0 else 0
         return (individual,)  
         
     def fitness_fonction(self, individual):
-        positions = self.remote.getDataForSolution(individual, self.startPoint, self.angle, self.speed)
+        positions = self.master.runSimulation(individual, self.startPoint, self.angle, self.speed)
         fitness_value = -1
         for i, p in enumerate(positions):
             if self.computeMaths.isArrivedToEndLine(p[0], p[2]):
@@ -74,15 +97,28 @@ class GaDataGeneration():
         for generation in range(self.ngen):
             # Calculate fitness values
             print("Length now is : ", len(population))
-            fits = list(map(self.toolbox.evaluate, population))
+            pool = 0 
+            if self.master.isLocal : 
+                pool = 1 
+            else: 
+                pool = self.master.availableSimuMax
+            with ThreadPoolExecutor(max_workers= pool) as executor:
+                futures = [executor.submit(self.toolbox.evaluate, individual) for individual in population]
+        
+        # Wait for all futures to finish and gather results
+                fits = [future.result() for future in futures]
             for fit, ind in zip(fits, population):
                 ind.fitness.values = fit  # Assign fitness values to individuals
 
             # Zip and sort by fitness values
             paired = list(zip(fits, population))
             paired_sorted = filter(lambda x:x[0][0] != -1, sorted(paired, key=lambda x: x[0][0]))  # Sort by fitness value
+            
+         
+            
             fitness_values_sorted, individuals_sorted = zip(*paired_sorted)
             print(fitness_values_sorted)
+            self.fitness_values.append([x[0] for x in fits])
 
             TARGET = 5
 
@@ -98,6 +134,8 @@ class GaDataGeneration():
             print(f"For generation : {generation}")
             for b in best_individuals:
                 print(f"Best ind got length = {len(b)} and fit : {b.fitness.values[0]}")
+            if generation == self.ngen -1:
+                continue
             # Create new population
             offspring = list(map(self.toolbox.clone, self.toolbox.select(best_individuals, k=len(population))))
             print("pop len", len(offspring))
@@ -114,8 +152,10 @@ class GaDataGeneration():
 
             # Recalculate fitness
             #fits = list(map(self.toolbox.evaluate, population))
-
-        return population
+        if not self.master.isLocal: 
+            self.master.stopContainer()
+        self.master.free = True
+        return best_individuals, self.fitness_values
 
 
 controls = [[1,0,0,0] for _ in range(250)]              
