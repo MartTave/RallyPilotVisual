@@ -2,7 +2,7 @@ import threading
 from time import sleep, time
 import requests
 import numpy as np
-from convert_to_bw import convertToBwSingle
+from rallyrobopilot.convert_to_bw import convertToBwSingle
 
 class Remote:
 
@@ -47,6 +47,24 @@ class Remote:
             )
             return False
         return True
+
+    def startRecording(self):
+        response = requests.post(f"{self.host}:{self.port}/record")
+        if response.status_code != 200:
+            print(
+                f"Received error response: {response.status_code} with status {response.json()['error']}"
+            )
+            return False
+        return True
+
+    def stopRecording(self):
+        response = requests.post(f"{self.host}:{self.port}/stop_record")
+        if response.status_code != 200:
+            print(
+                f"Received error response: {response.status_code} with status {response.json()['error']}"
+            )
+            return False
+        return response.json()["data"]
 
     def sendControl(self, command: list[int]):
         converted = self._convertControl(command)

@@ -63,10 +63,12 @@ print("Waiting for enter to stop recording...")
 input()
 collector.stopSensing()
 now = time.time()
+running = False
 print(f"Saving data... {len(images)} frames for ", now - then, " seconds")
 sleep(1)
 images = images[START_TRIM:-END_TRIM]
 controls = controls[START_TRIM:-END_TRIM]
+speeds = speeds[START_TRIM:-END_TRIM]
 
 images = np.array(images)
 controls = np.array(controls)
@@ -78,7 +80,6 @@ while os.path.exists(full_path):
     currIndex += 1
     full_path = DATA_FOLDER + str(currIndex) + FILENAME
 
-running = False
 np.savez(full_path, images=images, controls=controls, speeds=speeds)
 
 collector.reset()

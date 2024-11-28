@@ -41,7 +41,6 @@ regression_weight = 0.2
 num_epochs = 30
 
 BASE_FOLDER = "./data/"
-
 BASE_FILENAME = "record"
 BASE_EXTENSION = ".npz"
 file_names = [BASE_FILENAME + str(i) + BASE_EXTENSION for i in DATA_INDEXES]
