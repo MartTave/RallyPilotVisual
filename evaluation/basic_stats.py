@@ -6,8 +6,8 @@ import torch
 
 from model import AlexNetAtHome
 
-MODEL_NUMBER = 0
-DATA_NUMBER = [2, 3]
+MODEL_NUMBER = 1
+DATA_NUMBER = [3, 4, 5]
 
 if len(sys.argv) > 1:
     MODEL_NUMBER = int(sys.argv[1])
@@ -69,7 +69,7 @@ file_names = [BASE_FILENAME + str(i) + BASE_EXTENSION for i in DATA_NUMBER]
 
 
 def prepareData(npData):
-    x = npData["images"]
+    x = np.concatenate((npData["images"], npData["distances"][:, np.newaxis, :, :]), axis=1)
     assert x[0][0][0][0] != 0
     y = npData["controls"]
     return x, y
@@ -95,16 +95,16 @@ xData = torch.tensor(xData, dtype=torch.float32).to(device)
 yData = torch.tensor(yData, dtype=torch.float32).to(device)
 
 log(f"Data prepared, {len(xData)} samples")
+if sys.__name__ == "__main__":
+    with torch.no_grad():
+        model.eval()
 
-with torch.no_grad():
-    model.eval()
+        y_preds = torch.sigmoid(model(xData))
 
-    y_preds = torch.sigmoid(model(xData))
+        total = yData.size(0) * yData.size(1)
+        y_preds = torch.where(y_preds < 0.5, 0, 1)
 
-    total = yData.size(0) * yData.size(1)
-    y_preds = torch.where(y_preds < 0.5, 0, 1)
-
-    log("Accuracy is : ", Stats.accuracy(y_preds, yData))
-    class_accuracies = Stats.accuracyPerClass(y_preds, yData, LABELS)
-    for l in class_accuracies.keys():
-        log(f"Accuracy for {l} is : ", class_accuracies[l])
+        log("Accuracy is : ", Stats.accuracy(y_preds, yData))
+        class_accuracies = Stats.accuracyPerClass(y_preds, yData, LABELS)
+        for l in class_accuracies.keys():
+            log(f"Accuracy for {l} is : ", class_accuracies[l])
