@@ -9,63 +9,35 @@ images = []
 controls = []
 speeds = []
 
-running = True
-
 DATA_FOLDER = "./data/record"
 FILENAME = ".npz"
 START_TRIM = 10
 END_TRIM = 10
 
 
-firstSensing = True
-
-lastPicture = None
-
-
-freqIndex = 0
-
-def appendNewData(newData):
-    global images, controls, lastPicture, freqIndex, speeds, firstSensing
-    if firstSensing:
-        print("Data collector amorced")
-        firstSensing = False
-        return
-    x, y = Remote.convertFromMessageToTrainingData(newData)
-    if lastPicture is not None:
-        newX = np.stack((lastPicture, x), axis=0)
-        speeds.append(newData["car_speed"])
-        images.append(newX)
-        controls.append(y)
-    lastPicture = x
-    freqIndex += 1
-
-
-def freqCalc():
-    global running, freqIndex
-    if not running:
-        return
-    threading.Timer(10, freqCalc).start()
-    print(f"Data frequency is : ", freqIndex / 10)
-    freqIndex = 0
-
-
-collector = Remote("http://127.0.0.1", 5000, appendNewData, True)
+collector = Remote("http://127.0.0.1", 5000, lambda: "", True)
 # Cold starting the remote sensing
 # (It is there to tell the game that it need to save screenshots...)
-collector._getSensingData()
 collector.reset()
 print("Waiting for enter to start recording...")
 input()
 then = time.time()
-collector.startSensing()
-freqCalc()
+collector.startRecording()
 print("Waiting for enter to stop recording...")
 input()
-collector.stopSensing()
+data = collector.stopRecording()
 now = time.time()
-running = False
-print(f"Saving data... {len(images)} frames for ", now - then, " seconds")
-sleep(1)
+print(f"Saving data... {len(data)} frames for ", now - then, " seconds")
+lastPicture = None
+for d in data:
+    x, y = Remote.convertFromMessageToTrainingData(d)
+    if lastPicture is not None:
+        newX = np.stack((lastPicture, x), axis=0)
+        speeds.append(d["car_speed"])
+        images.append(newX)
+        controls.append(y)
+    lastPicture = x
+
 images = images[START_TRIM:-END_TRIM]
 controls = controls[START_TRIM:-END_TRIM]
 speeds = speeds[START_TRIM:-END_TRIM]

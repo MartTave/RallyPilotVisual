@@ -91,6 +91,11 @@ class RemoteController(Entity):
 
             if self.recording:
                 return jsonify({"error": "Already recording"}), 400
+            picture = request.args.get("picture")
+            if picture and picture == "True":
+                self.recordPictures = True
+            else:
+                self.recordPictures = False
             self.recording = True
             self.record = []
             return jsonify({"status": "Recording started"}), 200
@@ -107,6 +112,7 @@ class RemoteController(Entity):
                 return jsonify({"error": "Not recording"}), 400
 
             self.recording = False
+            self.recordPictures = False
             return jsonify({"status": "Recording stopped", "data": self.record}), 200
 
         @flask_app.route("/picture", methods=["GET"])
@@ -188,8 +194,8 @@ class RemoteController(Entity):
     def simulateGA(
         self,
     ):
-        #if self.car.timeManager.executeNow(10):
-            # Here we need to run next control and save position
+        # if self.car.timeManager.executeNow(10):
+        # Here we need to run next control and save position
         if self.simuIndex >= len(self.controlList) + GRACE_TIME_GA:
             self.simulating = False
             self.simuResult.append(
@@ -226,8 +232,15 @@ class RemoteController(Entity):
             self.process_remote_commands()
             if self.recordPictures:
                 self.updateScrenshot()
-            if self.recording:
-                self.record.append(self.get_sensing_data())
+        if self.recording:
+            data = self.get_sensing_data()
+            if self.recordPictures:
+                tex = base.win.getDisplayRegion(0).getScreenshot()
+                ar = np.frombuffer(tex.getRamImageAs("rgb"), np.uint8)
+                image = arr.reshape(224, 224, 3)
+                image = image[::-1, :, :].transpose((2, 0, 1))
+                data["picture"] = image.tolist()
+            self.record.append(data)
 
     def updateScrenshot(self):
         if self.car is None:

@@ -49,7 +49,9 @@ class Remote:
         return True
 
     def startRecording(self):
-        response = requests.post(f"{self.host}:{self.port}/record")
+        response = requests.post(
+            f"{self.host}:{self.port}/record", json={"picture": self.getPicture}
+        )
         if response.status_code != 200:
             print(
                 f"Received error response: {response.status_code} with status {response.json()['error']}"
