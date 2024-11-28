@@ -26,7 +26,7 @@ RUN apt-get update -y \
 # Rally part.
 WORKDIR /app
 RUN apt-get update && apt-get install -y git && apt-get clean
-RUN git clone https://github.com/MartTave/RallyPilotVisual.git .
+RUN git clone -b docker https://github.com/MartTave/RallyPilotVisual.git .
 COPY . .
 
 

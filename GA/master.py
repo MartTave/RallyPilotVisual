@@ -3,7 +3,6 @@ from multiprocessing import Lock, Pool
 import threading
 from time import sleep
 import docker
-
 from rallyrobopilot.remote import Remote
 
 def getx(x): 
@@ -46,10 +45,13 @@ class Master:
             log("Running in local - Not starting any container")
             return
         def startContainer(port):
+            env_var ={"TRACK" : "NotSoSimpleTrack"}
+            
             container = self.client.containers.run(
                 self.image_name,
                 detach=True,
-                ports={'5000': port},  
+                ports={'5000': port}, 
+                environment= env_var, 
             )
             return container
 
