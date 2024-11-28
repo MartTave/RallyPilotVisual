@@ -91,8 +91,8 @@ class RemoteController(Entity):
 
             if self.recording:
                 return jsonify({"error": "Already recording"}), 400
-            picture = request.args.get("picture")
-            if picture and picture == "True":
+            data = request.json
+            if "picture" in data and data["picture"] == True:
                 self.recordPictures = True
             else:
                 self.recordPictures = False
@@ -236,7 +236,7 @@ class RemoteController(Entity):
             data = self.get_sensing_data()
             if self.recordPictures:
                 tex = base.win.getDisplayRegion(0).getScreenshot()
-                ar = np.frombuffer(tex.getRamImageAs("rgb"), np.uint8)
+                arr = np.frombuffer(tex.getRamImageAs("rgb"), np.uint8)
                 image = arr.reshape(224, 224, 3)
                 image = image[::-1, :, :].transpose((2, 0, 1))
                 data["picture"] = image.tolist()

@@ -25,9 +25,12 @@ then = time.time()
 collector.startRecording()
 print("Waiting for enter to stop recording...")
 input()
+print("Recording stopped, this might take a while to get the data from the simulation")
 data = collector.stopRecording()
 now = time.time()
 print(f"Saving data... {len(data)} frames for ", now - then, " seconds")
+
+
 lastPicture = None
 for d in data:
     x, y = Remote.convertFromMessageToTrainingData(d)
