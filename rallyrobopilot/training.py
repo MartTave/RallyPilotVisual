@@ -57,7 +57,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Device is : {device}")
 
 def prepareData(npData):
-    x = npData["images"]
+    x = np.concatenate((npData["images"], npData["distances"][:, np.newaxis, :, :]), axis=1)
     assert x[0][0][0][0] != 0
     y = npData["controls"]
     return x, y
