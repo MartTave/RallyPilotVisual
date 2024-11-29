@@ -19,12 +19,10 @@ class Master:
         self.remotes = []
         self.free = True
         self.client = docker.from_env()
-        self.image_name = "app"  
-        try:
-            self.client.images.get(self.image_name)
-        except docker.errors.ImageNotFound:
-            log(f"Image {self.image_name} not found locally, pulling from Docker Hub...")
-            # self.client.images.pull(self.image_name)
+        self.image_name = "polypode/hes:latest"
+        log(f"Pulling {self.image_name} from docker hub")
+        self.client.images.pull(self.image_name)
+            
         self.availableSimuMax = len(self.ports)
         self.startContainers()
         if not self.isLocal:
@@ -55,7 +53,7 @@ class Master:
             return container
 
         log(f"Starting {len(self.ports)} containers")
-        with ThreadPoolExecutor(max_workers=int(len(self.ports) / 3)) as executor:
+        with ThreadPoolExecutor(max_workers=max(1, int(len(self.ports) / 3))) as executor:
             futures = [executor.submit(startContainer, port) for port in self.ports]
             # Wait for all futures to finish and gather results
             self.containers = [future.result() for future in futures]

@@ -33,9 +33,8 @@ def prepare_game_app(time: Time):
 
     envVar = os.environ.get("TRACK")
     track_name = "VisualTrack" if envVar is None else envVar
-    print("Actual Track is : ", track_name)
+    print("[GAME ]Actual Track is : ", track_name)
     track = Track(track_name)
-    print("loading assets after track creation")
     track.load_assets(global_models, global_texs)
 
     # Car

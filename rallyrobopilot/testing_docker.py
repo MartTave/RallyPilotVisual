@@ -3,7 +3,7 @@ from GA.conversions import Convertion
 import matplotlib.pyplot as plt
 
 
-jsonFile = Convertion("ga_0").readJson()
+jsonFile = Convertion("ga_4").readJson()
 
 
 def newData(data):
@@ -11,7 +11,7 @@ def newData(data):
 
 remote = Remote("http://127.0.0.1", 5000, newData, False)
 
-TRIES = 50
+TRIES = 20
 
 target = len(jsonFile["baseControls"]) - 1
 
