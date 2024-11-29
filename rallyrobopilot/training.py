@@ -47,7 +47,7 @@ BASE_EXTENSION = ".npz"
 file_names = [BASE_FILENAME + str(i) + BASE_EXTENSION for i in DATA_INDEXES]
 if USE_SYMETRIC:
     file_names += [
-        BASE_FILENAME + "_flipped" + str(i) + BASE_EXTENSION for i in DATA_INDEXES
+        BASE_FILENAME + "_flipped" + BASE_EXTENSION for i in DATA_INDEXES
     ]
 
 xData = []
