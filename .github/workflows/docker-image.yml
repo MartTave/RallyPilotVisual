@@ -19,6 +19,6 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build the Docker image
-      run: docker build ./docker -t polypode/hes
+      run: docker build ./docker -t --no-cache polypode/hes:latest
     - name: Push the docker image to docker hub
-      run: docker push polypode/hes
+      run: docker push polypode/hes:latest
