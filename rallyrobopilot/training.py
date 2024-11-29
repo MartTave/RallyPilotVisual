@@ -104,7 +104,7 @@ validate_loader = DataLoader(validate_data, batch_size=32)
 
 # Define loss function and optimizer
 classification_loss = nn.BCEWithLogitsLoss(
-    torch.tensor([0.4, 1, 1, 1], dtype=torch.float32)
+    torch.tensor([0.3, 1.5, 1, 1], dtype=torch.float32)
 )
 
 # Keep weight decays really small
