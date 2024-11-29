@@ -1,3 +1,4 @@
+from time import sleep
 from rallyrobopilot.remote import Remote
 from GA.conversions import Convertion
 import matplotlib.pyplot as plt
@@ -11,7 +12,7 @@ def newData(data):
 
 remote = Remote("http://127.0.0.1", 5000, newData, False)
 
-TRIES = 20
+TRIES = 50
 
 target = len(jsonFile["baseControls"]) - 1
 
@@ -27,6 +28,7 @@ for i in range(TRIES):
         jsonFile["startVelocity"],
     )
     results.append(res[target])
+    sleep(0.25)
 
 x = [i[0] for i in results]
 z = [i[2] for i in results]
