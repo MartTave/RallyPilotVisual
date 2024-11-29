@@ -2,6 +2,7 @@ import sys
 import threading
 from time import sleep
 from data_tools.getDistance import getDistancesSingle
+from rallyrobopilot.normalize_distances import normalize_distances
 import torch
 from model import AlexNetAtHome
 from remote import Remote
@@ -38,7 +39,9 @@ with torch.no_grad():
         pic = np.array(newData["picture"])
         pic = convertToBwSingle(pic)
         if lastPic is not None:
-            x = np.concatenate((AlexNetAtHome.concatTwoPics(lastPic, pic), getDistancesSingle(np.array(newData["picture"]), CURRENT_COLOR)[np.newaxis, :, :]), axis=0)
+            distances = getDistancesSingle(np.array(newData["picture"]), CURRENT_COLOR)
+            distances_normalized = normalize_distances(distances)
+            x = np.concatenate((AlexNetAtHome.concatTwoPics(lastPic, pic), distances_normalized[np.newaxis, :, :]), axis=0)
             xTensor = torch.tensor(x, dtype=torch.float32).unsqueeze(0).to(device)
             classification = model(xTensor)
             probs = torch.sigmoid(classification)

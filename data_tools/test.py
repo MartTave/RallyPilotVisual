@@ -1,6 +1,6 @@
 import numpy as np
 
-file = np.load("data/record2.npz")
+file = np.load("data/record0.npz")
 
 import ipdb
 

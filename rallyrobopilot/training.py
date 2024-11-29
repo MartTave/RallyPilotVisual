@@ -1,3 +1,4 @@
+from math import sqrt
 from multiprocessing import Pool
 import os
 import sys
@@ -41,7 +42,7 @@ regression_weight = 0.2
 num_epochs = 30
 
 BASE_FOLDER = "./data/"
-BASE_FILENAME = "record"
+BASE_FILENAME = "record_norm"
 BASE_EXTENSION = ".npz"
 file_names = [BASE_FILENAME + str(i) + BASE_EXTENSION for i in DATA_INDEXES]
 if USE_SYMETRIC:
@@ -55,6 +56,7 @@ yData = []
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Device is : {device}")
+
 
 def prepareData(npData):
     x = np.concatenate((npData["images"], npData["distances"][:, np.newaxis, :, :]), axis=1)

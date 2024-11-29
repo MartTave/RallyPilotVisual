@@ -3,6 +3,7 @@ import threading
 from time import sleep
 import time
 from data_tools.getDistance import getDistancesSingle
+from rallyrobopilot.normalize_distances import normalize_distances
 from remote import Remote
 import numpy as np
 
@@ -39,10 +40,12 @@ PURE_BLUE = [0, 0, 255]
 CURRENT_COLOR = np.array(PURE_CYAN)
 
 lastPicture = None
+distances_normalized = []
 for d in data:
     x, y = Remote.convertFromMessageToTrainingData(d)
     if lastPicture is not None:
-        distances.append(getDistancesSingle(np.array(d["picture"]), CURRENT_COLOR))
+        distances = getDistancesSingle(np.array(d["picture"]), CURRENT_COLOR)
+        distances_normalized.append(normalize_distances(distances))
         newX = np.stack((lastPicture, x), axis=0)
         speeds.append(d["car_speed"])
         images.append(newX)
@@ -52,14 +55,13 @@ for d in data:
 images = images[START_TRIM:-END_TRIM]
 controls = controls[START_TRIM:-END_TRIM]
 speeds = speeds[START_TRIM:-END_TRIM]
-distances = distances[START_TRIM:-START_TRIM]
+distances_normalized = distances_normalized[START_TRIM:-START_TRIM]
 
 images = np.array(images)
 controls = np.array(controls)
 speeds = np.array(speeds)
-distances = np.array(distances)
-
-assert len(distances) == len(images)
+distances_normalized = np.array(distances_normalized)
+assert len(distances_normalized) == len(images)
 
 
 currIndex = 0
@@ -68,7 +70,7 @@ while os.path.exists(full_path):
     currIndex += 1
     full_path = DATA_FOLDER + str(currIndex) + FILENAME
 
-np.savez(full_path, images=images, controls=controls, speeds=speeds, distances=distances)
+np.savez(full_path, images=images, controls=controls, speeds=speeds, distances=distances_normalized)
 
 collector.reset()
 
