@@ -49,7 +49,7 @@ class ControlsExamplesGA():
             print("End line not reached ! - File not saved !!!")
 
 
-FOLDERNAME = "ga_5"
+FOLDERNAME = "ga_7"
 
 test = ControlsExamplesGA(FOLDERNAME)
 test.computeSimulation()
