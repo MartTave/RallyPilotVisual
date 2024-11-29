@@ -180,6 +180,7 @@ class RemoteController(Entity):
             self.car.reset_position = startPosition
             self.car.reset_orientation = (0, startAngle, 0)
             self.car.reset_speed = startSpeed
+            self.car.collisionHappened = False
             self.simulating = True
             # Sync of last sensing
             # For it to start playing controls back immediately
@@ -194,6 +195,12 @@ class RemoteController(Entity):
     ):
         # if self.car.timeManager.executeNow(10):
         # Here we need to run next control and save position
+        if self.car.collisionHappened:
+            self.simuResult = []
+            self.simulating = False
+            self.car.collisionHappened = False
+            self.car.reset_car()
+            return
         if self.simuIndex == -1:
             self.car.reset_car()
             self.simuIndex += 1

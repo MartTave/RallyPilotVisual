@@ -166,7 +166,7 @@ class GaDataGeneration():
             log("")
             log("=====================================")
             log("Generation : ", generation + 1, "/", self.ngen)
-            log("Best score is : ", max_score)
+            log("Best score is : ", max_score, " from ", len(self.controls))
             log("Current patience is : ", currPatience, "/", self.patience)
             log("DNF count : ", self.pop_size - len(pop_filtered_fitness))
             log("Fitness values for elites : ", [x.fitness.values[0] for x in elites])

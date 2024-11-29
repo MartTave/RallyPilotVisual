@@ -18,12 +18,13 @@ class Master:
         self.containers = []
         self.remotes = []
         self.free = True
-        self.client = docker.from_env()
-        self.image_name = "polypode/hes:latest"
-        log(f"Pulling {self.image_name} from docker hub")
-        self.client.images.pull(self.image_name)
             
         self.availableSimuMax = len(self.ports)
+        if not self.isLocal:
+            self.client = docker.from_env()
+            self.image_name = "polypode/hes:latest"
+            log(f"Pulling {self.image_name} from docker hub")
+            self.client.images.pull(self.image_name)
         self.startContainers()
         if not self.isLocal:
             sleep(20)
@@ -42,7 +43,7 @@ class Master:
             log("Running in local - Not starting any container")
             return
         def startContainer(port):
-            env_var ={"TRACK" : "NotSoSimpleTrack"}
+            env_var ={"TRACK" : "NotSoSimpleTrack", "FPS": 20}
 
             container = self.client.containers.run(
                 self.image_name,
@@ -50,6 +51,7 @@ class Master:
                 ports={"5000": port},
                 environment=env_var,
             )
+            sleep(5)
             return container
 
         log(f"Starting {len(self.ports)} containers")

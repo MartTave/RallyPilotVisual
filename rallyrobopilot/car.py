@@ -95,6 +95,8 @@ class Car(Entity):
         self.trails = [self.trail_renderer1, self.trail_renderer2, self.trail_renderer3, self.trail_renderer4]
         self.start_trail = True
 
+        self.collisionHappened = False
+
         # Collision
         self.copy_normals = False
         self.hitting_wall = False
@@ -402,6 +404,9 @@ class Car(Entity):
 
         #   Detect collision
         if front_collision.distance < self.scale_x + distance_to_travel:
+
+            # self.collisionHappened = True
+
             free_dist = front_collision.distance - self.scale_x + distance_to_travel
 
             #   cancel speed going directly into the obstacle
