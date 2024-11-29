@@ -32,7 +32,7 @@ def prepare_game_app(time: Time):
     global_texs = [ "assets/cars/garage/sports-car/sports-red.png", "sports-blue.png", "sports-green.png", "sports-orange.png", "sports-white.png", "particle_forest_track.png", "red.png"]
 
     envVar = os.environ.get("TRACK")
-    track_name = "SimpleTrack" if envVar is None else envVar
+    track_name = "VisualTrack" if envVar is None else envVar
     print("Actual Track is : ", track_name)
     track = Track(track_name)
     print("loading assets after track creation")

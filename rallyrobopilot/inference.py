@@ -1,6 +1,7 @@
 import sys
 import threading
 from time import sleep
+from data_tools.getDistance import getDistancesSingle
 import torch
 from model import AlexNetAtHome
 from remote import Remote
@@ -11,7 +12,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 print("Device is : ", device)
 
-MODEL_NUMBER = 0
+MODEL_NUMBER = 1
 
 if len(sys.argv) > 1:
     MODEL_NUMBER = int(sys.argv[1])
@@ -24,6 +25,8 @@ lastPic = None
 
 model = model.to(device)
 
+CURRENT_COLOR = np.array([0, 0, 255])
+
 model.eval()
 
 with torch.no_grad():
@@ -35,7 +38,7 @@ with torch.no_grad():
         pic = np.array(newData["picture"])
         pic = convertToBwSingle(pic)
         if lastPic is not None:
-            x = AlexNetAtHome.concatTwoPics(lastPic, pic)
+            x = np.concatenate((AlexNetAtHome.concatTwoPics(lastPic, pic), getDistancesSingle(np.array(newData["picture"]), CURRENT_COLOR)[np.newaxis, :, :]), axis=0)
             xTensor = torch.tensor(x, dtype=torch.float32).unsqueeze(0).to(device)
             classification = model(xTensor)
             probs = torch.sigmoid(classification)
