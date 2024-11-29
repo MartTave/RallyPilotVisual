@@ -51,7 +51,7 @@ class Master:
                 ports={"5000": port},
                 environment=env_var,
             )
-            sleep(5)
+            sleep(8)
             return container
 
         log(f"Starting {len(self.ports)} containers")
@@ -74,8 +74,9 @@ class Master:
         def stopContainer(c):
             c.stop()
             c.remove()
+            sleep(10)
         log(f"Stopping {len(self.containers)} containers")
-        with ThreadPoolExecutor(max_workers=len(self.ports)) as executor:
+        with ThreadPoolExecutor(max_workers=max(1, int(len(self.ports) / 3))) as executor:
             futures = [executor.submit(stopContainer, c) for c in self.containers]
             # Wait for all futures to finish and gather results
             [future.result() for future in futures]
