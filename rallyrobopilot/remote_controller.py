@@ -173,6 +173,9 @@ class RemoteController(Entity):
                 return jsonify({"error": "Invalid command data"}), 400
             if self.simulating:
                 return jsonify({"error": "Already simulating"}), 400
+            
+            if "picture" in data and data["picture"] == True:
+                self.recordPictures = True
             self.controlList = data["controlList"]
             startPosition = data["startPosition"]
             startAngle = data["startAngle"]
