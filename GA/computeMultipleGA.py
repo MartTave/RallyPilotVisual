@@ -25,9 +25,11 @@ class computeMultipleGA():
 
             ga = GaDataGeneration(jsonData, m, pop_size=12, ngen=10)
             res,fitness_values = ga.run_ga()
-            
+            master.free = True
             conv.writeJsonFile(res)
             conv.writeFitnessValues(fitness_values)
+        for m in self.masters:
+            m.stopContainers()
 
 if __name__ == '__main__':
 

@@ -21,7 +21,7 @@ def log(*args):
 class GaDataGeneration():
     def __init__(self, jsonData, master: Master, pop_size=20, ngen=6, patience=15):        
         self.fitness_values = []
-        
+
         self.parseJsonData(jsonData)
         self.patience = patience        
         self.pop_size = pop_size
@@ -30,8 +30,7 @@ class GaDataGeneration():
         self.master = master
         self.master.free = False
         self.setup_deap()
-        
-        
+
     def parseJsonData(self, jsonData):
         self.controls = jsonData["baseControls"]
         self.startPoint = (
@@ -50,7 +49,7 @@ class GaDataGeneration():
         self.computeMaths = GaMaths(self.endLine,self.startPoint)
         self.angle = jsonData["startAngle"]
         self.speed = jsonData["startVelocity"]
-        
+
     def getInd(self):
         return self.toolbox.clone(self.exampleInd)
 
@@ -63,10 +62,10 @@ class GaDataGeneration():
         self.exampleInd = self.toolbox.individual()
         for i, c in enumerate(self.controls):
             self.exampleInd[i] = c
-       
+
         self.toolbox.register("takeBest", tools.selBest)
         self.toolbox.register("population", tools.initRepeat, list, self.getInd)
-        
+
         self.toolbox.register("evaluate", self.fitness_fonction) #evaluate allow to create a fitness fonction 
         self.toolbox.register("mate", tools.cxTwoPoint) #allow to choose a method for crossover
         self.toolbox.register("mutate", self.custom_mutate) # allow the mutation step 
@@ -79,7 +78,7 @@ class GaDataGeneration():
             j = random.randint(0, 3)
             individual[i][j] = 1 if individual[i][j] == 0 else 0
         return (individual,)  
-        
+
     def fitness_fonction(self, individual):
         positions = self.master.runSimulation(individual, self.startPoint, self.angle, self.speed)
         fitness_value = -1
@@ -117,7 +116,7 @@ class GaDataGeneration():
 
             # Sort by fitness values
             pop_filtered = filter(lambda x:x[1][0] != -1, zip(population, fits))  # Sort by fitness value
-            
+
             pop_filtered_fitness = []
 
             for t in pop_filtered:
@@ -132,7 +131,7 @@ class GaDataGeneration():
             # Don't crossover/mutate if it's the last gen !
             if generation == self.ngen -1:
                 continue
-                
+
             # Create new population with tournament selection
             offspring = list(map(self.toolbox.clone, self.toolbox.select(pop_filtered_fitness, k=len(population) - ELITE_SIZE)))
             # Apply crossover
@@ -154,9 +153,8 @@ class GaDataGeneration():
                 currBestScore = max_score
                 currPatience = 0
             if max_score > currBestScore:
-                log("Best score increased ! ", max_score, " > ", currBestScore)
+                log("Best score increased ! ", currBestScore, " -> ", max_score)
                 currBestScore = max_score
-                currPatience = 0
             if currPatience == self.patience:
                 log("Early stopping at generation ", generation)
                 break
@@ -170,17 +168,15 @@ class GaDataGeneration():
             log("Generation : ", generation + 1, "/", self.ngen)
             log("Best score is : ", max_score)
             log("Current patience is : ", currPatience, "/", self.patience)
-            log("DNF count : ", len(population) - len(pop_filtered_fitness))
+            log("DNF count : ", self.pop_size - len(pop_filtered_fitness))
             log("Fitness values for elites : ", [x.fitness.values[0] for x in elites])
             log("=====================================")
             log("")
 
-        self.master.stopContainers()
-        self.master.free = True
         best_individuals = sorted(population, key=lambda x: x.fitness.values[0], reverse=True)
         return best_individuals, self.fitness_values
 
 
 controls = [[1,0,0,0] for _ in range(250)]              
-#ga = GaDataGeneration(controls,(0.0, 0.0, 0.0),[(-166.49599104143704,0.0,74.12973000725437),(-185.91828508160984,0.0,78.90199301520657)],-90.0,0)
-#p = ga.run_ga()
+# ga = GaDataGeneration(controls,(0.0, 0.0, 0.0),[(-166.49599104143704,0.0,74.12973000725437),(-185.91828508160984,0.0,78.90199301520657)],-90.0,0)
+# p = ga.run_ga()

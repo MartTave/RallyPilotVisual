@@ -8,10 +8,10 @@ import numpy as np
 
 class StatsGA(): 
     def __init__(self, folder):
-       conv = Convertion(folder)
-       self.fitnessValues = conv.readFitnessValues()
-       self.folder = folder
-   
+        conv = Convertion(folder)
+        self.fitnessValues = conv.readFitnessValues()
+        self.folder = folder
+
     def getGetNumberEndedSim(self): 
         savePath = f"./GA/ga_data/{self.folder}/hist"
         os.makedirs(savePath, exist_ok=True)
@@ -22,8 +22,6 @@ class StatsGA():
             filename = os.path.join(savePath, f"histogram_{i}.png")
             plt.savefig(filename)
             plt.close()
-
-
 
     def getNumOfNotEndedSim(self):
         savePath = f"./GA/ga_data/{self.folder}"
@@ -53,12 +51,10 @@ class StatsGA():
         filename = os.path.join(savePath, "bestscores.png")
         plt.savefig(filename)
         plt.close()
-            
-            
-            
 
-     
-stat = StatsGA("ga_0")
-stat.getGetNumberEndedSim()
-stat.getNumOfNotEndedSim()
-stat.getBestScores()
+
+for f in [f"ga_{i}" for i in range(2, 6)]:
+    stat = StatsGA(f)
+    stat.getGetNumberEndedSim()
+    stat.getNumOfNotEndedSim()
+    stat.getBestScores()
