@@ -405,7 +405,7 @@ class Car(Entity):
         #   Detect collision
         if front_collision.distance < self.scale_x + distance_to_travel:
 
-            # self.collisionHappened = True
+            self.collisionHappened = True
 
             free_dist = front_collision.distance - self.scale_x + distance_to_travel
 
