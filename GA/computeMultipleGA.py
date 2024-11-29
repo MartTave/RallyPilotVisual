@@ -34,7 +34,7 @@ class computeMultipleGA():
 if __name__ == '__main__':
 
     masters = [
-        Master(range(5000, 5004), False)
+        Master(range(5000, 5001), False)
     ]
     
     test = computeMultipleGA(masters, ["ga_0"])

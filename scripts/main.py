@@ -1,3 +1,4 @@
+import os
 import sys
 from rallyrobopilot import prepare_game_app, RemoteController
 from flask import Flask, request, jsonify
@@ -11,7 +12,9 @@ from rallyrobopilot.args_parser import parseArgs
 
 time: Time
 
-if len(sys.argv) > 1:
+if os.environ.get("FPS") is not None:
+    time = Time(realTime=False, fps=int(os.environ.get("FPS")), dt=0.1)
+elif len(sys.argv) > 1:
     args = parseArgs(sys.argv[1:])
     if args is None:
         sys.exit(0)
