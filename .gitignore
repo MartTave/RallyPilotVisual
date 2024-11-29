@@ -2,7 +2,6 @@ trash
 hist
 myenv
 data
-models
 
 # Byte-compiled files
 __pycache__/
