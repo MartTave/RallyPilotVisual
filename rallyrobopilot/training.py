@@ -42,12 +42,12 @@ regression_weight = 0.2
 num_epochs = 30
 
 BASE_FOLDER = "./data/"
-BASE_FILENAME = "record_norm"
+BASE_FILENAME = "record"
 BASE_EXTENSION = ".npz"
 file_names = [BASE_FILENAME + str(i) + BASE_EXTENSION for i in DATA_INDEXES]
 if USE_SYMETRIC:
     file_names += [
-        BASE_FILENAME + str(i) +"_flipped" + BASE_EXTENSION for i in DATA_INDEXES
+        BASE_FILENAME + "_flipped" + str(i) + BASE_EXTENSION for i in DATA_INDEXES
     ]
 
 xData = []
@@ -104,7 +104,7 @@ validate_loader = DataLoader(validate_data, batch_size=32)
 
 # Define loss function and optimizer
 classification_loss = nn.BCEWithLogitsLoss(
-    torch.tensor([0.3, 1.5, 1, 1], dtype=torch.float32)
+    torch.tensor([0.2, 2, 1, 1], dtype=torch.float32)
 )
 
 # Keep weight decays really small
