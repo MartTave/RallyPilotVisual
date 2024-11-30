@@ -43,13 +43,13 @@ class AlexNetAtHome(nn.Module):
         )
         self.predictor = nn.Sequential(
             nn.Dropout(0.5),
-            nn.Linear(predictorInputSize, 256),
+            nn.Linear(predictorInputSize, 512),
             nn.ReLU(),
             nn.Dropout(0.5),
-            nn.Linear(256, 256),
+            nn.Linear(512, 512),
             nn.ReLU(),
             nn.Dropout(0.5),
-            nn.Linear(256, 4),
+            nn.Linear(512, 4),
         )
 
     def forward(self, x):
