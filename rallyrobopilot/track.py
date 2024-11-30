@@ -33,7 +33,7 @@ class Track(Entity):
         # Find assets paths.
         track_model_path =  str(self.data["track_model"])
         track_texture_path = str(self.data["track_texture"])
-        
+
         origin_position = tuple(self.data["origin_position"])
         origin_rotation = tuple(self.data["origin_rotation"])
         self.origin_scale = tuple(self.data["origin_scale"])
@@ -44,7 +44,7 @@ class Track(Entity):
         finish_line_position = tuple(self.data["finish_line_position"])
         finish_line_rotation = tuple(self.data["finish_line_rotation"])
         finish_line_scale = tuple(self.data["finish_line_scale"])
-       
+
         print("Creating track entity")
         super().__init__(model = track_model_path, texture = load_texture(track_texture_path),
                          position = origin_position, rotation = origin_rotation, 
@@ -56,19 +56,25 @@ class Track(Entity):
         self.track = [ self.finish_line ]
 
         self.details = []
-        for detail in self.data["details"]:
-            self.details.append(Entity(model = detail["model"], texture = load_texture(detail["texture"]),
-                            position = origin_position, rotation_y = origin_rotation[1], 
-                            scale = self.origin_scale[1]))
+        # for detail in self.data["details"]:
+        #     self.details.append(Entity(model = detail["model"], texture = load_texture(detail["texture"]),
+        #                     position = origin_position, rotation_y = origin_rotation[1],
+        #                     scale = self.origin_scale[1]))
         self.obstacles = []
         for obstacle in self.data["obstacles"]:
-            self.obstacles.append(Entity(model = obstacle["model"],
-                            collider = "mesh",
-                            position = origin_position, rotation_y = origin_rotation[1], 
-                            scale = self.origin_scale[1], visible = False))
+            self.obstacles.append(
+                Entity(
+                    model=obstacle["model"],
+                    collider="mesh",
+                    position=origin_position,
+                    rotation_y=origin_rotation[1],
+                    scale=self.origin_scale[1],
+                    visible=True,
+                )
+            )
 
         self.disable()
-        
+
         self.played = False
         self.unlocked = False
 
@@ -93,7 +99,6 @@ class Track(Entity):
             for i in self.details:
                 i.enable()
 
-
     def load_assets(self, global_models = [], global_texs = []):
         def inner_load_assets():
             models_to_load = list(set(
@@ -114,7 +119,7 @@ class Track(Entity):
                 print("Loading global texture")
                 print(t)
                 load_texture(t)
-                
+
             for i, m in enumerate(models_to_load):
                 print("Loading local model")
                 print(m)
