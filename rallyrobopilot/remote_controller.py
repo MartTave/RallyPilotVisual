@@ -183,6 +183,7 @@ class RemoteController(Entity):
             self.car.reset_position = startPosition
             self.car.reset_orientation = (0, startAngle, 0)
             self.car.reset_speed = startSpeed
+            self.car.speed = startSpeed
             self.car.collisionHappened = False
             self.simulating = True
             # Sync of last sensing

@@ -1,8 +1,9 @@
+from time import sleep
 from rallyrobopilot.remote import Remote
 from conversions import Convertion
 
 
-FOLDERS = [6, 7]
+FOLDERS = [4]
 
 remote = Remote("http://127.0.0.1", 5000, lambda x: x)
 
@@ -29,3 +30,4 @@ for f in [f"ga_{i}" for i in FOLDERS]:
         simulate(controls["0"], jsonFile)
     except:
         print("No results found for this folder ", f)
+    sleep(2)

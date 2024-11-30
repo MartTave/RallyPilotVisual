@@ -305,9 +305,7 @@ class Car(Entity):
         # Exit if esc pressed.
         if held_keys["escape"]:
             quit()
-
         self.check_respawn()
-
         if self.waitForStart:
             if held_keys[self.controls[0]] or held_keys["up arrow"]:
                 self.waitForStart = False
