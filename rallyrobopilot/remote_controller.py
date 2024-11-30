@@ -173,7 +173,7 @@ class RemoteController(Entity):
                 return jsonify({"error": "Invalid command data"}), 400
             if self.simulating:
                 return jsonify({"error": "Already simulating"}), 400
-            
+
             if "picture" in data and data["picture"] == True:
                 self.recordPictures = True
             self.controlList = data["controlList"]
@@ -196,7 +196,6 @@ class RemoteController(Entity):
     def simulateGA(
         self,
     ):
-        # if self.car.timeManager.executeNow(10):
         # Here we need to run next control and save position
         if self.car.collisionHappened:
             self.simuResult = []

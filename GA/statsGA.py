@@ -10,10 +10,10 @@ class StatsGA():
     def __init__(self, folder):
         conv = Convertion(folder)
         self.fitnessValues = conv.readFitnessValues()
-        self.folder = folder
+        self.baseFolder = f"./GA/ga_data/{folder}/graphs/"
 
     def getGetNumberEndedSim(self): 
-        savePath = f"./GA/ga_data/{self.folder}/hist"
+        savePath = f"{self.baseFolder}/hist"
         os.makedirs(savePath, exist_ok=True)
         for i,gen in enumerate(self.fitnessValues):
             plt.figure(figsize=(8, 5))
@@ -24,7 +24,7 @@ class StatsGA():
             plt.close()
 
     def getNumOfNotEndedSim(self):
-        savePath = f"./GA/ga_data/{self.folder}"
+        savePath = f"{self.baseFolder}"
         os.makedirs(savePath, exist_ok=True)
         numNotEndedSim = [int(np.sum(gen == -1)) for gen in self.fitnessValues]
         generations = list(range(len(self.fitnessValues)))  # X-axis: generation numbers
@@ -35,11 +35,11 @@ class StatsGA():
         plt.xlabel("Generation Number")
         plt.ylabel("Number of Not Ended Simulations")
         plt.xlim(left=0)
-        filename = os.path.join(savePath, "barplot_not_ended_sim.png")
+        filename = os.path.join(savePath, "individuals_killed.png")
         plt.savefig(filename)
         plt.close()
     def getBestScores(self): 
-        savePath = f"./GA/ga_data/{self.folder}"
+        savePath = f"{self.baseFolder}"
         bestScores = []
         for gen in self.fitnessValues:
             filtered = list(filter(lambda x: x != -1, gen))
@@ -48,7 +48,7 @@ class StatsGA():
         plt.title("Best Scores Per Generation")
         plt.xlabel("Generation Number")  
         plt.ylabel("Best Fitness Value") 
-        filename = os.path.join(savePath, "bestscores.png")
+        filename = os.path.join(savePath, "fitness_evolution.png")
         plt.savefig(filename)
         plt.close()
 

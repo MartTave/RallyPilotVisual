@@ -56,10 +56,16 @@ class Track(Entity):
         self.track = [ self.finish_line ]
 
         self.details = []
-        # for detail in self.data["details"]:
-        #     self.details.append(Entity(model = detail["model"], texture = load_texture(detail["texture"]),
-        #                     position = origin_position, rotation_y = origin_rotation[1],
-        #                     scale = self.origin_scale[1]))
+        for detail in self.data["details"]:
+            self.details.append(
+                Entity(
+                    model=detail["model"],
+                    texture=load_texture(detail["texture"]),
+                    position=origin_position,
+                    rotation_y=origin_rotation[1],
+                    scale=self.origin_scale[1],
+                )
+            )
         self.obstacles = []
         for obstacle in self.data["obstacles"]:
             self.obstacles.append(
@@ -69,7 +75,7 @@ class Track(Entity):
                     position=origin_position,
                     rotation_y=origin_rotation[1],
                     scale=self.origin_scale[1],
-                    visible=True,
+                    visible=False,
                 )
             )
 

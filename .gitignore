@@ -2,6 +2,7 @@ trash
 hist
 myenv
 data
+graphs
 
 # Byte-compiled files
 __pycache__/
