@@ -39,7 +39,7 @@ preparedData = ()
 
 regression_weight = 0.2
 
-num_epochs = 30
+num_epochs = 100
 
 BASE_FOLDER = "./data/"
 BASE_FILENAME = "record_norm"
@@ -184,6 +184,7 @@ def saveResults():
     plt.figure()
     plt.plot(losses["train"], label="Training loss")
     plt.plot(losses["eval"], label="Validation loss")
+    plt.yscale("log")
     plt.legend()
     plt.title("Loss")
     plt.savefig(currPath + "/loss.png")

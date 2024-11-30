@@ -11,11 +11,11 @@ class AlexNetAtHome(nn.Module):
     def __init__(self):
         super(AlexNetAtHome, self).__init__()
 
-        firstLayerSize = 32
-        secondLayerSize = 64
-        thirdLayerSize = 80
-        fourthLayerSize = 80
-        fifthLayerSize = 64
+        firstLayerSize = 64
+        secondLayerSize = 128
+        thirdLayerSize = 160
+        fourthLayerSize = 160
+        fifthLayerSize = 128
         # Calculate the input size of the predictor layer, this is the size of the last layer of the features flattenend
         predictorInputSize = 2304
 
