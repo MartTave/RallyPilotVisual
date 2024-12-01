@@ -44,7 +44,7 @@ if len(sys.argv) > 1:
             TRAINED_MODELS = [str(i) for i in sys.argv[len(DATA_INDEXES) +start_index :]]
             print(TRAINED_MODELS)
             for i in TRAINED_MODELS: 
-                model.load_state_dict(torch.load(f"./models/{i}/model.pth"))  
+                model.load_state_dict(torch.load(f"./models/{i}/model.pth"), weights_only=True)  
                 model.to(device)  
 preparedData = ()
 
