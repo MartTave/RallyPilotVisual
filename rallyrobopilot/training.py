@@ -28,12 +28,19 @@ DATA_INDEXES = [0, 1, 2, 3]
 
 USE_SYMETRIC = True
 
+TRAINED_MODELS = []
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Device is : {device}")
 if len(sys.argv) > 1:
     USE_SYMETRIC = bool(sys.argv[1])
     if len(sys.argv) > 2:
         DATA_INDEXES = [int(i) for i in sys.argv[2:]]
-
-
+        if len(sys.argv) > 3 :
+            TRAINED_MODELS = [str(i) for i in sys.argv[len(DATA_INDEXES) +1 :]]
+            for i in TRAINED_MODELS: 
+                model.load_state_dict(torch.load(f"./models/{i}/model.pth"))  
+                model.to(device)  
 preparedData = ()
 
 
@@ -54,8 +61,6 @@ xData = []
 yData = []
 
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(f"Device is : {device}")
 
 
 def prepareData(npData):
