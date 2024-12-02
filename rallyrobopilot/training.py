@@ -59,7 +59,6 @@ for f in [(TRAIN_FOLDER, train_files), (TEST_FOLDER, test_files)]:
         curr_path = f"{f[0]}/{fi}"
         if os.path.isfile(curr_path):
             f[1].append(curr_path)
-            break
 
 print(f"Loading {train_files} for training")
 print(f"Loading {test_files} for testing")
@@ -221,15 +220,15 @@ def saveResults():
     torch.save(model.state_dict(), currPath + "/model.pth")
     print("Saved model to ", currPath)
     plt.figure()
-    plt.plot(losses["train"], label="Training loss")
-    plt.plot(losses["eval"], label="Validation loss")
+    for key in losses:
+        plt.plot(losses[key], label=f"{key.capitalize()} loss")
     plt.yscale("log")
     plt.legend()
     plt.title("Loss")
     plt.savefig(currPath + "/loss.png")
     plt.figure()
-    plt.plot(accuracies["train"], label="Training accuracy")
-    plt.plot(accuracies["eval"], label="Validation accuracy")
+    for key in accuracies:
+        plt.plot(accuracies[key], label=f"{key.capitalize()} accuracy")
     plt.ylim((0, 1))
     plt.legend()
     plt.title("Accuracy")
