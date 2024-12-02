@@ -21,26 +21,3 @@ def add_gaussian_noise(images, noise_scale=0.05, blur_size=(3,3), blur_sigma=1.0
     return processed_images
 
 
-BASEPATH = "data/record_norm"
-BASE_EXTENSION = ".npz"
-files = [4,5,6,7]
-
-for f in files:
-    newPath = f"{BASEPATH}{str(f)}_noise{BASE_EXTENSION}"
-    if os.path.exists(newPath):
-        print("Found ", newPath, " skipping...")
-        continue
-    fullPath = BASEPATH + str(f) + BASE_EXTENSION
-    data = np.load(fullPath)
-    images = data["images"]
-    controls = data["controls"]
-    speeds = data["speeds"]
-    distances = data["distances"]
-    images_noise = add_gaussian_noise(images)
-    np.savez(
-        newPath,
-        images=images_noise,
-        controls=controls,
-        speeds=speeds,
-        distances=distances
-    )

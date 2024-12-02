@@ -38,26 +38,29 @@ if len(sys.argv) > 1:
         TRAINED_MODEL = str(sys.argv[3])
         if TRAINED_MODEL != "None":
             model.load_state_dict(torch.load(f"./models/{TRAINED_MODEL}/model.pth"), weights_only=True)  
-            model.to(device) 
-        if len(sys.argv) > 3 :
-            DATA_INDEXES = [int(i) for i in sys.argv[3 :]]
-          
-                
-preparedData = ()
+            model.to(device)
+        # if len(sys.argv) > 3 :
+        #     DATA_INDEXES = [int(i) for i in sys.argv[3 :]]
 
 
-regression_weight = 0.2
 
 num_epochs = 100
 
 BASE_FOLDER = "./data/"
-BASE_FILENAME = "record_norm"
-BASE_EXTENSION = ".npz"
-file_names = [BASE_FILENAME + str(i) + BASE_EXTENSION for i in DATA_INDEXES]
-if USE_SYMETRIC:
-    file_names += [
-        BASE_FILENAME + str(i) + "_flipped" + BASE_EXTENSION for i in DATA_INDEXES
-    ]
+TRAIN_FOLDER = f"{BASE_FOLDER}train/"
+TEST_FOLDER = f"{BASE_FOLDER}test/"
+
+train_files = []
+test_files = []
+
+for f in [(TRAIN_FOLDER, train_files), (TEST_FOLDER, test_files)]:
+    files = os.listdir(f[0])
+    for fi in files:
+        if os.path.isfile():
+            f[1].append(f"{f[0]}/{fi}")
+
+print(f"Loading {train_files} for training")
+print(f"Loading {test_files} for testing")
 
 xData = []
 yData = []
@@ -80,12 +83,21 @@ def loadFile(filename):
     return x, y
 
 
+testX = []
+testY = []
+
 with Pool() as pool:
-    results = pool.map(loadFile, file_names)
+    results = pool.map(loadFile, train_files)
     xData = np.concatenate([x for x, _ in results])
     yData = np.concatenate([y for _, y in results])
+    
+with Pool() as pool:
+    results = pool.map(loadFile, test_files)
+    testX = np.concatenate([x for x, _ in results])
+    testY = np.concatenate([y for _, y in results])
 
 assert len(xData) == len(yData)
+assert len(testX) == len(testY)
 
 print(f"Data prepared, {len(xData)} samples")
 
@@ -95,6 +107,11 @@ print("Target tensor created")
 sourceTensor = torch.tensor(xData, dtype=torch.float32)
 sourceTensor.to(device)
 print("Source tensor created")
+
+testTargetTensor = torch.tensor(yData, dtype=torch.float32)
+testTargetTensor.to(device)
+testSourceTensor = torch.tensor(xData, dtype=torch.float32)
+testSourceTensor.to(device)
 
 dataset = TensorDataset(sourceTensor, targetTensor)
 
@@ -126,10 +143,12 @@ model.to(device)
 losses = {
     "train": [],
     "eval": [],
+    "test": []
 }
 accuracies = {
     "train": [],
     "eval": [],
+    "test": []
 }
 
 # Training loop
@@ -137,7 +156,18 @@ accuracies = {
 
 for epoch in range(num_epochs):
 
-    for step in ["train", "eval"]:
+    for step in ["train", "eval", "test"]:
+        if step == "test":
+            model.eval()
+            optimizer.zero_grad()
+            y_pred = model(testSourceTensor)
+            loss = classification_loss(y_pred, testTargetTensor[:, :4])
+            y_pred = (y_pred > 0.5).float()
+            correct += (y_class == labels[:, :4]).sum().item()
+            total += labels.size(0) * labels.size(1)
+            losses[step].append(loss.item())
+            accuracies[step].append(correct / total)
+            continue
         currLoader = train_loader if step == "train" else validate_loader
         if step == "train":
             model.train()
@@ -167,7 +197,7 @@ for epoch in range(num_epochs):
         accuracies[step].append(correct / total)
 
     print(
-        f"Epoch [{epoch+1}/{num_epochs}], Loss: {class_loss.item():.4f}, Acc : {accuracies['eval'][-1]:.4f}"
+        f"Epoch [{epoch+1}/{num_epochs}], Loss: {class_loss.item():.4f}, Acc : {accuracies['eval'][-1]:.4f} - Test loss : {losses["test"][-1]}, Test Acc : {accuracies["test"][-1]}"
     )
 
 
