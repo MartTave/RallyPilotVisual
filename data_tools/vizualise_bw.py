@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-file = np.load("./data/record0.npz")
+file = np.load("./data/record_norm5_noise.npz")
 
 for pic in file["images"]:
     plt.imshow(pic[0], cmap="gray")

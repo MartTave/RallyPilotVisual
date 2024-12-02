@@ -26,7 +26,7 @@ lastPic = None
 
 model = model.to(device)
 
-CURRENT_COLOR = np.array([255,255,0])
+CURRENT_COLOR = np.array([255,0,0])
 
 model.eval()
 
