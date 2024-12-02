@@ -33,12 +33,17 @@ class ControlsExamplesGA():
         input()
         res = remote.stopRecording()
         detectedF = False
-        for p in res:
+        for i, p in enumerate(res):
             if not detectedF and p["up"] == 1 :
                 detectedF = True
             if detectedF:
                 self.data.append([p["up"], p["down"], p["left"], p["right"]])
                 self.positions.append([p['car_position x'], p["car_position y"], p["car_position z"]])
+                print(
+                    computeMaths.computeDistance(
+                        self.positions[-1][0], self.positions[-1][2]
+                    )
+                )
                 if computeMaths.isArrivedToEndLine(self.positions[-1][0], self.positions[-1][2]):
                     endLineReached = True
                     break
@@ -49,7 +54,7 @@ class ControlsExamplesGA():
             print("End line not reached ! - File not saved !!!")
 
 
-FOLDERNAME = [f"ga_{i}" for i in [3]]
+FOLDERNAME = [f"ga_{i}" for i in [7]]
 
 for f in FOLDERNAME:
     test = ControlsExamplesGA(f)

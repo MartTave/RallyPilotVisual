@@ -13,6 +13,9 @@ class GaMaths():
             (endLine[1][2] + endLine[0][2]) / 2
         ]
         self.startCarPosition = startCarPosition
+        self.baseSign = np.sign(
+            self.computeDistance(startCarPosition[0], startCarPosition[2])
+        )
 
     def computeDistance(self, posX , posZ):
         A = self.endLineA
@@ -26,4 +29,9 @@ class GaMaths():
         return dist < 20
 
     def isArrivedToEndLine(self, posX, posZ):
-        return self.isInCircle([posX, posZ]) and np.sign(self.computeDistance(posX,posZ))!= np.sign(self.computeDistance(self.startCarPosition[0], self.startCarPosition[2]))
+        if np.sign(self.computeDistance(posX, posZ)) != self.baseSign:
+            if self.isInCircle([posX, posZ]):
+                return True
+            else:
+                self.baseSign = np.sign(self.computeDistance(posX, posZ))
+        return False

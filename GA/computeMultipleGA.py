@@ -53,7 +53,7 @@ class computeMultipleGA():
 
 
 if __name__ == '__main__':
-    masters = [Master(range(5000, 5001), True)]
+    masters = [Master(range(5000, 5100), False)]
 
-    test = computeMultipleGA(masters, [f"ga_{i}" for i in range(3, 7)])
+    test = computeMultipleGA(masters, [f"ga_{i}" for i in range(7, 8)])
     test.runSimulations()

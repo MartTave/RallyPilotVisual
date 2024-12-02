@@ -42,6 +42,7 @@ class RemoteController(Entity):
         self.lastSensingSanity = time.time()
 
         self.record = []
+        self.recordLength = 0
         self.recording = False
         self.recordPictures = False
         self.recordStart = None
@@ -98,6 +99,7 @@ class RemoteController(Entity):
             else:
                 self.recordPictures = False
             self.recording = True
+            self.recordLength = 0
             self.recordStart = time.time()
             self.record = []
             return jsonify({"status": "Recording started"}), 200
@@ -119,7 +121,7 @@ class RemoteController(Entity):
                 "Got ",
                 len(self.record),
                 " records for ",
-                time.time() - self.recordStart,
+                self.recordLength,
                 " seconds",
             )
             self.recordStart = None
@@ -264,6 +266,7 @@ class RemoteController(Entity):
                 image = image[::-1, :, :].transpose((2, 0, 1))
                 data["picture"] = image.tolist()
             self.record.append(data)
+            self.recordLength += 1
 
     def updateScrenshot(self):
         if self.car is None:
