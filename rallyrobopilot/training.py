@@ -56,8 +56,9 @@ test_files = []
 for f in [(TRAIN_FOLDER, train_files), (TEST_FOLDER, test_files)]:
     files = os.listdir(f[0])
     for fi in files:
-        if os.path.isfile():
-            f[1].append(f"{f[0]}/{fi}")
+        curr_path = f"{f[0]}/{fi}"
+        if os.path.isfile(curr_path):
+            f[1].append(curr_path)
 
 print(f"Loading {train_files} for training")
 print(f"Loading {test_files} for testing")
