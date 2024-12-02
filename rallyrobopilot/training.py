@@ -104,8 +104,10 @@ assert len(testX) == len(testY)
 print(f"Data prepared, {len(xData)} samples")
 
 targetTensor = torch.tensor(yData, dtype=torch.float32)
+targetTensor = targetTensor.to(device)
 print("Target tensor created")
 sourceTensor = torch.tensor(xData, dtype=torch.float32)
+sourceTensor = sourceTensor.to(device)
 print("Source tensor created")
 
 testTargetTensor = torch.tensor(testY, dtype=torch.float32)
@@ -178,7 +180,7 @@ for epoch in range(num_epochs):
         correct = 0
         total = 0
         for inputs, labels in currLoader:
-            inputs, labels = inputs.to(device), labels.to(device)
+            # inputs, labels = inputs.to(device), labels.to(device)
 
             optimizer.zero_grad()
             y_class = model(inputs)
