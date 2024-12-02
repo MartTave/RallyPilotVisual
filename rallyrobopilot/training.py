@@ -109,9 +109,9 @@ sourceTensor = torch.tensor(xData, dtype=torch.float32)
 sourceTensor.to(device)
 print("Source tensor created")
 
-testTargetTensor = torch.tensor(yData, dtype=torch.float32)
+testTargetTensor = torch.tensor(testY, dtype=torch.float32)
 testTargetTensor.to(device)
-testSourceTensor = torch.tensor(xData, dtype=torch.float32)
+testSourceTensor = torch.tensor(testX, dtype=torch.float32)
 testSourceTensor.to(device)
 
 dataset = TensorDataset(sourceTensor, targetTensor)
