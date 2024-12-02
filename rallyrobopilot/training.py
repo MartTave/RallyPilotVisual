@@ -111,12 +111,14 @@ validate_loader = DataLoader(validate_data, batch_size=32)
 
 # Define loss function and optimizer
 classification_loss = nn.BCEWithLogitsLoss(
-    torch.tensor([0.3, 1.3, 1, 1], dtype=torch.float32)
+    torch.tensor([0.3, 1, 1, 1], dtype=torch.float32)
 )
 
 # Keep weight decays really small
 optimizer = optim.Adam(model.parameters(), lr=1e-4, weight_decay=1e-6)
-
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+    optimizer, mode="min", factor=0.1, patience=3
+)
 
 classification_loss.to(device)
 model.to(device)
@@ -159,7 +161,8 @@ for epoch in range(num_epochs):
             correct += (y_class == labels[:, :4]).sum().item()
             total += labels.size(0) * labels.size(1)
             nbr_items += 1
-      
+        if step == "eval":
+            scheduler.step(curr_loss)
         losses[step].append(curr_loss / nbr_items)
         accuracies[step].append(correct / total)
 
