@@ -3,7 +3,7 @@ from rallyrobopilot.remote import Remote
 from conversions import Convertion
 
 
-FOLDERS = [4]
+FOLDERS = range(0, 7)
 
 remote = Remote("http://127.0.0.1", 5000, lambda x: x)
 
@@ -23,11 +23,14 @@ for f in [f"ga_{i}" for i in FOLDERS]:
     file = Convertion(f)
 
     jsonFile = file.readJson()
-    print("Simulating example !")
+    print("Simulating example for ", f)
     simulate(jsonFile["baseControls"], jsonFile)
     try:
         controls = file.readResults()
+        print("Simulating results for ", f)
         simulate(controls["0"], jsonFile)
     except:
-        print("No results found for this folder ", f)
+        pass
+    print("Done")
+    remote.sendControl([0, 0, 0, 0])
     sleep(2)

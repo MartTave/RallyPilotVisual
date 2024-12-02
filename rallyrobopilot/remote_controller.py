@@ -16,7 +16,7 @@ from .sensing_message import SensingSnapshot, SensingSnapshotManager
 from .remote_commands import RemoteCommandParser
 
 
-GRACE_TIME_GA = 0
+GRACE_TIME_GA = 1
 
 REMOTE_CONTROLLER_VERBOSE = False
 PERIOD_REMOTE_SENSING = 0.1
@@ -44,6 +44,7 @@ class RemoteController(Entity):
         self.record = []
         self.recording = False
         self.recordPictures = False
+        self.recordStart = None
 
         self.listen_socket = None
         self.connected_client = None
@@ -97,6 +98,7 @@ class RemoteController(Entity):
             else:
                 self.recordPictures = False
             self.recording = True
+            self.recordStart = time.time()
             self.record = []
             return jsonify({"status": "Recording started"}), 200
 
@@ -113,6 +115,14 @@ class RemoteController(Entity):
 
             self.recording = False
             self.recordPictures = False
+            print(
+                "Got ",
+                len(self.record),
+                " records for ",
+                time.time() - self.recordStart,
+                " seconds",
+            )
+            self.recordStart = None
             return jsonify({"status": "Recording stopped", "data": self.record}), 200
 
         @flask_app.route("/picture", methods=["GET"])

@@ -57,9 +57,6 @@ for i in range(0, len(data), GA_LENGTH - OVERLAP):
     startAngle = data[i]["car_angle"]
     startVelocity = data[i]["car_speed"]
     baseControls = []
-    import ipdb
-
-    ipdb.set_trace()
     for d in data[i : endIndex + 1]:
         baseControls.append(
             [

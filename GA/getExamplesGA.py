@@ -49,7 +49,8 @@ class ControlsExamplesGA():
             print("End line not reached ! - File not saved !!!")
 
 
-FOLDERNAME = "ga_7"
+FOLDERNAME = [f"ga_{i}" for i in [3]]
 
-test = ControlsExamplesGA(FOLDERNAME)
-test.computeSimulation()
+for f in FOLDERNAME:
+    test = ControlsExamplesGA(f)
+    test.computeSimulation()
