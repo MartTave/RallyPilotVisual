@@ -67,7 +67,7 @@ class GaDataGeneration():
     def clonePreviousResults(self):
         population = []
         for ind in self.previousResults.values():
-            population.append([c for c in ind])
+            population.append(creator.Individual(ind))
         print("[GA] Cloned population of size ", len(population))
         return population
 
@@ -110,6 +110,9 @@ class GaDataGeneration():
         population = self.toolbox.population(n=self.pop_size)
         if self.previousResults is not None:
             population = self.clonePreviousResults()
+            for ind in population:
+                ind.fitness = creator.FitnessMin((-1,))
+
         offspring = []
         offspring[:] = population
         for individual in offspring:
