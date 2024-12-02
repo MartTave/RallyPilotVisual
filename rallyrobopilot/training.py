@@ -76,7 +76,7 @@ def prepareData(npData):
     return x, y
 
 def loadFile(filename):
-    loaded = np.load(BASE_FOLDER + filename)
+    loaded = np.load(filename)
     print("Preparing file : ", filename)
     x, y = prepareData(loaded)
     print(x.shape, " for file ", filename)
