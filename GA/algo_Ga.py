@@ -19,8 +19,19 @@ def log(*args):
     print("[GA] ", *args)
 
 class GaDataGeneration():
-    def __init__(self, jsonData, master: Master, pop_size=20, ngen=6, patience=15):        
+
+    def __init__(
+        self,
+        jsonData,
+        master: Master,
+        pop_size=20,
+        ngen=6,
+        patience=15,
+        previousResults=None,
+    ):
         self.fitness_values = []
+
+        self.previousResults = previousResults
 
         self.parseJsonData(jsonData)
         self.patience = patience        
@@ -53,11 +64,18 @@ class GaDataGeneration():
     def getInd(self):
         return self.toolbox.clone(self.exampleInd)
 
+    def clonePreviousResults(self):
+        population = []
+        for ind in self.previousResults.values():
+            population.append([c for c in ind])
+        print("[GA] Cloned population of size ", len(population))
+        return population
+
     def setup_deap(self): 
         self.toolbox = base.Toolbox()
-        creator.create("FitnessMin", base.Fitness, weights=(-1.0,))  
+        creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
         creator.create("Individual", list, fitness=creator.FitnessMin)
-        self.toolbox.register("attr_controls",  get_first_control, controls )
+        self.toolbox.register("attr_controls", get_first_control, self.controls)
         self.toolbox.register("individual", tools.initRepeat, creator.Individual,  self.toolbox.attr_controls, n=len(self.controls))
         self.exampleInd = self.toolbox.individual()
         for i, c in enumerate(self.controls):
@@ -90,6 +108,8 @@ class GaDataGeneration():
 
     def run_ga(self):
         population = self.toolbox.population(n=self.pop_size)
+        if self.previousResults is not None:
+            population = self.clonePreviousResults()
         offspring = []
         offspring[:] = population
         for individual in offspring:
@@ -177,6 +197,6 @@ class GaDataGeneration():
         return best_individuals, self.fitness_values
 
 
-controls = [[1,0,0,0] for _ in range(250)]              
+# controls = [[1,0,0,0] for _ in range(250)]
 # ga = GaDataGeneration(controls,(0.0, 0.0, 0.0),[(-166.49599104143704,0.0,74.12973000725437),(-185.91828508160984,0.0,78.90199301520657)],-90.0,0)
 # p = ga.run_ga()

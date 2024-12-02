@@ -53,7 +53,7 @@ class StatsGA():
         plt.close()
 
 
-for f in [f"ga_{i}" for i in range(6, 8)]:
+for f in [f"ga_{i}" for i in range(0, 7)]:
     stat = StatsGA(f)
     stat.getGetNumberEndedSim()
     stat.getNumOfNotEndedSim()

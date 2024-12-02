@@ -18,7 +18,7 @@ class Master:
         self.containers = []
         self.remotes = []
         self.free = True
-            
+
         self.availableSimuMax = len(self.ports)
         if not self.isLocal:
             self.client = docker.from_env()
@@ -67,7 +67,8 @@ class Master:
                     allRunning = False
                     log("All container are not started, waiting...")
                     sleep(1)
-                    break    
+                    break
+        log("Started !")
     def stopContainers(self):
         if self.isLocal:
             return

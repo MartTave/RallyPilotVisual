@@ -10,7 +10,7 @@ class computeMultipleGA():
         self.folder_names = folder_names
         pass
 
-    def runSimulations(self):
+    def runSimulations(self, ngen=150, patience=30, pop_size=100):
         for f in self.folder_names:
             conv = Convertion(f)
             jsonData = conv.readJson()
@@ -23,7 +23,27 @@ class computeMultipleGA():
                 print("No masters available... Waiting !")
                 sleep(5)
 
-            ga = GaDataGeneration(jsonData, m, pop_size=100, ngen=150, patience=15)
+            if conv.hasResults():
+                print(f"Results already computed for {f}")
+                print(f"Taking result as base controls !")
+                prevRes = conv.readResults()
+                ga = GaDataGeneration(
+                    jsonData,
+                    m,
+                    pop_size=len(prevRes.keys()),
+                    ngen=ngen,
+                    patience=patience,
+                    previousResults=prevRes,
+                )
+            else:
+                ga = GaDataGeneration(
+                    jsonData,
+                    m,
+                    pop_size=pop_size,
+                    ngen=ngen,
+                    patience=patience,
+                )
+
             res,fitness_values = ga.run_ga()
             master.free = True
             conv.writeJsonFile(res)
@@ -31,11 +51,9 @@ class computeMultipleGA():
         for m in self.masters:
             m.stopContainers()
 
+
 if __name__ == '__main__':
+    masters = [Master(range(5000, 5100), False)]
 
-    masters = [
-        Master(range(5000, 5100), False)
-    ]
-
-    test = computeMultipleGA(masters, [f"ga_{i}" for i in range(0, 7)])
+    test = computeMultipleGA(masters, [f"ga_{i}" for i in range(3, 7)])
     test.runSimulations()

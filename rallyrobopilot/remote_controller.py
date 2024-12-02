@@ -212,6 +212,8 @@ class RemoteController(Entity):
             self.simuResult = []
             self.simulating = False
             self.car.collisionHappened = False
+            for i in ["w", "s", "a", "d"]:
+                held_keys[i] = False
             self.car.reset_car()
             return
         if self.simuIndex == -1:

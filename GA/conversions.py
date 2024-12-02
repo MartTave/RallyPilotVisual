@@ -2,7 +2,7 @@ import csv, json
 import os
 import numpy as np
 class Convertion():
-    
+
     @staticmethod
     def generateJsons():
         BASE_PATH = "./GA/ga_data/"
@@ -51,7 +51,7 @@ class Convertion():
             with open(json_file_path, 'w') as json_file:
                 json.dump(data, json_file, indent=4)
             c+=1
-    
+
     def __init__(self, folder:str):
         filePathJson = './GA/ga_data'
         assert folder.startswith("ga_")
@@ -66,8 +66,7 @@ class Convertion():
             data["baseControls"] = controls
         with open(self.metadata_file_path, "w") as json_file:
             json.dump(data, json_file, indent=4)
-            
-                
+
     def readJson(self):
         jsonData = {}
         if os.path.exists(self.metadata_file_path):
@@ -78,7 +77,7 @@ class Convertion():
         else:
             print(f"{self.metadata_file_path} does not exist.")
         return jsonData
-    
+
     def writeJsonFile(self, data):
         json_file_path = os.path.join(self.fullPath, "results.json")
         res = {}
@@ -86,22 +85,29 @@ class Convertion():
             res[i] = d
         with open(json_file_path, 'w') as json_file:
             json.dump(res, json_file, indent=4)
-    
+
     def writeFitnessValues(self, fitness_value):
         npz_file_path = os.path.join(self.fullPath, "fitness_value.npz")
         np_arr = np.array(fitness_value)
         np.savez(npz_file_path,fitness_values = np_arr)
-        
+
     def readFitnessValues(self):
         npz_file_path = os.path.join(self.fullPath, "fitness_value.npz")
         return np.load(npz_file_path)["fitness_values"]
-    
+
     def readResults(self):
+        if not self.hasResults():
+            print("This GA has not result !")
+            return None
         results_path = "results.json"
         fullPathResults = os.path.join(self.fullPath, results_path)
         with open(fullPathResults,"r" ) as json_file: 
             data = json.load(json_file)
             return data
-    
+
+    def hasResults(self):
+        return os.path.exists(os.path.join(self.fullPath, "results.json"))
+
+
 if __name__ == '__main__':
     Convertion.generateJsons()
