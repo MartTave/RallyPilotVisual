@@ -162,6 +162,7 @@ for epoch in range(num_epochs):
         if step == "test":
             model.eval()
             optimizer.zero_grad()
+            import ipdb;ipdb.set_trace()
             y_pred = model(testSourceTensor)
             loss = classification_loss(y_pred, testTargetTensor[:, :4])
             y_pred = (y_pred > 0.5).float()
