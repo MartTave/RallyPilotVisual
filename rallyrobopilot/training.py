@@ -104,16 +104,14 @@ assert len(testX) == len(testY)
 print(f"Data prepared, {len(xData)} samples")
 
 targetTensor = torch.tensor(yData, dtype=torch.float32)
-targetTensor.to(device)
 print("Target tensor created")
 sourceTensor = torch.tensor(xData, dtype=torch.float32)
-sourceTensor.to(device)
 print("Source tensor created")
 
 testTargetTensor = torch.tensor(testY, dtype=torch.float32)
-testTargetTensor.to(device)
+testTargetTensor = testTargetTensor.to(device)
 testSourceTensor = torch.tensor(testX, dtype=torch.float32)
-testSourceTensor.to(device)
+testSourceTensor = testSourceTensor.to(device)
 
 dataset = TensorDataset(sourceTensor, targetTensor)
 
@@ -162,7 +160,6 @@ for epoch in range(num_epochs):
         if step == "test":
             model.eval()
             optimizer.zero_grad()
-            import ipdb;ipdb.set_trace()
             y_pred = model(testSourceTensor)
             loss = classification_loss(y_pred, testTargetTensor[:, :4])
             y_pred = (y_pred > 0.5).float()
