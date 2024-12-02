@@ -47,8 +47,8 @@ if len(sys.argv) > 1:
 num_epochs = 100
 
 BASE_FOLDER = "./data/"
-TRAIN_FOLDER = f"{BASE_FOLDER}train/"
-TEST_FOLDER = f"{BASE_FOLDER}test/"
+TRAIN_FOLDER = f"{BASE_FOLDER}train"
+TEST_FOLDER = f"{BASE_FOLDER}test"
 
 train_files = []
 test_files = []
