@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 BASEPATH = "data/record_norm"
 BASE_EXTENSION = ".npz"
-files = [0, 1, 2, 3, 4, 5]
+files = [4, 5, 6, 7]
 
 for f in files:
     newPath = f"{BASEPATH}{str(f)}_noise_flipped{BASE_EXTENSION}"

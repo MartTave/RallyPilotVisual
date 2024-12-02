@@ -12,7 +12,7 @@ controls = []
 speeds = []
 distances = []
 
-DATA_FOLDER = "./data/record"
+DATA_FOLDER = "./data/record_norm"
 FILENAME = ".npz"
 START_TRIM = 10
 END_TRIM = 10
@@ -36,8 +36,9 @@ print(f"Saving data... {len(data)} frames for ", now - then, " seconds")
 PURE_CYAN = [0, 255, 255]
 PURE_RED = [255, 0, 0]
 PURE_BLUE = [0, 0, 255]
+PURE_PURPLE = [255, 0, 255]
 
-CURRENT_COLOR = np.array(PURE_CYAN)
+CURRENT_COLOR = np.array(PURE_PURPLE)
 
 lastPicture = None
 distances_normalized = []

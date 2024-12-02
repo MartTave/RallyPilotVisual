@@ -22,7 +22,7 @@ def add_gaussian_noise(images, noise_scale=0.1, blur_size=(5,5), blur_sigma=1.0)
 
 BASEPATH = "data/record_norm"
 BASE_EXTENSION = ".npz"
-files = [0, 1, 2, 3]
+files = [4,5,6,7]
 
 for f in files:
     newPath = f"{BASEPATH}{str(f)}_noise{BASE_EXTENSION}"

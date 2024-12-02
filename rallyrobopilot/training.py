@@ -28,24 +28,21 @@ DATA_INDEXES = [0, 1, 2, 3]
 
 USE_SYMETRIC = True
 
-TRAINED_MODELS = []
+TRAINED_MODELS = ""
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Device is : {device}")
 if len(sys.argv) > 1:
     USE_SYMETRIC = bool(sys.argv[1])
-    start_index = 3
     if len(sys.argv) > 2:
-        print(int(sys.argv[2]))
-        DATA_INDEXES = [int(i) for i in sys.argv[start_index:int(sys.argv[2])+start_index]]
-        print(DATA_INDEXES)
-        print(len(DATA_INDEXES))
-        if len(sys.argv) > len(DATA_INDEXES)+start_index :
-            TRAINED_MODELS = [str(i) for i in sys.argv[len(DATA_INDEXES) +start_index :]]
-            print(TRAINED_MODELS)
-            for i in TRAINED_MODELS: 
-                model.load_state_dict(torch.load(f"./models/{i}/model.pth"), weights_only=True)  
-                model.to(device)  
+        TRAINED_MODEL = str(sys.argv[3])
+        if TRAINED_MODEL != "None":
+            model.load_state_dict(torch.load(f"./models/{TRAINED_MODEL}/model.pth"), weights_only=True)  
+            model.to(device) 
+        if len(sys.argv) > 3 :
+            DATA_INDEXES = [int(i) for i in sys.argv[3 :]]
+          
+                
 preparedData = ()
 
 
@@ -119,9 +116,7 @@ classification_loss = nn.BCEWithLogitsLoss(
 
 # Keep weight decays really small
 optimizer = optim.Adam(model.parameters(), lr=1e-4, weight_decay=1e-6)
-scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-    optimizer, mode="min", factor=0.1, patience=3
-)
+
 
 classification_loss.to(device)
 model.to(device)
@@ -164,8 +159,7 @@ for epoch in range(num_epochs):
             correct += (y_class == labels[:, :4]).sum().item()
             total += labels.size(0) * labels.size(1)
             nbr_items += 1
-        if step == "eval":
-            scheduler.step(curr_loss)
+      
         losses[step].append(curr_loss / nbr_items)
         accuracies[step].append(correct / total)
 

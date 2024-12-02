@@ -230,7 +230,7 @@ class RemoteController(Entity):
             self.simulateGA()
         else:
             self.process_remote_commands()
-            if self.recordPictures:
+            if self.recordPictures and not self.recording:
                 self.updateScrenshot()
         if self.recording:
             data = self.get_sensing_data()
@@ -254,7 +254,7 @@ class RemoteController(Entity):
         arr = tex.getRamImageAs("rgb")
         data = np.frombuffer(arr, np.uint8)
         if period > self.sensing_period + 0.02:
-            print("[GAME] Update of screenshot is late ! ", period, " s")
+            print("[GAME] Update of screenshot is late ! ", period, "s")
         self.lastScreenshot = data
         self.last_sensing = now
 
