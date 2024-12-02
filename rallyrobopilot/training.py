@@ -197,7 +197,7 @@ for epoch in range(num_epochs):
         accuracies[step].append(correct / total)
 
     print(
-        f"Epoch [{epoch+1}/{num_epochs}], Loss: {class_loss.item():.4f}, Acc : {accuracies['eval'][-1]:.4f} - Test loss : {losses["test"][-1]}, Test Acc : {accuracies["test"][-1]}"
+        f"Epoch [{epoch+1}/{num_epochs}], Loss: {class_loss.item():.4f}, Acc : {accuracies['eval'][-1]:.4f} - Test loss : {losses['test'][-1]}, Test Acc : {accuracies['test'][-1]}"
     )
 
 
