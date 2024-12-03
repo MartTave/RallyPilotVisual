@@ -64,6 +64,8 @@ if __name__ == '__main__':
             "gaStart": 0,
             "gaEnd": 1,
             "local": False,
+            "kube": False,
+            "kubeN": 0,
         }
         if "--ports" in args:
             port = args[args.index("--ports") + 1].split(":")
@@ -79,6 +81,8 @@ if __name__ == '__main__':
                 sys.exit(1)
             res["gaStart"] = int(ga[0])
             res["gaEnd"] = int(ga[1])
+        if "--kube" in args:
+            res["kube"] = True
         if "--gen" in args:
             res["nGen"] = int(args[args.index("--gen") + 1])
         if "--pop" in args:
@@ -97,6 +101,7 @@ Usage : python GA/computeMultipleGA.py [OPTIONS]
     --gen <int> : Set the number of generations
     --pop <int> : Set the population size
     --patience <int> : Set the patience
+    --kube : Run in kubernetes mode
     -l --local : Run in local mode
     -h --help : Display this help message
 ==========================="""
@@ -114,6 +119,8 @@ Launching GA with the following parameters :
     Generations :       {res["nGen"]}
     Population size :   {res["popSize"]}
     Patience :          {res["patience"]}
+    Local :            {res["local"]}
+    Kubernetes :       {res.get("kube", False)}
 ===========================
 """
         )
@@ -122,7 +129,13 @@ Launching GA with the following parameters :
 
     params = parseArgs(sys.argv)
 
-    masters = [Master(range(params["portStart"], params["portEnd"]), params["local"])]
+    masters = [
+        Master(
+            range(params["portStart"], params["portEnd"]),
+            params["local"],
+            isKubernetes=params["kube"],
+        )
+    ]
 
     test = computeMultipleGA(
         masters, [f"ga_{i}" for i in range(params["gaStart"], params["gaEnd"])]

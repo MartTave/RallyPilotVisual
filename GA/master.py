@@ -3,6 +3,7 @@ from multiprocessing import Lock, Pool
 import threading
 from time import sleep
 import docker
+import kubernetes
 from rallyrobopilot.remote import Remote
 
 def getx(x): 
@@ -12,13 +13,23 @@ def log(*args):
     print("[MASTER] ", *args)
 
 class Master:
-    def __init__(self, portsRange, isLocal):  
+
+    def __init__(self, portsRange, isLocal, isKubernetes=False):
         self.isLocal = isLocal      
         self.ports = {key: True for key in portsRange}
         self.containers = []
         self.remotes = []
         self.free = True
-
+        self.isKubernetes = isKubernetes
+        if isKubernetes:
+            log("Running in kubernetes")
+            self.k8sClient = kubernetes.client.CoreV1Api()
+            self.pods = self.k8sClient.list_namespaced_pod(
+                namespace="isc3", label_selector="simulation-marmar"
+            ).items
+        else:
+            self.k8sClient = None
+            self.pods = None
         self.availableSimuMax = len(self.ports)
         if not self.isLocal:
             self.client = docker.from_env()
@@ -31,16 +42,22 @@ class Master:
         self.createRemotes()
 
     def createRemotes(self):
-        for p in self.ports:
-            remote = Remote("http://127.0.0.1", p, lambda :'')
-            self.remotes.append({
-                'remote': remote,
-                'free': True
-            })
-
+        if self.isKubernetes:
+            log("Running in kubernetes - Creating remotes")
+            for p in self.pods:
+                remote = Remote(f"http://{p.status.pod_ip}", 5000, lambda: "")
+                self.remotes.append({"remote": remote, "free": True})
+        else:
+            for p in self.ports:
+                remote = Remote("http://127.0.0.1", p, lambda: "")
+                self.remotes.append({"remote": remote, "free": True})
+        log("Created remotes")
     def startContainers(self):
         if self.isLocal:
             log("Running in local - Not starting any container")
+            return
+        if self.isKubernetes:
+            log("Running in kubernetes - Not starting any container")
             return
         def startContainer(port):
             env_var = {"TRACK": "SimpleTrack", "FPS": 30}
