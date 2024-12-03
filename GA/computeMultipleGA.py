@@ -54,24 +54,81 @@ class computeMultipleGA():
 
 
 if __name__ == '__main__':
-    portStart = 5000
-    portEnd = 5075
-    patience = 15
-    nGen = 100
-    if len(sys.argv) >= 3:
-        portStart = int(sys.argv[1])
-        portEnd = int(sys.argv[2])
 
-        if len(sys.argv) >= 4:
-            nGen = int(sys.argv[3])
-            if len(sys.argv) >= 5:
-                patience = int(sys.argv[4])
+    def parseArgs(args):
+        res = {
+            "portStart": 5000,
+            "portEnd": 5001,
+            "patience": 15,
+            "nGen": 100,
+            "gaStart": 0,
+            "gaEnd": 1,
+            "local": False,
+        }
+        if "--ports" in args:
+            port = args[args.index("-t") + 1].split(":")
+            if len(port) != 2:
+                print("Invalid port range")
+                sys.exit(1)
+            res["portStart"] = int(port[0])
+            res["portEnd"] = int(port[1])
+        if "--ga-range" in args:
+            ga = args[args.index("-g") + 1].split(":")
+            if len(ga) != 2:
+                print("Invalid ga range")
+                sys.exit(1)
+            res["gaStart"] = int(ga[0])
+            res["gaEnd"] = int(ga[1])
+        if "--gen" in args:
+            res["nGen"] = int(args[args.index("-g") + 1])
+        if "--pop" in args:
+            res["popSize"] = int(args[args.index("-p") + 1])
+        if "--patience" in args:
+            res["patience"] = int(args[args.index("-a") + 1])
+        if "-l" in args or "--local" in args:
+            res["local"] = True
+        if "-h" in args or "--help" in args:
+            print(
+                """===========================
+GA Launcher
+Usage : python GA/computeMultipleGA.py [OPTIONS]
+    --ports <start>:<end> : Set the port range for the masters
+    --ga-range <start>:<end> : Set the range of the GA folders
+    --gen <int> : Set the number of generations
+    --pop <int> : Set the population size
+    --patience <int> : Set the patience
+    -l --local : Run in local mode
+    -h --help : Display this help message
+==========================="""
+            )
+            sys.exit(0)
+        if not "popSize" in res:
+            res["popSize"] = res["portEnd"] - res["portStart"]
+        print(
+            f"""
+===========================
+GA Launcher
+Launching GA with the following parameters :
+    Port range :        {res["portStart"]:04d} - {res["portEnd"]:04d}
+    GA folder range :   {res["gaStart"]:02d} - {res["gaEnd"]:02d}
+    Generations :       {res["nGen"]}
+    Population size :   {res["popSize"]}
+    Patience :          {res["patience"]}
+===========================
+"""
+        )
 
-    masters = [Master(range(portStart, portEnd), False)]
+        return res
 
-    test = computeMultipleGA(masters, [f"ga_{i}" for i in range(0, 74)])
+    params = parseArgs(sys.argv)
+
+    masters = [Master(range(params["portStart"], params["portEnd"]), params["local"])]
+
+    test = computeMultipleGA(
+        masters, [f"ga_{i}" for i in range(params["gaStart"], params["gaEnd"])]
+    )
     test.runSimulations(
-        pop_size=portStart - portEnd,
-        patience=patience,
-        ngen=nGen,
+        pop_size=params["popSize"],
+        patience=params["patience"],
+        ngen=params["nGen"],
     )
