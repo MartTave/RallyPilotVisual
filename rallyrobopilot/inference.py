@@ -37,6 +37,7 @@ with torch.no_grad():
             return
         pic = np.array(newData["picture"])
         pic = convertToBwSingle(pic)
+
         if lastPic is not None:
             x = np.concatenate((AlexNetAtHome.concatTwoPics(lastPic, pic), getDistancesSingle(np.array(newData["picture"]), CURRENT_COLOR)[np.newaxis, :, :]), axis=0)
             xTensor = torch.tensor(x, dtype=torch.float32).unsqueeze(0).to(device)

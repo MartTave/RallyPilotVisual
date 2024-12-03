@@ -40,7 +40,7 @@ flask_thread.start()
 
 
 app, car = prepare_game_app(time)
-remote_controller = RemoteController(car = car, flask_app=flask_app)
+remote_controller = RemoteController(car=car, flask_app=flask_app)
 
 if time.fps > 0:
     while True:
