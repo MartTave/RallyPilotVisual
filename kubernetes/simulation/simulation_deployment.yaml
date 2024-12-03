@@ -5,7 +5,7 @@ metadata:
   labels:
     app: simulation-marmar
 spec:
-  replicas: 1
+  replicas: 30
   selector:
     matchLabels:
       app: simulation-marmar
@@ -22,7 +22,7 @@ spec:
                   - key: kubernetes.io/hostname
                     operator: In
                     values:
-                    - calypso3
+                    - calypso5
       containers:
       - name: simulation-container
         imagePullPolicy: Always
@@ -31,6 +31,6 @@ spec:
             - containerPort: 5000
         env:
         - name: FPS
-          value: 30
+          value: "30"
         - name: TRACK
           value: "SimpleTrack"
