@@ -1,0 +1,23 @@
+import numpy as np 
+import requests
+file =  np.zeros((3, 224, 224), dtype=np.uint8)
+
+
+data = {
+    "picture": file.tolist(), 
+    "color": [255,0,0]
+}
+
+def sendRequest():
+    response = requests.post(
+            "http://127.0.0.1:5000/getPrediction", json=data
+        )
+    print
+    if response.status_code != 200:
+        print(
+            f"Received error response: {response.status_code} with status"
+        )
+        return response.status_code
+    return response.json()
+
+print(sendRequest())
