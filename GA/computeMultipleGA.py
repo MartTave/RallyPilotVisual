@@ -66,25 +66,25 @@ if __name__ == '__main__':
             "local": False,
         }
         if "--ports" in args:
-            port = args[args.index("-t") + 1].split(":")
+            port = args[args.index("--ports") + 1].split(":")
             if len(port) != 2:
                 print("Invalid port range")
                 sys.exit(1)
             res["portStart"] = int(port[0])
             res["portEnd"] = int(port[1])
         if "--ga-range" in args:
-            ga = args[args.index("-g") + 1].split(":")
+            ga = args[args.index("--ga-range") + 1].split(":")
             if len(ga) != 2:
                 print("Invalid ga range")
                 sys.exit(1)
             res["gaStart"] = int(ga[0])
             res["gaEnd"] = int(ga[1])
         if "--gen" in args:
-            res["nGen"] = int(args[args.index("-g") + 1])
+            res["nGen"] = int(args[args.index("--gen") + 1])
         if "--pop" in args:
-            res["popSize"] = int(args[args.index("-p") + 1])
+            res["popSize"] = int(args[args.index("--pop") + 1])
         if "--patience" in args:
-            res["patience"] = int(args[args.index("-a") + 1])
+            res["patience"] = int(args[args.index("--patience") + 1])
         if "-l" in args or "--local" in args:
             res["local"] = True
         if "-h" in args or "--help" in args:
