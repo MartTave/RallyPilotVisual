@@ -13,7 +13,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 print("Device is : ", device)
 
-MODEL_NUMBER = 1
+MODEL_NUMBER = 3
 if len(sys.argv) > 1:
     MODEL_NUMBER = int(sys.argv[1])
 
@@ -25,7 +25,7 @@ lastPic = None
 
 model = model.to(device)
 
-CURRENT_COLOR = np.array([0,255,255])
+CURRENT_COLOR = np.array([0,255,0])
 
 model.eval()
 
