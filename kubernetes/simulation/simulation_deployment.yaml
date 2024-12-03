@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulation-deployement
+  labels:
+    app: simulation-marmar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simulation-marmar
+  template:
+    metadata:
+      labels:
+        app: simulation-marmar
+    spec:
+      affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                    - calypso3
+      containers:
+      - name: simulation-container
+        imagePullPolicy: Always
+        image: polypode/hes:latest
+        ports:
+            - containerPort: 5000
+        env:
+        - name: FPS
+          value: 30
+        - name: TRACK
+          value: "SimpleTrack"
