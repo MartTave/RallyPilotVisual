@@ -3,7 +3,6 @@
 from data_tools.getDistance import getDistancesSingle
 from model import AlexNetAtHome
 from rallyrobopilot.convert_to_bw import convertToBwSingle
-from ursina import *
 import torch
 import numpy as np
 
