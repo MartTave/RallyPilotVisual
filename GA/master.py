@@ -43,7 +43,7 @@ class Master:
             log("Running in local - Not starting any container")
             return
         def startContainer(port):
-            env_var = {"TRACK": "SimpleTrack", "FPS": 30}
+            env_var = {"TRACK": "VisualTrack", "FPS": 30}
 
             container = self.client.containers.run(
                 self.image_name,
