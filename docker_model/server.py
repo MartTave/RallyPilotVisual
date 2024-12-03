@@ -7,7 +7,6 @@ import numpy as np
 
 from flask import Flask, request, jsonify
 
-from rallyrobopilot.car import Car
 
 GRACE_TIME_GA = 1
 
