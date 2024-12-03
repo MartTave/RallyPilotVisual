@@ -1,5 +1,5 @@
 
-from docker_model.fonctions import convertToBwSingle, getDistancesSingle
+from fonctions import convertToBwSingle, getDistancesSingle
 from model import AlexNetAtHome
 import torch
 import numpy as np
@@ -17,22 +17,25 @@ class Server():
     def __init__(self, flask_app=None):
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-        MODEL_NUMBER = 1
         self.lastimage = None
         
         self.model_ml = AlexNetAtHome()
+        print("AlexNetModel")
         self.model_ml.load_state_dict(
-            torch.load(f"./models/model_{MODEL_NUMBER}/model.pth", map_location=self.device)
+            torch.load(f"./model/model.pth", map_location=self.device)
         )
-
+        print("model charged")
         self.model_ml = self.model_ml.to(self.device)
 
+        print("model to device", self.device)
 
+        @flask_app.route("/", methods=["GET"])
+        def index():
+            return "AHHHH"
         
         @flask_app.route("/getPrediction", methods=["POST"])
         def getPrediction():
-            data = request.json
-            
+            data = request.json    
             if "picture" not in data or "color" not in data:
                 return
             CURRENT_COLOR = np.array(data["color"])
@@ -55,4 +58,4 @@ class Server():
             
 flask_app = Flask(__name__)
 Server(flask_app)
-flask_app.run()
+flask_app.run(host="0.0.0.0", port=5000)

@@ -10,9 +10,8 @@ data = {
 
 def sendRequest():
     response = requests.post(
-            "http://127.0.0.1:5000/getPrediction", json=data
+            "http://localhost:5000/getPrediction", json=data
         )
-    print
     if response.status_code != 200:
         print(
             f"Received error response: {response.status_code} with status"

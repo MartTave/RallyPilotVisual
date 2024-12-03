@@ -18,7 +18,6 @@ RUN apt-get update -y \
 # Rally part.
 WORKDIR /app
 RUN apt-get update && apt-get install -y git && apt-get clean
-RUN git clone -b docker https://github.com/MartTave/RallyPilotVisual.git .
 COPY . .
 
 
@@ -39,4 +38,4 @@ RUN pip install python3_xlib
 
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 EXPOSE 5000
-CMD ["python","server.py"]
+CMD ["python","-u", "server.py"]

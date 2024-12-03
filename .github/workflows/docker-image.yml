@@ -22,3 +22,7 @@ jobs:
       run: docker build ./docker -t polypode/hes:latest --no-cache
     - name: Push the docker image to docker hub
       run: docker push polypode/hes:latest
+    - name: Build Docker Image Model
+      run: docker build ./docker_model -t polypode/model_prediction:latest --no-cache
+    - name: Push Docker Image Model
+      run:  docker push polypode/model_prediction:latest
