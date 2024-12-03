@@ -1,4 +1,5 @@
 import csv
+import sys
 from time import sleep
 
 from algo_Ga import GaDataGeneration
@@ -10,7 +11,7 @@ class computeMultipleGA():
         self.folder_names = folder_names
         pass
 
-    def runSimulations(self, ngen=50, patience=15, pop_size=100):
+    def runSimulations(self, ngen=100, patience=15, pop_size=75):
         for f in self.folder_names:
             conv = Convertion(f)
             jsonData = conv.readJson()
@@ -53,7 +54,24 @@ class computeMultipleGA():
 
 
 if __name__ == '__main__':
-    masters = [Master(range(5000, 5100), False)]
+    portStart = 5000
+    portEnd = 5075
+    patience = 15
+    nGen = 100
+    if len(sys.argv) >= 3:
+        portStart = int(sys.argv[1])
+        portEnd = int(sys.argv[2])
 
-    test = computeMultipleGA(masters, [f"ga_{i}" for i in range(0, 147)])
-    test.runSimulations()
+        if len(sys.argv) >= 4:
+            nGen = int(sys.argv[3])
+            if len(sys.argv) >= 5:
+                patience = int(sys.argv[4])
+
+    masters = [Master(range(portStart, portEnd), False)]
+
+    test = computeMultipleGA(masters, [f"ga_{i}" for i in range(0, 74)])
+    test.runSimulations(
+        pop_size=portStart - portEnd,
+        patience=patience,
+        ngen=nGen,
+    )
