@@ -25,7 +25,7 @@ class Remote:
     def getControlsFromData(x): 
         return [x["up"], x["down"], x["left"], x["right"]]
 
-    def __init__(self, host, port, cb, getPicture=False):
+    def __init__(self, host, port, cb, getPicture=False, sanitiyChecks=True):
         self.lastSensing = time()
         self.lastSended = [0, 0, 0, 0]
         self.host = host
@@ -33,6 +33,7 @@ class Remote:
         self.cb = cb
         self.sensing = False
         self.getPicture = getPicture
+        self.sanitiyChecks = sanitiyChecks
         self.inferCount = 0
         self.thread = None
         self.sendCommand("release all;")
@@ -117,7 +118,9 @@ class Remote:
             f"{self.host}:{self.port}/sensing", params={"picture": self.getPicture}
         )
         # We are more tolerant if the requests are too quick as it depends more on the time we take to process things
-        if time() - self.lastSensing > 0.11 or time() - self.lastSensing < 0.09:
+        if self.sanitiyChecks and (
+            time() - self.lastSensing > 0.11 or time() - self.lastSensing < 0.09
+        ):
             print("[REMOTE] Losing sync ! Time elapsed : ", time() - self.lastSensing)
         self.lastSensing = time()
         if response.status_code != 200:
@@ -128,6 +131,7 @@ class Remote:
             return None
         currData = response.json()
         self.cb(currData)
+        return currData
 
     def getDataForSolution(
         self,

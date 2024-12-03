@@ -10,7 +10,7 @@ class computeMultipleGA():
         self.folder_names = folder_names
         pass
 
-    def runSimulations(self, ngen=150, patience=30, pop_size=250):
+    def runSimulations(self, ngen=50, patience=15, pop_size=100):
         for f in self.folder_names:
             conv = Convertion(f)
             jsonData = conv.readJson()
@@ -53,7 +53,7 @@ class computeMultipleGA():
 
 
 if __name__ == '__main__':
-    masters = [Master(range(5000, 5175), False)]
+    masters = [Master(range(5000, 5100), False)]
 
     test = computeMultipleGA(masters, [f"ga_{i}" for i in range(8, 13)])
     test.runSimulations()

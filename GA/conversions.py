@@ -4,8 +4,25 @@ import numpy as np
 class Convertion():
 
     @staticmethod
-    def generateJsons():
+    def getNewFolderName():
         BASE_PATH = "./GA/ga_data/"
+        startIndex = 0
+        currPath = os.path.join(BASE_PATH, f"ga_{startIndex}")
+        while os.path.exists(currPath):
+            startIndex += 1
+            currPath = os.path.join(BASE_PATH, f"ga_{startIndex}")
+        return currPath
+
+    @staticmethod
+    def dumpJson(newData):
+        newPath = Convertion.getNewFolderName()
+        os.makedirs(newPath, exist_ok=True)
+        json_file_path = os.path.join(newPath, "metadata.json")
+        with open(json_file_path, "w") as json_file:
+            json.dump(newData, json_file, indent=4)
+
+    @staticmethod
+    def generateJsons():
         filePathPos ='positions.csv'
         with open(filePathPos, newline='') as csvfile:
             reader = csv.reader(csvfile)
@@ -13,12 +30,6 @@ class Convertion():
             csvfile.close()
         lines[1:] = [[float(float(value)) for value in row] for row in lines[1:]]
         positions = lines
-        c = 0
-        startIndex = 0
-        currPath = os.path.join(BASE_PATH, f'ga_{startIndex}')
-        while os.path.exists(currPath):
-            startIndex += 1
-            currPath = os.path.join(BASE_PATH, f'ga_{startIndex}')
         for i in range(1, len(positions)-1,2):
             group = positions[i:i+2]
             data = {
@@ -43,14 +54,13 @@ class Convertion():
                 "startVelocity": group[0][10],
                 "baseControls": []
                 }
-            currPath = os.path.join(BASE_PATH, f'ga_{startIndex + c}')    
+            currPath = Convertion.getNewFolderName()
 
             os.makedirs(currPath, exist_ok=True)
 
             json_file_path = os.path.join(currPath, "metadata.json")
             with open(json_file_path, 'w') as json_file:
                 json.dump(data, json_file, indent=4)
-            c+=1
 
     def __init__(self, folder:str):
         filePathJson = './GA/ga_data'

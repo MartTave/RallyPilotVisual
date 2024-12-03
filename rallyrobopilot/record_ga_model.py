@@ -5,8 +5,8 @@ from time import sleep
 from rallyrobopilot.remote import Remote
 
 
-GA_LENGTH = 150
-OVERLAP = 40
+GA_LENGTH = 70
+OVERLAP = 30
 BASE_FOLDER = "./GA/ga_data/"
 DISTANCE = 5
 

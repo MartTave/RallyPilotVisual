@@ -3,7 +3,7 @@ from rallyrobopilot.remote import Remote
 from conversions import Convertion
 
 
-FOLDERS = range(8, 13)
+FOLDERS = range(5, 6)
 
 remote = Remote("http://127.0.0.1", 5000, lambda x: x)
 
