@@ -44,7 +44,7 @@ if len(sys.argv) > 1:
 
 
 
-num_epochs = 100
+num_epochs = 65
 
 BASE_FOLDER = "./data/"
 TRAIN_FOLDER = f"{BASE_FOLDER}train"
@@ -59,7 +59,6 @@ for f in [(TRAIN_FOLDER, train_files), (TEST_FOLDER, test_files)]:
         curr_path = f"{f[0]}/{fi}"
         if os.path.isfile(curr_path):
             f[1].append(curr_path)
-            break
 
 print(f"Loading {train_files} for training")
 print(f"Loading {test_files} for testing")
