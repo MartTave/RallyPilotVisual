@@ -22,6 +22,7 @@ class Master:
         self.free = True
         self.isKubernetes = isKubernetes
         if isKubernetes:
+            kubernetes.config.load_kube_config()
             log("Running in kubernetes")
             self.k8sClient = kubernetes.client.CoreV1Api()
             self.pods = self.k8sClient.list_namespaced_pod(
@@ -31,7 +32,7 @@ class Master:
             self.k8sClient = None
             self.pods = None
         self.availableSimuMax = len(self.ports)
-        if not self.isLocal:
+        if not self.isLocal and not self.isKubernetes:
             self.client = docker.from_env()
             self.image_name = "polypode/hes:latest"
             log(f"Pulling {self.image_name} from docker hub")
