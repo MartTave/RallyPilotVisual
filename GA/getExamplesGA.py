@@ -68,7 +68,7 @@ class ControlsExamplesGA():
         sleep(2)
 
 
-FOLDERNAME = [f"ga_{i}" for i in range(5, 6)]
+FOLDERNAME = [f"ga_{i}" for i in range(1, 2)]
 
 for f in FOLDERNAME:
     test = ControlsExamplesGA(f)

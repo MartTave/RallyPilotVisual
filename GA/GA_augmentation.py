@@ -5,7 +5,7 @@ from rallyrobopilot.remote import Remote
 from conversions import Convertion
 from computeGAMaths import GaMaths
 
-FOLDERS_NUMBER = range(0, 7)
+FOLDERS_NUMBER = range(7, 9)
 
 FOLDERS = [f"ga_{i}" for i in FOLDERS_NUMBER]
 
@@ -101,7 +101,7 @@ def getStartingPoints(folder_name, number=10, distance=5):
 
 
 for f in FOLDERS:
-    newPoints = getStartingPoints(f, number=20, distance=5)
+    newPoints = getStartingPoints(f, number=15, distance=5)
     for p in newPoints:
         baseData = Convertion(f).readJson()
         baseData["augmented"] = True
