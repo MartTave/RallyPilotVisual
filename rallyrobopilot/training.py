@@ -108,12 +108,11 @@ sourceTensor = torch.tensor(xData, dtype=torch.float32)
 print("Source tensor created")
 
 testTargetTensor = torch.tensor(testY, dtype=torch.float32)
-testTargetTensor = testTargetTensor.to(device)
 testSourceTensor = torch.tensor(testX, dtype=torch.float32)
-testSourceTensor = testSourceTensor.to(device)
 
 dataset = TensorDataset(sourceTensor, targetTensor)
 
+datasetTest = TensorDataset(testSourceTensor, testTargetTensor)
 print("Created tensors")
 
 train_size = int(0.8 * len(dataset))
@@ -124,6 +123,8 @@ train_data, validate_data = random_split(dataset, [train_size, validate_size])
 train_loader = DataLoader(train_data, batch_size=32)
 
 validate_loader = DataLoader(validate_data, batch_size=32)
+
+test_loader = DataLoader(datasetTest, batch_size =128)
 
 # Define loss function and optimizer
 classification_loss = nn.BCEWithLogitsLoss(
@@ -156,18 +157,12 @@ accuracies = {
 for epoch in range(num_epochs):
 
     for step in ["train", "eval", "test"]:
-        if step == "test":
-            model.eval()
-            optimizer.zero_grad()
-            y_pred = model(testSourceTensor)
-            loss = classification_loss(y_pred, testTargetTensor[:, :4])
-            y_pred = (y_pred > 0.5).float()
-            correct += (y_class == labels[:, :4]).sum().item()
-            total += labels.size(0) * labels.size(1)
-            losses[step].append(loss.item())
-            accuracies[step].append(correct / total)
-            continue
-        currLoader = train_loader if step == "train" else validate_loader
+        if step == "train": 
+            currLoader = train_loader 
+        elif step == "eval":
+            currLoader = validate_loader
+        else: 
+            currLoader = test_loader
         if step == "train":
             model.train()
         else:
