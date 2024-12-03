@@ -59,6 +59,7 @@ for f in [(TRAIN_FOLDER, train_files), (TEST_FOLDER, test_files)]:
         curr_path = f"{f[0]}/{fi}"
         if os.path.isfile(curr_path):
             f[1].append(curr_path)
+            break
 
 print(f"Loading {train_files} for training")
 print(f"Loading {test_files} for testing")
@@ -88,9 +89,9 @@ testX = []
 testY = []
 
 with Pool() as pool:
-    results = pool.map(loadFile, train_files)
-    xData = np.concatenate([x for x, _ in results])
-    yData = np.concatenate([y for _, y in results])
+    x, y = pool.map(loadFile, train_files)
+    xData = np.concatenate(x)
+    yData = np.concatenate(y)
     
 with Pool() as pool:
     results = pool.map(loadFile, test_files)

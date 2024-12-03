@@ -29,13 +29,13 @@
         {
             "base": "red",
             "model": "assets/VisualTrack/IntersectionPath2.obj",
-            "texture": "assets/Indicators/Indicators_yellow.png"
+            "texture": "assets/Indicators/Indicators_cyan.png"
         },
 
         {
             "base": "blue",
             "model": "assets/VisualTrack/IntersectionPath3.obj",
-            "texture": "assets/Indicators/Indicators_yellow.png"
+            "texture": "assets/Indicators/Indicators_red.png"
         }
     ], 
     "obstacles":
