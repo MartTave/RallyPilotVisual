@@ -49,6 +49,9 @@ class AlexNetAtHome(nn.Module):
             nn.Linear(256, 256),
             nn.ReLU(),
             nn.Dropout(0.5),
+            nn.Linear(256, 256),
+            nn.ReLU(),
+            nn.Dropout(0.5),
             nn.Linear(256, 4),
         )
 
