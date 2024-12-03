@@ -89,9 +89,9 @@ testX = []
 testY = []
 
 with Pool() as pool:
-    x, y = pool.map(loadFile, train_files)
-    xData = np.concatenate(x)
-    yData = np.concatenate(y)
+    results = pool.map(loadFile, train_files)
+    xData = np.concatenate([x for x, _ in results])
+    yData = np.concatenate([y for _, y in results])
     
 with Pool() as pool:
     results = pool.map(loadFile, test_files)
