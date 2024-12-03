@@ -44,7 +44,7 @@ if len(sys.argv) > 1:
 
 
 
-num_epochs = 65
+num_epochs = 35
 
 BASE_FOLDER = "./data/"
 TRAIN_FOLDER = f"{BASE_FOLDER}train"
