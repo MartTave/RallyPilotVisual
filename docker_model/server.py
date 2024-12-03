@@ -1,8 +1,6 @@
 
-
-from data_tools.getDistance import getDistancesSingle
+from docker_model.fonctions import convertToBwSingle, getDistancesSingle
 from model import AlexNetAtHome
-from rallyrobopilot.convert_to_bw import convertToBwSingle
 import torch
 import numpy as np
 
