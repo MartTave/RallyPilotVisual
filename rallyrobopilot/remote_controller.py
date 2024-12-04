@@ -265,7 +265,7 @@ class RemoteController(Entity):
             arr = np.frombuffer(tex.getRamImageAs("rgb"), np.uint8)
             image = arr.reshape(224, 224, 3)
             image = image[::-1, :, :].transpose((2, 0, 1))
-        self.simuPictures.append(image.tolist())
+            self.simuPictures.append(image.tolist())
         self.simuIndex += 1
         self.last_sensing = time.time()
         pass
