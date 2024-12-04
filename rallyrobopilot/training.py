@@ -1,3 +1,4 @@
+from math import sqrt
 from multiprocessing import Pool
 import os
 import sys
@@ -27,34 +28,46 @@ DATA_INDEXES = [0, 1, 2, 3]
 
 USE_SYMETRIC = True
 
+TRAINED_MODELS = ""
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Device is : {device}")
 if len(sys.argv) > 1:
     USE_SYMETRIC = bool(sys.argv[1])
     if len(sys.argv) > 2:
-        DATA_INDEXES = [int(i) for i in sys.argv[2:]]
+        TRAINED_MODEL = str(sys.argv[3])
+        if TRAINED_MODEL != "None":
+            model.load_state_dict(torch.load(f"./models/{TRAINED_MODEL}/model.pth"), weights_only=True)  
+            model.to(device)
+        # if len(sys.argv) > 3 :
+        #     DATA_INDEXES = [int(i) for i in sys.argv[3 :]]
 
 
-preparedData = ()
 
-
-regression_weight = 0.2
-
-num_epochs = 30
+num_epochs = 35
 
 BASE_FOLDER = "./data/"
-BASE_FILENAME = "record"
-BASE_EXTENSION = ".npz"
-file_names = [BASE_FILENAME + str(i) + BASE_EXTENSION for i in DATA_INDEXES]
-if USE_SYMETRIC:
-    file_names += [
-        BASE_FILENAME + "_flipped" + str(i) + BASE_EXTENSION for i in DATA_INDEXES
-    ]
+TRAIN_FOLDER = f"{BASE_FOLDER}train"
+TEST_FOLDER = f"{BASE_FOLDER}test"
+
+train_files = []
+test_files = []
+
+for f in [(TRAIN_FOLDER, train_files), (TEST_FOLDER, test_files)]:
+    files = os.listdir(f[0])
+    for fi in files:
+        curr_path = f"{f[0]}/{fi}"
+        if os.path.isfile(curr_path):
+            f[1].append(curr_path)
+
+print(f"Loading {train_files} for training")
+print(f"Loading {test_files} for testing")
 
 xData = []
 yData = []
 
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(f"Device is : {device}")
+
 
 def prepareData(npData):
     x = np.concatenate((npData["images"], npData["distances"][:, np.newaxis, :, :]), axis=1)
@@ -63,7 +76,7 @@ def prepareData(npData):
     return x, y
 
 def loadFile(filename):
-    loaded = np.load(BASE_FOLDER + filename)
+    loaded = np.load(filename)
     print("Preparing file : ", filename)
     x, y = prepareData(loaded)
     print(x.shape, " for file ", filename)
@@ -71,24 +84,35 @@ def loadFile(filename):
     return x, y
 
 
+testX = []
+testY = []
+
 with Pool() as pool:
-    results = pool.map(loadFile, file_names)
+    results = pool.map(loadFile, train_files)
     xData = np.concatenate([x for x, _ in results])
     yData = np.concatenate([y for _, y in results])
+    
+with Pool() as pool:
+    results = pool.map(loadFile, test_files)
+    testX = np.concatenate([x for x, _ in results])
+    testY = np.concatenate([y for _, y in results])
 
 assert len(xData) == len(yData)
+assert len(testX) == len(testY)
 
 print(f"Data prepared, {len(xData)} samples")
 
 targetTensor = torch.tensor(yData, dtype=torch.float32)
-targetTensor.to(device)
 print("Target tensor created")
 sourceTensor = torch.tensor(xData, dtype=torch.float32)
-sourceTensor.to(device)
 print("Source tensor created")
+
+testTargetTensor = torch.tensor(testY, dtype=torch.float32)
+testSourceTensor = torch.tensor(testX, dtype=torch.float32)
 
 dataset = TensorDataset(sourceTensor, targetTensor)
 
+datasetTest = TensorDataset(testSourceTensor, testTargetTensor)
 print("Created tensors")
 
 train_size = int(0.8 * len(dataset))
@@ -100,9 +124,11 @@ train_loader = DataLoader(train_data, batch_size=32)
 
 validate_loader = DataLoader(validate_data, batch_size=32)
 
+test_loader = DataLoader(datasetTest, batch_size =128)
+
 # Define loss function and optimizer
 classification_loss = nn.BCEWithLogitsLoss(
-    torch.tensor([0.4, 1, 1, 1], dtype=torch.float32)
+    torch.tensor([0.3, 1, 1, 1], dtype=torch.float32)
 )
 
 # Keep weight decays really small
@@ -117,10 +143,12 @@ model.to(device)
 losses = {
     "train": [],
     "eval": [],
+    "test": []
 }
 accuracies = {
     "train": [],
     "eval": [],
+    "test": []
 }
 
 # Training loop
@@ -128,8 +156,13 @@ accuracies = {
 
 for epoch in range(num_epochs):
 
-    for step in ["train", "eval"]:
-        currLoader = train_loader if step == "train" else validate_loader
+    for step in ["train", "eval", "test"]:
+        if step == "train": 
+            currLoader = train_loader 
+        elif step == "eval":
+            currLoader = validate_loader
+        else: 
+            currLoader = test_loader
         if step == "train":
             model.train()
         else:
@@ -158,7 +191,7 @@ for epoch in range(num_epochs):
         accuracies[step].append(correct / total)
 
     print(
-        f"Epoch [{epoch+1}/{num_epochs}], Loss: {class_loss.item():.4f}, Acc : {accuracies['eval'][-1]:.4f}"
+        f"Epoch [{epoch+1}/{num_epochs}], Loss: {class_loss.item():.4f}, Acc : {accuracies['eval'][-1]:.4f} - Test loss : {losses['test'][-1]}, Test Acc : {accuracies['test'][-1]}"
     )
 
 
@@ -180,14 +213,15 @@ def saveResults():
     torch.save(model.state_dict(), currPath + "/model.pth")
     print("Saved model to ", currPath)
     plt.figure()
-    plt.plot(losses["train"], label="Training loss")
-    plt.plot(losses["eval"], label="Validation loss")
+    for key in losses:
+        plt.plot(losses[key], label=f"{key.capitalize()} loss")
+    plt.yscale("log")
     plt.legend()
     plt.title("Loss")
     plt.savefig(currPath + "/loss.png")
     plt.figure()
-    plt.plot(accuracies["train"], label="Training accuracy")
-    plt.plot(accuracies["eval"], label="Validation accuracy")
+    for key in accuracies:
+        plt.plot(accuracies[key], label=f"{key.capitalize()} accuracy")
     plt.ylim((0, 1))
     plt.legend()
     plt.title("Accuracy")
