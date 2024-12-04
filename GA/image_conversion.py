@@ -10,7 +10,7 @@ from rallyrobopilot.remote import Remote
 class ImageConversion: 
     def __init__(self, numbersGA):
         self.numbersGA= numbersGA
-        self.remote = Remote("http://127.0.0.1", 4999, lambda x:"")
+        self.remote = Remote("http://127.0.0.1", 5000, lambda x:"")
         self.simulateGA()
         pass
 
@@ -91,7 +91,7 @@ class ImageConversion:
             controls = []
             lastPic = None
             distances_normalized = []
-            full_path = "./data/train/record_GA"
+            full_path = "./data/train/record_GA_visual"
             try:
                 assert len(data["pictures"]) == len(data["result"])
             except:
@@ -117,4 +117,4 @@ class ImageConversion:
             print("Saved file : ", f"{full_path}{i}.npz")
 
 
-ImageConversion(range(80, 147))
+ImageConversion(range(58, 144))
