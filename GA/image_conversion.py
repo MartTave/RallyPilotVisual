@@ -13,9 +13,51 @@ class ImageConversion:
         self.remote = Remote("http://127.0.0.1", 4999, lambda x:"")
         self.simulateGA()
         pass
+
     def simulateGA(self):
-        CURRENT_COLOR = np.array([255, 0, 0])
+
+        # 0: vert
+        # 1: rouge
+        # 2: rouge
+        # 3: vert
+        # 4: vert ou rouge
+        # 5: cyan
+        # 6: cyan
+        # 7: rouge
+        # 8: rouge
+
+        colors = [
+            [0, 255, 0],
+            [255, 0, 0],
+            [255, 0, 0],
+            [0, 255, 0],
+            [0, 255, 0],
+            [0, 255, 255],
+            [0, 255, 255],
+            [255, 0, 0],
+            [255, 0, 0],
+        ]
+        color_labels = [
+            "vert",
+            "rouge",
+            "rouge",
+            "vert",
+            "vert",
+            "cyan",
+            "cyan",
+            "rouge",
+            "rouge",
+        ]
+
         for i in self.numbersGA:
+            CURRENT_COLOR = []
+            if i < 9:
+                CURRENT_COLOR = np.array(colors[i])
+                print("Color is : ", color_labels[i])
+            else:
+                # int divide by 15 to get the color
+                CURRENT_COLOR = np.array(colors[(i - 9) // 15])
+                print("Color is : ", color_labels[(i - 9) // 15])
             file = Convertion(f"ga_{i}")
             startData = file.readJson()
             currMath = GaMaths([
