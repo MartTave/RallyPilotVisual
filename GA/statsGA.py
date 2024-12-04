@@ -1,6 +1,6 @@
 import os
 import matplotlib
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 
 import matplotlib.pyplot as plt
 from conversions import Convertion
@@ -8,6 +8,7 @@ import numpy as np
 
 class StatsGA(): 
     def __init__(self, folder):
+        
         conv = Convertion(folder)
         self.fitnessValues = conv.readFitnessValues()
         self.baseFolder = f"./GA/ga_data/{folder}/graphs/"
@@ -51,10 +52,56 @@ class StatsGA():
         filename = os.path.join(savePath, "fitness_evolution.png")
         plt.savefig(filename)
         plt.close()
+    def getMedianScores(self): 
+        savePath = f"{self.baseFolder}"
+        mean = []
+        min_vals = []
+        max_vals = []
+        bestScores = []
+        
+        for gen in self.fitnessValues:
+            filtered = list(filter(lambda x: x != -1, gen))
+            min_vals.append(np.min(filtered))
+            max_vals.append(np.max(filtered))
+            mean.append(np.mean(np.array(filtered)))
+            bestScores.append(min(filtered)) 
+        plt.plot(mean, label='Mean')
+        plt.plot(bestScores, label='Best Score')
+        plt.title("Best Scores and Mean Per Generation")
+        plt.xlabel("Generation Number")  
+        plt.ylabel("Fitness Values")         
+        plt.legend()
+        filename = os.path.join(savePath, "median_evolution.png")
+        plt.savefig(filename)
+        plt.close()
 
 
-for f in [f"ga_{i}" for i in range(0, 144)]:
+for f in [f"ga_{i}" for i in range(74, 146)]:
     stat = StatsGA(f)
-    # stat.getGetNumberEndedSim()
-    stat.getNumOfNotEndedSim()
-    stat.getBestScores()
+    #stat.getGetNumberEndedSim()
+    #stat.getNumOfNotEndedSim()
+    #stat.getBestScores()
+    #stat.getMedianScores()
+
+def getDifferenceOfImprovement(minRange, maxRange): 
+    savePath = f"./GA/ga_data/"
+    plt.figure()
+    for i in range(minRange,maxRange):
+        
+        path = f"ga_{i}"
+        conv = Convertion(path)
+        fitnessValues = conv.readFitnessValues()
+        start_fitness_value = 0
+        diff = []
+        for j,gen in enumerate(fitnessValues):
+            filtered = list(filter(lambda x: x != -1, gen))
+            if j == 0: 
+                start_fitness_value = min(filtered)
+            diff.append(start_fitness_value-min(filtered))
+        plt.plot(diff, label=i)
+        plt.legend()
+
+    filename = os.path.join(savePath, "ala2.png")
+    plt.savefig(filename)
+    plt.close()  
+getDifferenceOfImprovement(80,100)

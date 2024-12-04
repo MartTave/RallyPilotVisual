@@ -196,7 +196,7 @@ class GaDataGeneration():
             log("=====================================")
             log("")
 
-        best_individuals = sorted(population, key=lambda x: x.fitness.values[0], reverse=True)
+        best_individuals = sorted(population, key=lambda x: x.fitness.values[0])
         return best_individuals, self.fitness_values
 
 
