@@ -80,6 +80,8 @@ def loadFile(filename):
     print("Preparing file : ", filename)
     x, y = prepareData(loaded)
     print(x.shape, " for file ", filename)
+    if len(x) != len(y):
+        print("Invalid length for file : ", filename)
     assert len(x) == len(y)
     return x, y
 
