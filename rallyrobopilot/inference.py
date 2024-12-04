@@ -13,7 +13,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 print("Device is : ", device)
 
-MODEL_NUMBER = 3
+MODEL_NUMBER = 4
 if len(sys.argv) > 1:
     MODEL_NUMBER = int(sys.argv[1])
 
