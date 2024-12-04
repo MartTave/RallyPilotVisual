@@ -34,7 +34,7 @@ FRAMERATE = 50
 # Setup Flask
 flask_app = Flask(__name__)
 flask_app.logger.disabled = True
-flask_thread = Thread(target=flask_app.run, kwargs={'host': "0.0.0.0", 'port': 5000})
+flask_thread = Thread(target=flask_app.run, kwargs={'host': "0.0.0.0", 'port': 4999})
 print("Flask server running on port 5000")
 flask_thread.start()
 

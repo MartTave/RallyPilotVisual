@@ -59,6 +59,7 @@ class RemoteController(Entity):
         self.simuIndex = 0
         self.simulating = False
         self.simuResult = []
+        self.simuPictures = []
 
         #   Period for recording --> 0.1 secods = 10 times a second
         self.sensing_period = PERIOD_REMOTE_SENSING
@@ -202,9 +203,17 @@ class RemoteController(Entity):
             # For it to start playing controls back immediately
             self.simuIndex = -1
             self.simuResult = []
+            self.simuPictures = []
             while self.simulating:
                 sleep(0.25)
-            return jsonify({"result": self.simuResult}), 200
+            data = {
+                "result": self.simuResult
+            }
+            if len(self.simuPictures) > 0:
+                data["pictures"] = self.simuPictures
+                self.simuPictures = []
+            self.simuResult = []
+            return jsonify(data), 200
 
     def simulateGA(
         self,
@@ -223,6 +232,13 @@ class RemoteController(Entity):
             self.simuIndex += 1
         if self.simuIndex >= len(self.controlList) + GRACE_TIME_GA:
             self.simulating = False
+            if self.recordPictures:
+                tex = base.win.getDisplayRegion(0).getScreenshot()
+                arr = np.frombuffer(tex.getRamImageAs("rgb"), np.uint8)
+                image = arr.reshape(224, 224, 3)
+                image = image[::-1, :, :].transpose((2, 0, 1))
+                self.simuPictures.append(image.tolist())
+                self.recordPictures = False
             self.simuResult.append(
                 [
                     self.car.world_position[i]
@@ -244,6 +260,12 @@ class RemoteController(Entity):
                 for i, v in enumerate(self.car.world_position)
             ]
         )
+        if self.recordPictures:
+            tex = base.win.getDisplayRegion(0).getScreenshot()
+            arr = np.frombuffer(tex.getRamImageAs("rgb"), np.uint8)
+            image = arr.reshape(224, 224, 3)
+            image = image[::-1, :, :].transpose((2, 0, 1))
+        self.simuPictures.append(image.tolist())
         self.simuIndex += 1
         self.last_sensing = time.time()
         pass

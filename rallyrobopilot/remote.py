@@ -139,6 +139,7 @@ class Remote:
         startPosition: tuple[float, float, float],
         startAngle: float,
         speed: float,
+        getPics: bool = False
     ) -> list[list[float]]:
         response = requests.post(
             f"{self.host}:{self.port}/GASolution",
@@ -147,6 +148,7 @@ class Remote:
                 "startPosition": startPosition,
                 "startAngle": startAngle,
                 "startSpeed": speed,
+                "picture": getPics
             },
         )
         if response.status_code != 200:
@@ -154,7 +156,11 @@ class Remote:
                 f"Received error response: {response.status_code} with status {response.json()['error']}"
             )
             return False
-        return response.json()["result"]
+        if getPics:
+            json = response.json()
+            return json
+        else:
+            return response.json()["result"]
 
     def sensingLoop(self):
         while self.sensing:
