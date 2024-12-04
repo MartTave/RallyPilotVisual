@@ -11,7 +11,7 @@ class AlexNetAtHome(nn.Module):
     def __init__(self):
         super(AlexNetAtHome, self).__init__()
 
-        firstLayerSize = 40
+        firstLayerSize = 64
         secondLayerSize = 75
         thirdLayerSize = 90
         fourthLayerSize = 90
@@ -44,6 +44,9 @@ class AlexNetAtHome(nn.Module):
         self.predictor = nn.Sequential(
             nn.Dropout(0.5),
             nn.Linear(predictorInputSize, 256),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(256, 256),
             nn.ReLU(),
             nn.Dropout(0.5),
             nn.Linear(256, 256),
