@@ -58,7 +58,6 @@ for f in [(TRAIN_FOLDER, train_files), (TEST_FOLDER, test_files)]:
         curr_path = f"{f[0]}/{fi}"
         if os.path.isfile(curr_path):
             f[1].append(curr_path)
-            break
 
 
 print(f"Loading {train_files} for training")
