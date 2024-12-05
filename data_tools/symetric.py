@@ -13,13 +13,13 @@ for b in BASEPATH:
         data = np.load(path)
         images = data["images"]
         controls = data["controls"]
-        speeds = data["speeds"]
         distances = data["distances"]
         images = np.flip(images, axis=3)
+        controls[:, [2, 3]] = controls[:, [3, 2]]
+        distances = np.flip(distances, axis=2)
         np.savez(
             f"{b}/{f.split('.')[0]}_flipped.npz",
             images=images,
             controls=controls,
-            speeds=speeds,
-            distances=distances
+            distances=distances,
         )
