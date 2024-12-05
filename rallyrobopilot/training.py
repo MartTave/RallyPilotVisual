@@ -43,7 +43,7 @@ if len(sys.argv) > 1:
         #     DATA_INDEXES = [int(i) for i in sys.argv[3 :]]
 
 
-num_epochs = 15 
+num_epochs = 100 
 
 BASE_FOLDER = "./data/"
 TRAIN_FOLDER = f"{BASE_FOLDER}train"
