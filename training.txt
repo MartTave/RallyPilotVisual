@@ -1,354 +1,354 @@
 Device is : cuda
 Loading ['./data/train/record_GA16.npz', './data/train/record_GA22.npz', './data/train/record_GA138.npz', './data/train/record_GA92.npz', './data/train/record_GA122.npz', './data/train/record_GA_visual0_flipped.npz', './data/train/record_GA112_flipped.npz', './data/train/record_GA17.npz', './data/train/record_GA_visual60_flipped.npz', './data/train/record_GA_visual109_flipped.npz', './data/train/record_GA_Visual3.npz', './data/train/record_GA54_flipped.npz', './data/train/record_GA_visual74_flipped.npz', './data/train/record_GA_visual121_flipped.npz', './data/train/record_GA125_flipped.npz', './data/train/record_GA41_flipped.npz', './data/train/record_GA140.npz', './data/train/record_GA51_flipped.npz', './data/train/record_GA26_flipped.npz', './data/train/record_GA_visual71.npz', './data/train/record_GA_visual99_flipped.npz', './data/train/record_GA142_flipped.npz', './data/train/record_GA53_flipped.npz', './data/train/record_GA134_flipped.npz', './data/train/record_GA_visual105.npz', './data/train/record_GA_visual59.npz', './data/train/record_GA131_flipped.npz', './data/train/record_GA_visual102.npz', './data/train/record8_flipped.npz', './data/train/record10.npz', './data/train/record_GA33.npz', './data/train/record_GA137.npz', './data/train/record_GA12_flipped.npz', './data/train/record_GA_visual99.npz', './data/train/record_GA18_flipped.npz', './data/train/record_GA104_flipped.npz', './data/train/record_GA_visual114.npz', './data/train/record_GA88_flipped.npz', './data/train/record_GA122_flipped.npz', './data/train/record_GA80_flipped.npz', './data/train/record2.npz', './data/train/record_GA_visual68_flipped.npz', './data/train/record7.npz', './data/train/record_GA_visual66.npz', './data/train/record_GA40_flipped.npz', './data/train/record_GA32.npz', './data/train/record_GA84_flipped.npz', './data/train/record_GA136.npz', './data/train/record_GA133.npz', './data/train/record_GA_visual112.npz', './data/train/record_GA_visual77.npz', './data/train/record7_flipped.npz', './data/train/record_GA40.npz', './data/train/record_GA_visual113_flipped.npz', './data/train/record_GA_visual91_flipped.npz', './data/train/record_GA98.npz', './data/train/record_GA118.npz', './data/train/record_GA_visual71_flipped.npz', './data/train/record_GA_visual62_flipped.npz', './data/train/record_GA_visual88_flipped.npz', './data/train/record_GA127.npz', './data/train/record_GA107_flipped.npz', './data/train/record_GA_visual97.npz', './data/train/record_GA_visual109.npz', './data/train/record_GA_visual77_flipped.npz', './data/train/record_GA_Visual1_flipped.npz', './data/train/record2_flipped.npz', './data/train/record_GA95.npz', './data/train/record_GA117.npz', './data/train/record_GA_visual61.npz', './data/train/record_GA115_flipped.npz', './data/train/record4.npz', './data/train/record_GA_visual70.npz', './data/train/record_GA_visual81_flipped.npz', './data/train/record_GA119.npz', './data/train/record_GA_visual88.npz', './data/train/record_GA_visual81.npz', './data/train/record_GA_visual97_flipped.npz', './data/train/record_GA96_flipped.npz', './data/train/record_GA39.npz', './data/train/record_GA143.npz', './data/train/record_GA_visual87_flipped.npz', './data/train/record_GA_visual73.npz', './data/train/record_GA114_flipped.npz', './data/train/record_GA_visual59_flipped.npz', './data/train/record_GA_visual83_flipped.npz', './data/train/record_GA_Visual8_flipped.npz', './data/train/record_GA_visual115_flipped.npz', './data/train/record_GA15_flipped.npz', './data/train/record5_flipped.npz', './data/train/record_GA_visual125.npz', './data/train/record_GA112.npz', './data/train/record_GA_visual67.npz', './data/train/record_GA14_flipped.npz', './data/train/record3_with_accident_flipped.npz', './data/train/record_GA24.npz', './data/train/record_GA17_flipped.npz', './data/train/record_GA81.npz', './data/train/record_GA100_flipped.npz', './data/train/record_GA_visual105_flipped.npz', './data/train/record_GA82_flipped.npz', './data/train/record_GA27_flipped.npz', './data/train/record_GA90.npz', './data/train/record_GA29.npz', './data/train/record_GA46_flipped.npz', './data/train/record_GA30_flipped.npz', './data/train/record_GA23.npz', './data/train/record_GA145.npz', './data/train/record_GA128_flipped.npz', './data/train/record_GA103_flipped.npz', './data/train/record_GA123.npz', './data/train/record_GA_visual96_flipped.npz', './data/train/record_GA29_flipped.npz', './data/train/record9_flipped.npz', './data/train/record_GA141.npz', './data/train/record_GA132_flipped.npz', './data/train/record_GA104.npz', './data/train/record_GA_visual82.npz', './data/train/record_GA133_flipped.npz', './data/train/record_GA45.npz', './data/train/record_GA25_flipped.npz', './data/train/record_GA55_flipped.npz', './data/train/record_GA135_flipped.npz', './data/train/record_GA116.npz', './data/train/record_GA94_flipped.npz', './data/train/record_GA100.npz', './data/train/record_GA84.npz', './data/train/record_GA15.npz', './data/train/record_GA95_flipped.npz', './data/train/record_GA_visual123_flipped.npz', './data/train/record10_flipped.npz', './data/train/record_GA45_flipped.npz', './data/train/record_GA5.npz', './data/train/record_GA37.npz', './data/train/record_GA3.npz', './data/train/record_GA28_flipped.npz', './data/train/record_GA_visual89.npz', './data/train/record_GA2.npz', './data/train/record_GA12.npz', './data/train/record_GA99.npz', './data/train/record_GA48.npz', './data/train/record_GA102_flipped.npz', './data/train/record_GA56_flipped.npz', './data/train/record_GA114.npz', './data/train/record_GA35_flipped.npz', './data/train/record_GA83.npz', './data/train/record_GA1_flipped.npz', './data/train/record_GA132.npz', './data/train/record_GA97_flipped.npz', './data/train/record_GA_visual110.npz', './data/train/record_GA_visual124_flipped.npz', './data/train/record_GA_visual98.npz', './data/train/record3_with_accident.npz', './data/train/record_GA117_flipped.npz', './data/train/record_GA48_flipped.npz', './data/train/record_GA38_flipped.npz', './data/train/record_GA21.npz', './data/train/record_GA_visual116_flipped.npz', './data/train/record_GA_visual110_flipped.npz', './data/train/record_GA_visual78.npz', './data/train/record_GA137_flipped.npz', './data/train/record_GA134.npz', './data/train/record_GA_Visual2_flipped.npz', './data/train/record_GA1.npz', './data/train/record_GA54.npz', './data/train/record_GA_visual127.npz', './data/train/record_GA_visual107.npz', './data/train/record8.npz', './data/train/record_GA57.npz', './data/train/record_GA10.npz', './data/train/record_GA80.npz', './data/train/record_GA92_flipped.npz', './data/train/record_GA31.npz', './data/train/record_GA102.npz', './data/train/record_GA123_flipped.npz', './data/train/record_GA36_flipped.npz', './data/train/record_GA_visual101.npz', './data/train/record_GA101.npz', './data/train/record_GA87.npz', './data/train/record_GA_visual76_flipped.npz', './data/train/record_GA_visual58.npz', './data/train/record_GA_visual58_flipped.npz', './data/train/record_GA47_flipped.npz', './data/train/record_GA32_flipped.npz', './data/train/record_GA_visual100.npz', './data/train/record_GA_Visual0_flipped.npz', './data/train/record_GA126_flipped.npz', './data/train/record_GA_visual118.npz', './data/train/record_GA106_flipped.npz', './data/train/record_GA_Visual1.npz', './data/train/record_GA_visual118_flipped.npz', './data/train/record_GA13_flipped.npz', './data/train/record_GA35.npz', './data/train/record_GA11.npz', './data/train/record_GA37_flipped.npz', './data/train/record_GA111.npz', './data/train/record1.npz', './data/train/record5.npz', './data/train/record_GA106.npz', './data/train/record0.npz', './data/train/record_GA_Visual6.npz', './data/train/record_GA43_flipped.npz', './data/train/record_GA_visual69.npz', './data/train/record_GA86.npz', './data/train/record_GA_visual64.npz', './data/train/record_GA_visual107_flipped.npz', './data/train/record_GA42_flipped.npz', './data/train/record_GA126.npz', './data/train/record_GA5_flipped.npz', './data/train/record_GA20_flipped.npz', './data/train/record_GA42.npz', './data/train/record_GA44.npz', './data/train/record_GA_visual117_flipped.npz', './data/train/record_GA27.npz', './data/train/record_GA86_flipped.npz', './data/train/record_GA_visual94_flipped.npz', './data/train/record_GA110.npz', './data/train/record_GA_visual73_flipped.npz', './data/train/record_GA21_flipped.npz', './data/train/record_GA10_flipped.npz', './data/train/record_GA139_flipped.npz', './data/train/record_GA88.npz', './data/train/record_GA23_flipped.npz', './data/train/record_GA_visual93.npz', './data/train/record_GA55.npz', './data/train/record_GA_visual79_flipped.npz', './data/train/record_GA_visual111.npz', './data/train/record_GA91_flipped.npz', './data/train/record_GA36.npz', './data/train/record_GA50.npz', './data/train/record_GA41.npz', './data/train/record_GA51.npz', './data/train/record_GA_Visual3_flipped.npz', './data/train/record_GA34.npz', './data/train/record_GA85_flipped.npz', './data/train/record_GA107.npz', './data/train/record_GA_Visual4_flipped.npz', './data/train/record_GA_visual95_flipped.npz', './data/train/record_GA16_flipped.npz', './data/train/record_GA19.npz', './data/train/record4_flipped.npz', './data/train/record_GA_visual82_flipped.npz', './data/train/record_GA_visual86.npz', './data/train/record_GA13.npz', './data/train/record_GA_visual116.npz', './data/train/record_GA24_flipped.npz', './data/train/record_GA52.npz', './data/train/record_GA_visual121.npz', './data/train/record_GA_visual78_flipped.npz', './data/train/record_GA_visual80.npz', './data/train/record_GA142.npz', './data/train/record_GA82.npz', './data/train/record_GA94.npz', './data/train/record_GA2_flipped.npz', './data/train/record_GA_visual92.npz', './data/train/record_GA8.npz', './data/train/record_GA119_flipped.npz', './data/train/record_GA43.npz', './data/train/record_GA_visual69_flipped.npz', './data/train/record_GA144_flipped.npz', './data/train/record0_flipped.npz', './data/train/record_GA25.npz', './data/train/record_GA125.npz', './data/train/record_GA109_flipped.npz', './data/train/record_GA_visual92_flipped.npz', './data/train/record_GA_visual76.npz', './data/train/record_GA110_flipped.npz', './data/train/record_GA_visual101_flipped.npz', './data/train/record_GA_visual127_flipped.npz', './data/train/record_GA_Visual7.npz', './data/train/record_GA49_flipped.npz', './data/train/record_GA103.npz', './data/train/record_GA_visual124.npz', './data/train/record_GA139.npz', './data/train/record_GA_visual61_flipped.npz', './data/train/record_GA124.npz', './data/train/record_GA_visual102_flipped.npz', './data/train/record_GA26.npz', './data/train/record_GA90_flipped.npz', './data/train/record_GA113.npz', './data/train/record_GA135.npz', './data/train/record_GA111_flipped.npz', './data/train/record_GA_visual113.npz', './data/train/record_GA_Visual8.npz', './data/train/record_GA_visual62.npz', './data/train/record_GA_visual95.npz', './data/train/record_GA_visual63.npz', './data/train/record_GA_visual126_flipped.npz', './data/train/record_GA124_flipped.npz', './data/train/record_GA115.npz', './data/train/record_GA_visual115.npz', './data/train/record_GA121_flipped.npz', './data/train/record_GA113_flipped.npz', './data/train/record_GA47.npz', './data/train/record_GA85.npz', './data/train/record_GA_visual66_flipped.npz', './data/train/record_GA120_flipped.npz', './data/train/record_GA131.npz', './data/train/record_GA19_flipped.npz', './data/train/record_GA_visual79.npz', './data/train/record_GA52_flipped.npz', './data/train/record_GA_visual90.npz', './data/train/record_GA7_flipped.npz', './data/train/record_GA_visual64_flipped.npz', './data/train/record_GA6.npz', './data/train/record_GA_visual119_flipped.npz', './data/train/record_GA22_flipped.npz', './data/train/record_GA_visual0.npz', './data/train/record_GA89_flipped.npz', './data/train/record6_flipped.npz', './data/train/record_GA_visual85.npz', './data/train/record_GA_Visual4.npz', './data/train/record_GA9_flipped.npz', './data/train/record_GA_visual85_flipped.npz', './data/train/record_GA_visual90_flipped.npz', './data/train/record_GA143_flipped.npz', './data/train/record_GA_visual91.npz', './data/train/record_GA121.npz', './data/train/record_GA141_flipped.npz', './data/train/record_GA_visual84_flipped.npz', './data/train/record_GA99_flipped.npz', './data/train/record_GA_visual104.npz', './data/train/record_GA_visual84.npz', './data/train/record_GA138_flipped.npz', './data/train/record_GA140_flipped.npz', './data/train/record_GA_visual67_flipped.npz', './data/train/record1_flipped.npz', './data/train/record_GA50_flipped.npz', './data/train/record_GA_visual80_flipped.npz', './data/train/record_GA56.npz', './data/train/record_GA_Visual6_flipped.npz', './data/train/record_GA_Visual5.npz', './data/train/record_GA145_flipped.npz', './data/train/record_GA_visual96.npz', './data/train/record_GA_visual114_flipped.npz', './data/train/record_GA130.npz', './data/train/record_GA93_flipped.npz', './data/train/record_GA58.npz', './data/train/record_GA28.npz', './data/train/record_GA6_flipped.npz', './data/train/record_GA108_flipped.npz', './data/train/record_GA_visual75_flipped.npz', './data/train/record_GA_visual106.npz', './data/train/record_GA57_flipped.npz', './data/train/record_GA30.npz', './data/train/record_GA89.npz', './data/train/record_GA127_flipped.npz', './data/train/record_GA_visual72_flipped.npz', './data/train/record_GA83_flipped.npz', './data/train/record_GA3_flipped.npz', './data/train/record_GA_Visual7_flipped.npz', './data/train/record_GA31_flipped.npz', './data/train/record_GA_visual126.npz', './data/train/record_GA_Visual2.npz', './data/train/record_GA_visual111_flipped.npz', './data/train/record_GA116_flipped.npz', './data/train/record9.npz', './data/train/record_GA46.npz', './data/train/record_GA_visual72.npz', './data/train/record_GA9.npz', './data/train/record_GA_visual89_flipped.npz', './data/train/record_GA91.npz', './data/train/record_GA18.npz', './data/train/record_GA_Visual0.npz', './data/train/record_GA_Visual5_flipped.npz', './data/train/record_GA144.npz', './data/train/record_GA44_flipped.npz', './data/train/record_GA_visual117.npz', './data/train/record_GA_visual74.npz', './data/train/record_GA81_flipped.npz', './data/train/record_GA_visual125_flipped.npz', './data/train/record_GA_visual122.npz', './data/train/record_GA_visual68.npz', './data/train/record_GA_visual123.npz', './data/train/record_GA_visual106_flipped.npz', './data/train/record_GA49.npz', './data/train/record6.npz', './data/train/record_GA_visual120.npz', './data/train/record_GA_visual86_flipped.npz', './data/train/record_GA109.npz', './data/train/record_GA_visual94.npz', './data/train/record_GA_visual98_flipped.npz', './data/train/record_GA53.npz', './data/train/record_GA34_flipped.npz', './data/train/record_GA39_flipped.npz', './data/train/record_GA96.npz', './data/train/record_GA_visual83.npz', './data/train/record_GA87_flipped.npz', './data/train/record_GA_visual87.npz', './data/train/record_GA38.npz', './data/train/record_GA_visual75.npz', './data/train/record_GA_visual119.npz', './data/train/record_GA98_flipped.npz', './data/train/record_GA128.npz', './data/train/record_GA20.npz', './data/train/record_GA93.npz', './data/train/record_GA33_flipped.npz', './data/train/record_GA_visual104_flipped.npz', './data/train/record_GA_visual93_flipped.npz', './data/train/record_GA_visual112_flipped.npz', './data/train/record_GA97.npz', './data/train/record_GA136_flipped.npz', './data/train/record_GA8_flipped.npz', './data/train/record_GA118_flipped.npz', './data/train/record_GA108.npz', './data/train/record_GA58_flipped.npz', './data/train/record_GA_visual60.npz', './data/train/record_GA_visual100_flipped.npz', './data/train/record_GA_visual122_flipped.npz', './data/train/record_GA11_flipped.npz', './data/train/record_GA130_flipped.npz', './data/train/record_GA14.npz', './data/train/record_GA7.npz', './data/train/record_GA120.npz', './data/train/record_GA_visual70_flipped.npz', './data/train/record_GA101_flipped.npz', './data/train/record_GA_visual63_flipped.npz', './data/train/record_GA_visual120_flipped.npz'] for training
 Loading ['./data/test/record1.npz', './data/test/record0.npz', './data/test/record0_flipped.npz', './data/test/record1_flipped.npz'] for testing
-Preparing file :  ./data/train/record_GA26_flipped.npz
+Preparing file : Preparing file :  ./data/train/record_GA16.npz 
+./data/train/record_GA138.npz
+Preparing file :  ./data/train/record_GA112_flipped.npz
+Preparing file :  ./data/train/record_GA_visual60_flipped.npz
+Preparing file :  ./data/train/record_GA122.npz
+Preparing file :  ./data/train/record_GA_visual74_flipped.npz
+Preparing file :  ./data/train/record_GA125_flipped.npz
+Preparing file : Preparing file : Preparing file : Preparing file : Preparing file : Preparing file :      ./data/train/record_GA_Visual3.npz ./data/train/record_GA140.npz./data/train/record_GA_visual99_flipped.npz./data/train/record_GA53_flipped.npz./data/train/record_GA26_flipped.npz./data/train/record_GA_visual105.npz
+
+
+
+
+
+Preparing file :  ./data/train/record8_flipped.npz
+Preparing file :  ./data/train/record_GA131_flipped.npz
+Preparing file :  ./data/train/record_GA18_flipped.npz
+Preparing file :  ./data/train/record_GA12_flipped.npz
+Preparing file :  ./data/train/record_GA33.npz
+Preparing file :  ./data/train/record7.npz
 Preparing file :  ./data/train/record_GA_visual114.npz
 Preparing file :  ./data/train/record2.npz
-Preparing file :  ./data/train/record_GA_visual77.npz
-Preparing file :  ./data/train/record_GA_visual91_flipped.npz
-Preparing file :  ./data/train/record_GA115_flipped.npz
-Preparing file :  ./data/train/record_GA_visual74_flipped.npz
-Preparing file :  ./data/train/record_GA_visual62_flipped.npz
-Preparing file :  ./data/train/record_GA_Visual8_flipped.npz
+Preparing file : Preparing file :  ./data/train/record_GA122_flipped.npz 
+./data/train/record_GA40_flipped.npz
+Preparing file :  ./data/train/record_GA84_flipped.npz
 Preparing file :  ./data/train/record_GA133.npz
-Preparing file :  ./data/train/record_GA16.npzPreparing file : 
- ./data/train/record8_flipped.npz
-Preparing file : Preparing file : Preparing file :   ./data/train/record_GA40.npz ./data/train/record_GA_Visual3.npzPreparing file : ./data/train/record_GA122.npz
+Preparing file :  ./data/train/record_GA_visual77.npz
+Preparing file : Preparing file : Preparing file :   ./data/train/record_GA_visual91_flipped.npz./data/train/record_GA40.npz 
+./data/train/record_GA118.npz
 
+Preparing file : Preparing file :  ./data/train/record_GA_visual62_flipped.npz
+ ./data/train/record_GA127.npz
+Preparing file : Preparing file :   ./data/train/record_GA_visual97.npz./data/train/record_GA_visual77_flipped.npz
 
- ./data/train/record_GA140.npz
-Preparing file : Preparing file :  ./data/train/record_GA119.npz Preparing file : ./data/train/record_GA_visual60_flipped.npz
-
- ./data/train/record_GA18_flipped.npz
-Preparing file :  ./data/train/record_GA138.npzPreparing file : 
- ./data/train/record_GA53_flipped.npz
-Preparing file : Preparing file :  ./data/train/record_GA84_flipped.npz 
-Preparing file : ./data/train/record_GA143.npzPreparing file : Preparing file : Preparing file :  
- Preparing file :  ./data/train/record_GA_visual73.npzPreparing file : Preparing file : ./data/train/record_GA_visual81.npz Preparing file : Preparing file :  ./data/train/record_GA118.npz 
-Preparing file :   
-./data/train/record_GA112_flipped.npz./data/train/record_GA_visual105.npz 
-./data/train/record7.npzPreparing file : Preparing file : Preparing file : ./data/train/record_GA127.npz./data/train/record_GA_visual70.npz 
-
-Preparing file : ./data/train/record_GA33.npz
-
-Preparing file :   
- ./data/train/record_GA_visual99_flipped.npz./data/train/record_GA_visual97.npz
- Preparing file : ./data/train/record_GA_visual59_flipped.npz  ./data/train/record_GA15_flipped.npz
-
-./data/train/record_GA_visual67.npz./data/train/record_GA_visual125.npz
-./data/train/record_GA131_flipped.npz
-
-
-Preparing file : 
-Preparing file :  ./data/train/record_GA40_flipped.npzPreparing file :  
-./data/train/record2_flipped.npz ./data/train/record_GA125_flipped.npz
-
+Preparing file :  ./data/train/record2_flipped.npz
+Preparing file :  ./data/train/record_GA117.npz
+Preparing file :  ./data/train/record_GA115_flipped.npz
+Preparing file :  ./data/train/record_GA_visual70.npz
+Preparing file :  ./data/train/record_GA119.npz
+Preparing file :  ./data/train/record_GA_visual81.npz
 Preparing file :  ./data/train/record_GA96_flipped.npz
-Preparing file :  ./data/train/record_GA12_flipped.npz
-Preparing file : Preparing file :  ./data/train/record_GA117.npz ./data/train/record_GA_visual77_flipped.npz
+Preparing file :  ./data/train/record_GA143.npz
+Preparing file :  ./data/train/record_GA_visual73.npz
+Preparing file :  ./data/train/record_GA_visual59_flipped.npz
+Preparing file :  ./data/train/record_GA_Visual8_flipped.npz
+Preparing file :  ./data/train/record_GA15_flipped.npz
+Preparing file :  ./data/train/record_GA_visual67.npz
+Preparing file :  ./data/train/record_GA_visual125.npz
+Preparing file :  ./data/train/record_GA17_flipped.npz
+Preparing file :  ./data/train/record3_with_accident_flipped.npz
+Preparing file :  ./data/train/record_GA100_flipped.npz
+Preparing file :  ./data/train/record_GA82_flipped.npz
+Preparing file :  ./data/train/record_GA90.npz
+Preparing file : Preparing file :  ./data/train/record_GA128_flipped.npz ./data/train/record_GA23.npz
 
 Preparing file :  ./data/train/record_GA46_flipped.npz
-Preparing file : Preparing file :  Preparing file : Preparing file : Preparing file : Preparing file : Preparing file : Preparing file : Preparing file : Preparing file : Preparing file : ./data/train/record_GA100_flipped.npz          ./data/train/record_GA122_flipped.npz
-./data/train/record_GA82_flipped.npz./data/train/record_GA90.npz./data/train/record3_with_accident_flipped.npz./data/train/record_GA17_flipped.npz./data/train/record_GA25_flipped.npz./data/train/record_GA23.npz./data/train/record_GA128_flipped.npz./data/train/record_GA135_flipped.npz./data/train/record_GA123.npzPreparing file : 
+Preparing file : Preparing file :   ./data/train/record_GA123.npz./data/train/record_GA29_flipped.npz
 
-
-
-
-
-
-
-
-
- ./data/train/record_GA29_flipped.npz
-Preparing file :  ./data/train/record_GA104.npz
-Preparing file :  ./data/train/record_GA133_flipped.npz
 Preparing file :  ./data/train/record_GA141.npz
-Preparing file :  ./data/train/record_GA94_flipped.npz
-Preparing file :  ./data/train/record_GA56_flipped.npz
-Preparing file :  ./data/train/record_GA12.npz
+Preparing file : Preparing file :  ./data/train/record_GA104.npz
+ ./data/train/record_GA133_flipped.npz
+Preparing file :  ./data/train/record_GA25_flipped.npz
+Preparing file :  ./data/train/record_GA135_flipped.npz
+Preparing file : Preparing file :   ./data/train/record_GA94_flipped.npz./data/train/record_GA84.npz
+
 Preparing file :  ./data/train/record_GA95_flipped.npz
 Preparing file :  ./data/train/record10_flipped.npz
-Preparing file :  ./data/train/record_GA84.npz
-Preparing file :  ./data/train/record_GA_visual89.npz
-Preparing file :  ./data/train/record_GA48.npz
 Preparing file :  ./data/train/record_GA5.npz
 Preparing file :  ./data/train/record_GA3.npz
-(32, 3, 224, 224)  for file  ./data/train/record_GA_visual74_flipped.npz
-Preparing file :  ./data/train/record_GA_visual121_flipped.npz
-(37, 3, 224, 224)  for file  ./data/train/record_GA_visual77_flipped.npz
-Preparing file :  ./data/train/record_GA_Visual1_flipped.npz
-(36, 3, 224, 224)  for file  ./data/train/record_GA135_flipped.npz
-Preparing file :  ./data/train/record_GA116.npz
-(52, 3, 224, 224)  for file  ./data/train/record_GA_visual125.npz
-Preparing file :  ./data/train/record_GA112.npz
-(35, 3, 224, 224)  for file  ./data/train/record_GA133_flipped.npz
-Preparing file :  ./data/train/record_GA45.npz
-(40, 3, 224, 224)  for file  ./data/train/record_GA141.npz
-Preparing file :  ./data/train/record_GA132_flipped.npz
+Preparing file :  ./data/train/record_GA_visual89.npz
+Preparing file :  ./data/train/record_GA12.npz
+Preparing file :  ./data/train/record_GA48.npz
+Preparing file :  ./data/train/record_GA56_flipped.npz
+(25, 3, 224, 224)  for file  ./data/train/record_GA_visual105.npz
 (24, 3, 224, 224)  for file  ./data/train/record_GA_visual99_flipped.npz
+Preparing file :  ./data/train/record_GA_visual59.npz
 Preparing file :  ./data/train/record_GA142_flipped.npz
-(35, 3, 224, 224)  for file  ./data/train/record_GA133.npz
-Preparing file :  ./data/train/record_GA_visual112.npz
-(42, 3, 224, 224)  for file  ./data/train/record_GA128_flipped.npz
-Preparing file :  ./data/train/record_GA103_flipped.npz
-(32, 3, 224, 224)  for file  ./data/train/record_GA_visual62_flipped.npz
-(54, 3, 224, 224)  for file  ./data/train/record_GA117.npz
-Preparing file :  ./data/train/record_GA_visual61.npz
+(36, 3, 224, 224)  for file  ./data/train/record_GA131_flipped.npz
+(32, 3, 224, 224)  for file  ./data/train/record_GA_visual74_flipped.npz
+Preparing file :  ./data/train/record_GA_visual102.npz
+Preparing file :  ./data/train/record_GA_visual121_flipped.npz
+(32, 3, 224, 224)  for file  ./data/train/record_GA_visual59_flipped.npz
+Preparing file :  ./data/train/record_GA_visual83_flipped.npz
+(28, 3, 224, 224)  for file  ./data/train/record_GA_visual60_flipped.npz
+Preparing file :  ./data/train/record_GA_visual109_flipped.npz
 (38, 3, 224, 224)  for file  ./data/train/record_GA140.npz
 Preparing file :  ./data/train/record_GA51_flipped.npz
-(54, 3, 224, 224)  for file  ./data/train/record_GA122_flipped.npz
-Preparing file :  ./data/train/record_GA_visual88_flipped.npz
-Preparing file :  ./data/train/record_GA80_flipped.npz
-(37, 3, 224, 224)  for file  ./data/train/record_GA_visual77.npz
-Preparing file :  ./data/train/record7_flipped.npz
+(35, 3, 224, 224)  for file  ./data/train/record_GA_visual73.npz
+Preparing file :  ./data/train/record_GA114_flipped.npz
+(30, 3, 224, 224)  for file  ./data/train/record_GA_Visual3.npz
+Preparing file :  ./data/train/record_GA54_flipped.npz
+(32, 3, 224, 224)  for file  ./data/train/record_GA_visual67.npz
+Preparing file :  ./data/train/record_GA14_flipped.npz
 (31, 3, 224, 224)  for file  ./data/train/record_GA_visual70.npz
 Preparing file :  ./data/train/record_GA_visual81_flipped.npz
-(55, 3, 224, 224)  for file  ./data/train/record_GA118.npz
-(59, 3, 224, 224)  for file  ./data/train/record_GA17_flipped.npz
-Preparing file :  ./data/train/record_GA_visual71_flipped.npz
-Preparing file :  ./data/train/record_GA81.npz
-(56, 3, 224, 224)  for file  ./data/train/record_GA112_flipped.npz
+(32, 3, 224, 224)  for file  ./data/train/record_GA_visual62_flipped.npz
+Preparing file :  ./data/train/record_GA_visual88_flipped.npz
+(33, 3, 224, 224)  for file  ./data/train/record_GA_visual81.npz
+Preparing file :  ./data/train/record_GA_visual97_flipped.npz
+(36, 3, 224, 224)(35, 3, 224, 224)   for file  for file   ./data/train/record_GA138.npz./data/train/record_GA133.npz
+
+Preparing file : Preparing file :   ./data/train/record_GA92.npz./data/train/record_GA_visual112.npz
+
+(37, 3, 224, 224)  for file  ./data/train/record_GA_visual77.npz
+Preparing file :  ./data/train/record7_flipped.npz
+(39, 3, 224, 224)  for file  ./data/train/record_GA143.npz
+Preparing file :  ./data/train/record_GA_visual87_flipped.npz
+(37, 3, 224, 224)  for file  ./data/train/record_GA_visual77_flipped.npz
+Preparing file :  ./data/train/record_GA_Visual1_flipped.npz
 (41, 3, 224, 224)  for file  ./data/train/record_GA127.npz
 Preparing file :  ./data/train/record_GA107_flipped.npz
+(49, 3, 224, 224)  for file  ./data/train/record_GA119.npz
+Preparing file :  ./data/train/record_GA_visual88.npz
+(55, 3, 224, 224)(36, 3, 224, 224)  for file    for file ./data/train/record_GA125_flipped.npz 
+./data/train/record_GA135_flipped.npz
+Preparing file :  ./data/train/record_GA41_flipped.npz
+Preparing file :  ./data/train/record_GA116.npz
+(54, 3, 224, 224)  for file  ./data/train/record_GA_visual97.npz
+Preparing file :  ./data/train/record_GA_visual109.npz
+(35, 3, 224, 224)  for file  ./data/train/record_GA133_flipped.npz
+Preparing file :  ./data/train/record_GA45.npz
+(42, 3, 224, 224)  for file  ./data/train/record_GA128_flipped.npz
+(46, 3, 224, 224)  for file  ./data/train/record_GA_visual114.npz
+Preparing file :  ./data/train/record_GA103_flipped.npz
+Preparing file :  ./data/train/record_GA88_flipped.npz
+(23, 3, 224, 224)  for file  ./data/train/record_GA_visual102.npz
+(30, 3, 224, 224)  for file  ./data/train/record_GA3.npz
+Preparing file :  ./data/train/record_GA28_flipped.npz
+(54, 3, 224, 224)  for file  ./data/train/record_GA122_flipped.npz
+Preparing file :  ./data/train/record_GA80_flipped.npz
+(55, 3, 224, 224)  for file  ./data/train/record_GA118.npz
+Preparing file :  ./data/train/record_GA_visual71_flipped.npz
+(40, 3, 224, 224)  for file  ./data/train/record_GA141.npz
+Preparing file :  ./data/train/record_GA132_flipped.npz
+(37, 3, 224, 224)  for file  ./data/train/record_GA5.npz
+Preparing file :  ./data/train/record_GA37.npz
+(66, 3, 224, 224)  for file  ./data/train/record_GA96_flipped.npz
+Preparing file :  ./data/train/record_GA39.npz
+(56, 3, 224, 224)  for file  ./data/train/record_GA112_flipped.npz
+(55, 3, 224, 224)  for file  ./data/train/record_GA115_flipped.npz
 Preparing file :  ./data/train/record_GA17.npz
+Preparing file :  ./data/train/record4.npz
+(24, 3, 224, 224)  for file  ./data/train/record_GA_visual109_flipped.npz
+(31, 3, 224, 224)  for file  ./data/train/record_GA56_flipped.npz
+(61, 3, 224, 224)  for file  ./data/train/record_GA_Visual8_flipped.npz
+(54, 3, 224, 224)  for file  ./data/train/record_GA_visual91_flipped.npz
+Preparing file :  ./data/train/record_GA114.npz
+Preparing file : Preparing file :   ./data/train/record_GA_visual115_flipped.npz./data/train/record_GA98.npz
+
+(54, 3, 224, 224)  for file  ./data/train/record_GA18_flipped.npz
+Preparing file :  ./data/train/record_GA104_flipped.npz
+(33, 3, 224, 224)  for file  ./data/train/record_GA_visual83_flipped.npz
+(59, 3, 224, 224)  for file  ./data/train/record_GA17_flipped.npz
+(54, 3, 224, 224)  for file  ./data/train/record_GA122.npz
+Preparing file :  ./data/train/record_GA81.npz
+Preparing file :  ./data/train/record_GA_visual0_flipped.npz
+(32, 3, 224, 224)  for file  ./data/train/record_GA_visual59.npz
+(54, 3, 224, 224)  for file  ./data/train/record_GA117.npz
+Preparing file :  ./data/train/record_GA_visual61.npz
 (55, 3, 224, 224)  for file  ./data/train/record_GA123.npz
+(58, 3, 224, 224)  for file  ./data/train/record_GA23.npz
 Preparing file :  ./data/train/record_GA_visual96_flipped.npz
-(36, 3, 224, 224)  for file  ./data/train/record_GA131_flipped.npz
-Preparing file :  ./data/train/record_GA_visual102.npz
+Preparing file :  ./data/train/record_GA145.npz
+(60, 3, 224, 224)  for file  ./data/train/record_GA12_flipped.npz
+Preparing file :  ./data/train/record_GA_visual99.npz
+(69, 3, 224, 224)  for file  ./data/train/record_GA40.npz
+Preparing file :  ./data/train/record_GA_visual113_flipped.npz
+(52, 3, 224, 224)  for file  ./data/train/record_GA_visual125.npz
+Preparing file :  ./data/train/record_GA112.npz
+(24, 3, 224, 224)  for file  ./data/train/record_GA_visual112.npz
+(76, 3, 224, 224)  for file  ./data/train/record_GA33.npz
+Preparing file :  ./data/train/record_GA137.npz
+(62, 3, 224, 224)  for file  ./data/train/record_GA84_flipped.npz
+Preparing file :  ./data/train/record_GA136.npz
+(32, 3, 224, 224)  for file  ./data/train/record_GA54_flipped.npz
+(24, 3, 224, 224)  for file  ./data/train/record_GA_visual109.npz
+(33, 3, 224, 224)  for file  ./data/train/record_GA_visual81_flipped.npz
+(60, 3, 224, 224)  for file  ./data/train/record_GA16.npz
+Preparing file :  ./data/train/record_GA22.npz
+(53, 3, 224, 224)  for file  ./data/train/record_GA_visual89.npz
+Preparing file :  ./data/train/record_GA2.npz
+(73, 3, 224, 224)  for file  ./data/train/record_GA53_flipped.npz
+Preparing file :  ./data/train/record_GA134_flipped.npz
 (65, 3, 224, 224)  for file  ./data/train/record_GA90.npz
 Preparing file :  ./data/train/record_GA29.npz
 (69, 3, 224, 224)  for file  ./data/train/record_GA40_flipped.npz
+(59, 3, 224, 224)  for file  ./data/train/record_GA15_flipped.npz
 Preparing file :  ./data/train/record_GA32.npz
+Preparing file :  ./data/train/record5_flipped.npz
+(45, 3, 224, 224)  for file  ./data/train/record_GA142_flipped.npz
 (63, 3, 224, 224)  for file  ./data/train/record_GA82_flipped.npz
 Preparing file :  ./data/train/record_GA27_flipped.npz
-(62, 3, 224, 224)  for file  ./data/train/record_GA84_flipped.npz
-(25, 3, 224, 224)  for file  ./data/train/record_GA_visual105.npz
-Preparing file :  ./data/train/record_GA_visual59.npz
-Preparing file :  ./data/train/record_GA136.npz
-(32, 3, 224, 224)  for file  ./data/train/record_GA_visual67.npz
-Preparing file :  ./data/train/record_GA14_flipped.npz
-(60, 3, 224, 224)  for file  ./data/train/record_GA12_flipped.npz
-Preparing file :  ./data/train/record_GA_visual99.npz
-(37, 3, 224, 224)  for file  ./data/train/record_GA5.npz
-Preparing file :  ./data/train/record_GA37.npz
-(60, 3, 224, 224)  for file  ./data/train/record_GA12.npz
-Preparing file :  ./data/train/record_GA99.npz
-(31, 3, 224, 224)  for file  ./data/train/record_GA_visual71_flipped.npz
-(33, 3, 224, 224)  for file  ./data/train/record_GA_visual81_flipped.npz
-(69, 3, 224, 224)  for file  ./data/train/record_GA40.npz
-(56, 3, 224, 224)  for file  ./data/train/record_GA116.npz
-Preparing file :  ./data/train/record_GA_visual113_flipped.npz
-(30, 3, 224, 224)  for file  ./data/train/record_GA_Visual3.npz
-(36, 3, 224, 224)  for file  ./data/train/record_GA132_flipped.npz
-Preparing file :  ./data/train/record_GA54_flipped.npz
-(55, 3, 224, 224)  for file  ./data/train/record_GA115_flipped.npz
-Preparing file :  ./data/train/record4.npz
-(31, 3, 224, 224)  for file  ./data/train/record_GA56_flipped.npz
-(32, 3, 224, 224)  for file  ./data/train/record_GA_visual59_flipped.npz
-Preparing file :  ./data/train/record_GA114.npz
-Preparing file :  ./data/train/record_GA_visual83_flipped.npz
-(54, 3, 224, 224)  for file  ./data/train/record_GA_visual88_flipped.npz
-(60, 3, 224, 224)  for file  ./data/train/record_GA_visual121_flipped.npz
+(66, 3, 224, 224)  for file  ./data/train/record_GA94_flipped.npz
+(62, 3, 224, 224)  for file  ./data/train/record_GA84.npz
+Preparing file :  ./data/train/record_GA100.npz
+Preparing file :  ./data/train/record_GA15.npz
 (64, 3, 224, 224)  for file  ./data/train/record_GA100_flipped.npz
 Preparing file :  ./data/train/record_GA_visual105_flipped.npz
-(39, 3, 224, 224)  for file  ./data/train/record_GA143.npz
-(36, 3, 224, 224)(32, 3, 224, 224)   for file  for file   ./data/train/record_GA136.npz./data/train/record_GA_visual61.npz
-
-(54, 3, 224, 224)  for file  ./data/train/record_GA_visual96_flipped.npz
-(73, 3, 224, 224)  for file  ./data/train/record_GA53_flipped.npz
-Preparing file :  ./data/train/record_GA134_flipped.npz
-Preparing file :  ./data/train/record_GA_visual87_flipped.npz
-(54, 3, 224, 224)  for file  ./data/train/record_GA122.npz
-(54, 3, 224, 224)  for file  ./data/train/record_GA18_flipped.npz
-(36, 3, 224, 224)  for file  ./data/train/record_GA138.npz
-(59, 3, 224, 224)  for file  ./data/train/record_GA17.npz
-Preparing file :  ./data/train/record_GA104_flipped.npz
-Preparing file :  ./data/train/record_GA92.npz
-Preparing file :  ./data/train/record_GA_visual0_flipped.npz
-(56, 3, 224, 224)  for file  ./data/train/record_GA112.npz
-(28, 3, 224, 224)  for file  ./data/train/record_GA_visual60_flipped.npz
-(49, 3, 224, 224)  for file  ./data/train/record_GA119.npz
-Preparing file :  ./data/train/record_GA_visual88.npz
-Preparing file :  ./data/train/record_GA_visual109_flipped.npz
-(33, 3, 224, 224)  for file  ./data/train/record_GA_visual81.npz
-(23, 3, 224, 224)  for file  ./data/train/record_GA_visual102.npz
-Preparing file :  ./data/train/record_GA_visual97_flipped.npz
-(24, 3, 224, 224)  for file  ./data/train/record_GA_visual99.npz
-(69, 3, 224, 224)  for file  ./data/train/record_GA45.npz
-(25, 3, 224, 224)  for file  ./data/train/record_GA_visual105_flipped.npz
-(24, 3, 224, 224)  for file  ./data/train/record_GA_visual112.npz
-(66, 3, 224, 224)  for file  ./data/train/record_GA103_flipped.npz
-(81, 3, 224, 224)  for file  ./data/train/record_GA81.npz
-(45, 3, 224, 224)  for file  ./data/train/record_GA142_flipped.npz
-(23, 3, 224, 224)  for file  ./data/train/record_GA_visual113_flipped.npz
-(62, 3, 224, 224)  for file  ./data/train/record_GA84.npz
-Preparing file :  ./data/train/record_GA15.npz
-(83, 3, 224, 224)  for file  ./data/train/record_GA_Visual1_flipped.npz
-(82, 3, 224, 224)  for file  ./data/train/record_GA80_flipped.npz
-(66, 3, 224, 224)  for file  ./data/train/record_GA94_flipped.npz
-(54, 3, 224, 224)  for file  ./data/train/record_GA_visual91_flipped.npz
-Preparing file :  ./data/train/record_GA100.npz
-(77, 3, 224, 224)  for file  ./data/train/record_GA27_flipped.npz
-Preparing file :  ./data/train/record_GA98.npz
-(59, 3, 224, 224)  for file  ./data/train/record_GA15_flipped.npz
-Preparing file :  ./data/train/record5_flipped.npz
-(67, 3, 224, 224)  for file  ./data/train/record_GA99.npz
-(83, 3, 224, 224)  for file  ./data/train/record_GA29_flipped.npz
-Preparing file :  ./data/train/record9_flipped.npz
-(46, 3, 224, 224)  for file  ./data/train/record_GA_visual114.npz
-Preparing file :  ./data/train/record_GA88_flipped.npz
-(53, 3, 224, 224)  for file  ./data/train/record_GA_visual89.npz
-Preparing file :  ./data/train/record_GA2.npz
-Preparing file :  ./data/train/record_GA35_flipped.npz
-(65, 3, 224, 224)  for file  ./data/train/record_GA95_flipped.npz
-Preparing file :  ./data/train/record_GA_visual123_flipped.npz
-(35, 3, 224, 224)  for file  ./data/train/record_GA_visual73.npz
-Preparing file :  ./data/train/record_GA114_flipped.npz
-(30, 3, 224, 224)  for file  ./data/train/record_GA3.npz
-Preparing file :  ./data/train/record_GA28_flipped.npz
-(24, 3, 224, 224)  for file  ./data/train/record_GA_visual109_flipped.npz
-(83, 3, 224, 224)  for file  ./data/train/record_GA29.npz
-(54, 3, 224, 224)  for file  ./data/train/record_GA_visual97.npz
-Preparing file :  ./data/train/record_GA_visual109.npz
-(61, 3, 224, 224)  for file  ./data/train/record_GA_Visual8_flipped.npz
-Preparing file :  ./data/train/record_GA_visual115_flipped.npz
-(76, 3, 224, 224)  for file  ./data/train/record_GA33.npz
-Preparing file :  ./data/train/record_GA137.npz
-(37, 3, 224, 224)  for file  ./data/train/record_GA134_flipped.npz
-(58, 3, 224, 224)  for file  ./data/train/record_GA23.npz
-(67, 3, 224, 224)  for file  ./data/train/record_GA104.npz
-Preparing file :  ./data/train/record_GA_visual82.npz
-(33, 3, 224, 224)  for file  ./data/train/record_GA_visual83_flipped.npz
-Preparing file :  ./data/train/record_GA145.npz
-(32, 3, 224, 224)  for file  ./data/train/record_GA54_flipped.npz
-(82, 3, 224, 224)  for file  ./data/train/record_GA32.npz
-(32, 3, 224, 224)  for file  ./data/train/record_GA_visual59.npz
-(78, 3, 224, 224)  for file  ./data/train/record_GA25_flipped.npz
-Preparing file :  ./data/train/record_GA55_flipped.npz
-(59, 3, 224, 224)  for file  ./data/train/record_GA_visual0_flipped.npz
-(52, 3, 224, 224)  for file  ./data/train/record_GA114.npz
-(64, 3, 224, 224)  for file  ./data/train/record_GA100.npz
-Preparing file :  ./data/train/record_GA1_flipped.npz
-(41, 3, 224, 224)  for file  ./data/train/record_GA137.npz
-(55, 3, 224, 224)  for file  ./data/train/record_GA125_flipped.npz
-Preparing file :  ./data/train/record_GA41_flipped.npz
-(67, 3, 224, 224)  for file  ./data/train/record_GA104_flipped.npz
-(70, 3, 224, 224)  for file  ./data/train/record_GA51_flipped.npz
-(66, 3, 224, 224)  for file  ./data/train/record_GA92.npz
-(73, 3, 224, 224)  for file  ./data/train/record_GA37.npz
-(66, 3, 224, 224)  for file  ./data/train/record_GA96_flipped.npz
-Preparing file :  ./data/train/record_GA39.npz
-(59, 3, 224, 224)  for file  ./data/train/record_GA14_flipped.npz
-(59, 3, 224, 224)  for file  ./data/train/record_GA15.npz
-(54, 3, 224, 224)  for file  ./data/train/record_GA_visual88.npz
-(54, 3, 224, 224)  for file  ./data/train/record_GA_visual97_flipped.npz
-(52, 3, 224, 224)  for file  ./data/train/record_GA107_flipped.npz
-(83, 3, 224, 224)  for file  ./data/train/record_GA26_flipped.npz
-Preparing file :  ./data/train/record_GA_visual71.npz
-(67, 3, 224, 224)  for file  ./data/train/record_GA88_flipped.npz
-(54, 3, 224, 224)  for file  ./data/train/record_GA_visual87_flipped.npz
-(60, 3, 224, 224)  for file  ./data/train/record_GA16.npz
-(24, 3, 224, 224)  for file  ./data/train/record_GA_visual109.npz
-Preparing file :  ./data/train/record_GA22.npz
-(73, 3, 224, 224)  for file  ./data/train/record_GA48.npz
-Preparing file :  ./data/train/record_GA102_flipped.npz
-(52, 3, 224, 224)  for file  ./data/train/record_GA114_flipped.npz
-(67, 3, 224, 224)  for file  ./data/train/record_GA98.npz
-(31, 3, 224, 224)  for file  ./data/train/record_GA55_flipped.npz
-(40, 3, 224, 224)  for file  ./data/train/record_GA145.npz
+(60, 3, 224, 224)  for file  ./data/train/record_GA12.npz
+Preparing file :  ./data/train/record_GA99.npz
 (71, 3, 224, 224)  for file  ./data/train/record_GA46_flipped.npz
 Preparing file :  ./data/train/record_GA30_flipped.npz
+(65, 3, 224, 224)  for file  ./data/train/record_GA95_flipped.npz
+Preparing file :  ./data/train/record_GA_visual123_flipped.npz
+(60, 3, 224, 224)  for file  ./data/train/record_GA_visual121_flipped.npz
+(31, 3, 224, 224)  for file  ./data/train/record_GA_visual71_flipped.npz
+(67, 3, 224, 224)  for file  ./data/train/record_GA104.npz
+Preparing file :  ./data/train/record_GA_visual82.npz
+(54, 3, 224, 224)  for file  ./data/train/record_GA_visual88_flipped.npz
+(52, 3, 224, 224)  for file  ./data/train/record_GA114_flipped.npz
+(52, 3, 224, 224)  for file  ./data/train/record_GA107_flipped.npz
+(78, 3, 224, 224)  for file  ./data/train/record_GA25_flipped.npz
+Preparing file :  ./data/train/record_GA55_flipped.npz
+(54, 3, 224, 224)  for file  ./data/train/record_GA_visual97_flipped.npz
+(83, 3, 224, 224)  for file  ./data/train/record_GA26_flipped.npz
+Preparing file :  ./data/train/record_GA_visual71.npz
+(23, 3, 224, 224)  for file  ./data/train/record_GA_visual113_flipped.npz
+(24, 3, 224, 224)  for file  ./data/train/record_GA_visual99.npz
+(83, 3, 224, 224)  for file  ./data/train/record_GA29_flipped.npz
+Preparing file :  ./data/train/record9_flipped.npz
+(54, 3, 224, 224)  for file  ./data/train/record_GA_visual87_flipped.npz
+(36, 3, 224, 224)  for file  ./data/train/record_GA132_flipped.npz
+(73, 3, 224, 224)  for file  ./data/train/record_GA48.npz
+Preparing file :  ./data/train/record_GA102_flipped.npz
+(70, 3, 224, 224)  for file  ./data/train/record_GA51_flipped.npz
+(56, 3, 224, 224)  for file  ./data/train/record_GA116.npz
+(36, 3, 224, 224)  for file  ./data/train/record_GA136.npz
+(54, 3, 224, 224)  for file  ./data/train/record_GA_visual88.npz
+(25, 3, 224, 224)  for file  ./data/train/record_GA_visual105_flipped.npz
+(59, 3, 224, 224)  for file  ./data/train/record_GA14_flipped.npz
+(66, 3, 224, 224)  for file  ./data/train/record_GA92.npz
+(54, 3, 224, 224)  for file  ./data/train/record_GA_visual96_flipped.npz
+(40, 3, 224, 224)  for file  ./data/train/record_GA145.npz
+(66, 3, 224, 224)  for file  ./data/train/record_GA103_flipped.npz
+(37, 3, 224, 224)  for file  ./data/train/record_GA134_flipped.npz
+(59, 3, 224, 224)  for file  ./data/train/record_GA_visual0_flipped.npz
+(31, 3, 224, 224)  for file  ./data/train/record_GA55_flipped.npz
+(59, 3, 224, 224)  for file  ./data/train/record_GA17.npz
+(35, 3, 224, 224)  for file  ./data/train/record_GA_visual82.npz
+(67, 3, 224, 224)  for file  ./data/train/record_GA98.npz
+(73, 3, 224, 224)  for file  ./data/train/record_GA37.npz
+(67, 3, 224, 224)  for file  ./data/train/record_GA104_flipped.npz
+(52, 3, 224, 224)  for file  ./data/train/record_GA114.npz
+(67, 3, 224, 224)  for file  ./data/train/record_GA88_flipped.npz
+(32, 3, 224, 224)  for file  ./data/train/record_GA_visual61.npz
+(69, 3, 224, 224)  for file  ./data/train/record_GA45.npz
+(67, 3, 224, 224)  for file  ./data/train/record_GA99.npz
+(41, 3, 224, 224)  for file  ./data/train/record_GA137.npz
+(64, 3, 224, 224)  for file  ./data/train/record_GA100.npz
+(59, 3, 224, 224)  for file  ./data/train/record_GA15.npz
+(83, 3, 224, 224)  for file  ./data/train/record_GA_Visual1_flipped.npz
+(82, 3, 224, 224)  for file  ./data/train/record_GA80_flipped.npz
+(31, 3, 224, 224)  for file  ./data/train/record_GA_visual71.npz
+(63, 3, 224, 224)  for file  ./data/train/record_GA_visual115_flipped.npz
+(76, 3, 224, 224)  for file  ./data/train/record_GA41_flipped.npz
+Preparing file :  ./data/train/record_GA35_flipped.npz
+(81, 3, 224, 224)  for file  ./data/train/record_GA81.npz
+(56, 3, 224, 224)  for file  ./data/train/record_GA112.npz
+(76, 3, 224, 224)  for file  ./data/train/record_GA28_flipped.npz
+(63, 3, 224, 224)  for file  ./data/train/record_GA_visual123_flipped.npz
+(60, 3, 224, 224)  for file  ./data/train/record_GA22.npz
+(77, 3, 224, 224)  for file  ./data/train/record_GA27_flipped.npz
+(71, 3, 224, 224)  for file  ./data/train/record_GA2.npz
+(65, 3, 224, 224)  for file  ./data/train/record_GA102_flipped.npz
+Preparing file :  ./data/train/record_GA1_flipped.npz
+(82, 3, 224, 224)  for file  ./data/train/record_GA32.npz
+(83, 3, 224, 224)  for file  ./data/train/record_GA29.npz
+(77, 3, 224, 224)  for file  ./data/train/record_GA39.npz
+(81, 3, 224, 224)  for file  ./data/train/record_GA30_flipped.npz
 (77, 3, 224, 224)  for file  ./data/train/record_GA35_flipped.npz
 Preparing file :  ./data/train/record_GA83.npz
-(35, 3, 224, 224)  for file  ./data/train/record_GA_visual82.npz
-(63, 3, 224, 224)  for file  ./data/train/record_GA_visual123_flipped.npz
-(63, 3, 224, 224)  for file  ./data/train/record_GA_visual115_flipped.npz
-(76, 3, 224, 224)  for file  ./data/train/record_GA28_flipped.npz
-(31, 3, 224, 224)  for file  ./data/train/record_GA_visual71.npz
-(71, 3, 224, 224)  for file  ./data/train/record_GA2.npz
 Preparing file :  ./data/train/record_GA97_flipped.npz
 (83, 3, 224, 224)  for file  ./data/train/record_GA1_flipped.npz
 Preparing file :  ./data/train/record_GA132.npz
-(60, 3, 224, 224)  for file  ./data/train/record_GA22.npz
-(65, 3, 224, 224)  for file  ./data/train/record_GA102_flipped.npz
-(77, 3, 224, 224)  for file  ./data/train/record_GA39.npz
-(36, 3, 224, 224)  for file  ./data/train/record_GA132.npz
-(76, 3, 224, 224)  for file  ./data/train/record_GA41_flipped.npz
+Preparing file :  ./data/train/record_GA_visual124_flipped.npz
 (82, 3, 224, 224)  for file  ./data/train/record_GA83.npz
 (65, 3, 224, 224)  for file  ./data/train/record_GA97_flipped.npz
 Preparing file :  ./data/train/record_GA_visual110.npz
-(81, 3, 224, 224)  for file  ./data/train/record_GA30_flipped.npz
+(36, 3, 224, 224)  for file  ./data/train/record_GA132.npz
 (25, 3, 224, 224)  for file  ./data/train/record_GA_visual110.npz
-Preparing file :  ./data/train/record_GA_visual124_flipped.npz
-(337, 3, 224, 224)  for file  ./data/train/record3_with_accident_flipped.npz
-Preparing file :  ./data/train/record_GA24.npz
+Preparing file :  ./data/train/record3_with_accident.npz
 (63, 3, 224, 224)  for file  ./data/train/record_GA_visual124_flipped.npz
 Preparing file :  ./data/train/record_GA_visual98.npz
-Preparing file :  ./data/train/record3_with_accident.npz
+(337, 3, 224, 224)  for file  ./data/train/record3_with_accident_flipped.npz
+Preparing file :  ./data/train/record_GA24.npz
 (54, 3, 224, 224)  for file  ./data/train/record_GA_visual98.npz
-(83, 3, 224, 224)  for file  ./data/train/record_GA24.npz
 Preparing file :  ./data/train/record_GA48_flipped.npz
-(550, 3, 224, 224)  for file  ./data/train/record10_flipped.npz
-Preparing file :  ./data/train/record_GA45_flipped.npz
+Preparing file :  ./data/train/record_GA21.npz
+(83, 3, 224, 224)  for file  ./data/train/record_GA24.npz
 (73, 3, 224, 224)  for file  ./data/train/record_GA48_flipped.npz
 Preparing file :  ./data/train/record_GA38_flipped.npz
-(69, 3, 224, 224)  for file  ./data/train/record_GA45_flipped.npz
-Preparing file :  ./data/train/record_GA21.npz
-(83, 3, 224, 224)  for file  ./data/train/record_GA38_flipped.npz
-(875, 3, 224, 224)  for file  ./data/train/record2_flipped.npz
-Preparing file :  ./data/train/record_GA95.npz
+(550, 3, 224, 224)  for file  ./data/train/record10_flipped.npz
+Preparing file :  ./data/train/record_GA45_flipped.npz
+Preparing file :  ./data/train/record_GA_visual110_flipped.npz
 (58, 3, 224, 224)  for file  ./data/train/record_GA21.npz
 Preparing file :  ./data/train/record_GA_visual116_flipped.npz
-(337, 3, 224, 224)  for file  ./data/train/record3_with_accident.npz
-Preparing file :  ./data/train/record_GA117_flipped.npz
-(65, 3, 224, 224)  for file  ./data/train/record_GA95.npz
-(52, 3, 224, 224)  for file  ./data/train/record_GA_visual116_flipped.npz
-(54, 3, 224, 224)  for file  ./data/train/record_GA117_flipped.npz
-(806, 3, 224, 224)  for file  ./data/train/record4.npz
-Preparing file :  ./data/train/record_GA_visual110_flipped.npz
+(83, 3, 224, 224)  for file  ./data/train/record_GA38_flipped.npz
 (25, 3, 224, 224)  for file  ./data/train/record_GA_visual110_flipped.npz
 Preparing file :  ./data/train/record_GA_visual78.npz
-(737, 3, 224, 224)  for file  ./data/train/record9_flipped.npz
+(69, 3, 224, 224)  for file  ./data/train/record_GA45_flipped.npz
+(52, 3, 224, 224)  for file  ./data/train/record_GA_visual116_flipped.npz
 (31, 3, 224, 224)  for file  ./data/train/record_GA_visual78.npz
-(875, 3, 224, 224)  for file  ./data/train/record2.npz
-Preparing file :  ./data/train/record_GA_visual68_flipped.npz
-(1004, 3, 224, 224)  for file  ./data/train/record7_flipped.npz
-(32, 3, 224, 224)  for file  ./data/train/record_GA_visual68_flipped.npz
 Preparing file :  ./data/train/record_GA137_flipped.npz
-(1004, 3, 224, 224)  for file  ./data/train/record7.npz
-Preparing file :  ./data/train/record_GA_visual66.npz
 (41, 3, 224, 224)  for file  ./data/train/record_GA137_flipped.npz
 Preparing file :  ./data/train/record_GA134.npz
-(32, 3, 224, 224)  for file  ./data/train/record_GA_visual66.npz
 (37, 3, 224, 224)  for file  ./data/train/record_GA134.npz
-(1012, 3, 224, 224)  for file  ./data/train/record8_flipped.npz
-Preparing file :  ./data/train/record10.npz
-(1115, 3, 224, 224)  for file  ./data/train/record5_flipped.npz
 Preparing file :  ./data/train/record_GA_Visual2_flipped.npz
+(337, 3, 224, 224)  for file  ./data/train/record3_with_accident.npz
+Preparing file :  ./data/train/record_GA117_flipped.npz
 (71, 3, 224, 224)  for file  ./data/train/record_GA_Visual2_flipped.npz
 Preparing file :  ./data/train/record_GA1.npz
-(83, 3, 224, 224)  for file  ./data/train/record_GA1.npz
+(54, 3, 224, 224)  for file  ./data/train/record_GA117_flipped.npz
 Preparing file :  ./data/train/record_GA54.npz
+(737, 3, 224, 224)  for file  ./data/train/record9_flipped.npz
 (32, 3, 224, 224)  for file  ./data/train/record_GA54.npz
 Preparing file :  ./data/train/record_GA_visual127.npz
+(875, 3, 224, 224)  for file  ./data/train/record2_flipped.npz
+Preparing file :  ./data/train/record_GA95.npz
+(83, 3, 224, 224)  for file  ./data/train/record_GA1.npz
 (49, 3, 224, 224)  for file  ./data/train/record_GA_visual127.npz
-(550, 3, 224, 224)  for file  ./data/train/record10.npz
+(806, 3, 224, 224)  for file  ./data/train/record4.npz
+(65, 3, 224, 224)  for file  ./data/train/record_GA95.npz
 Preparing file :  ./data/train/record_GA_visual107.npz
+(1012, 3, 224, 224)  for file  ./data/train/record8_flipped.npz
+Preparing file :  ./data/train/record10.npz
 (24, 3, 224, 224)  for file  ./data/train/record_GA_visual107.npz
 Preparing file :  ./data/train/record8.npz
+(1004, 3, 224, 224)  for file  ./data/train/record7_flipped.npz
+(875, 3, 224, 224)  for file  ./data/train/record2.npz
+Preparing file :  ./data/train/record_GA_visual68_flipped.npz
+(1115, 3, 224, 224)  for file  ./data/train/record5_flipped.npz
 Preparing file :  ./data/train/record_GA57.npz
+(32, 3, 224, 224)  for file  ./data/train/record_GA_visual68_flipped.npz
+(1004, 3, 224, 224)  for file  ./data/train/record7.npz
+Preparing file :  ./data/train/record_GA_visual66.npz
 (32, 3, 224, 224)  for file  ./data/train/record_GA57.npz
 Preparing file :  ./data/train/record_GA10.npz
+(32, 3, 224, 224)  for file  ./data/train/record_GA_visual66.npz
 (60, 3, 224, 224)  for file  ./data/train/record_GA10.npz
 Preparing file :  ./data/train/record_GA80.npz
 (82, 3, 224, 224)  for file  ./data/train/record_GA80.npz
 Preparing file :  ./data/train/record_GA92_flipped.npz
 Preparing file :  ./data/train/record_GA31.npz
 (66, 3, 224, 224)  for file  ./data/train/record_GA92_flipped.npz
+(550, 3, 224, 224)  for file  ./data/train/record10.npz
 (82, 3, 224, 224)  for file  ./data/train/record_GA31.npz
 Preparing file :  ./data/train/record_GA102.npz
-(65, 3, 224, 224)  for file  ./data/train/record_GA102.npz
 Preparing file :  ./data/train/record_GA123_flipped.npz
+(65, 3, 224, 224)  for file  ./data/train/record_GA102.npz
 (55, 3, 224, 224)  for file  ./data/train/record_GA123_flipped.npz
 Preparing file :  ./data/train/record_GA36_flipped.npz
 (83, 3, 224, 224)  for file  ./data/train/record_GA36_flipped.npz
@@ -356,8 +356,8 @@ Preparing file :  ./data/train/record_GA_visual101.npz
 (25, 3, 224, 224)  for file  ./data/train/record_GA_visual101.npz
 Preparing file :  ./data/train/record_GA101.npz
 (66, 3, 224, 224)  for file  ./data/train/record_GA101.npz
-(1012, 3, 224, 224)  for file  ./data/train/record8.npz
 Preparing file :  ./data/train/record_GA87.npz
+(1012, 3, 224, 224)  for file  ./data/train/record8.npz
 (65, 3, 224, 224)  for file  ./data/train/record_GA87.npz
 Preparing file :  ./data/train/record_GA_visual76_flipped.npz
 (33, 3, 224, 224)  for file  ./data/train/record_GA_visual76_flipped.npz
@@ -402,16 +402,16 @@ Preparing file :  ./data/train/record_GA_Visual6.npz
 Preparing file :  ./data/train/record_GA43_flipped.npz
 (74, 3, 224, 224)  for file  ./data/train/record_GA43_flipped.npz
 Preparing file :  ./data/train/record_GA_visual69.npz
+(358, 3, 224, 224)  for file  ./data/train/record0.npz
 (36, 3, 224, 224)  for file  ./data/train/record_GA_visual69.npz
 Preparing file :  ./data/train/record_GA86.npz
+(667, 3, 224, 224)  for file  ./data/train/record1.npz
+Preparing file :  ./data/train/record5.npz
 (66, 3, 224, 224)  for file  ./data/train/record_GA86.npz
 Preparing file :  ./data/train/record_GA_visual64.npz
-(358, 3, 224, 224)  for file  ./data/train/record0.npz
 (32, 3, 224, 224)  for file  ./data/train/record_GA_visual64.npz
 Preparing file :  ./data/train/record_GA_visual107_flipped.npz
 (24, 3, 224, 224)  for file  ./data/train/record_GA_visual107_flipped.npz
-(667, 3, 224, 224)  for file  ./data/train/record1.npz
-Preparing file :  ./data/train/record5.npz
 Preparing file :  ./data/train/record_GA42_flipped.npz
 (70, 3, 224, 224)  for file  ./data/train/record_GA42_flipped.npz
 Preparing file :  ./data/train/record_GA126.npz
@@ -427,9 +427,9 @@ Preparing file :  ./data/train/record_GA44.npz
 Preparing file :  ./data/train/record_GA_visual117_flipped.npz
 (62, 3, 224, 224)  for file  ./data/train/record_GA_visual117_flipped.npz
 Preparing file :  ./data/train/record_GA27.npz
+(1115, 3, 224, 224)  for file  ./data/train/record5.npz
 (77, 3, 224, 224)  for file  ./data/train/record_GA27.npz
 Preparing file :  ./data/train/record_GA86_flipped.npz
-(1115, 3, 224, 224)  for file  ./data/train/record5.npz
 (66, 3, 224, 224)  for file  ./data/train/record_GA86_flipped.npz
 Preparing file :  ./data/train/record_GA_visual94_flipped.npz
 (53, 3, 224, 224)  for file  ./data/train/record_GA_visual94_flipped.npz
@@ -493,9 +493,9 @@ Preparing file :  ./data/train/record_GA24_flipped.npz
 Preparing file :  ./data/train/record_GA52.npz
 (806, 3, 224, 224)  for file  ./data/train/record4_flipped.npz
 Preparing file :  ./data/train/record_GA_visual82_flipped.npz
-(35, 3, 224, 224)  for file  ./data/train/record_GA_visual82_flipped.npz
 (70, 3, 224, 224)  for file  ./data/train/record_GA52.npz
 Preparing file :  ./data/train/record_GA_visual121.npz
+(35, 3, 224, 224)  for file  ./data/train/record_GA_visual82_flipped.npz
 (60, 3, 224, 224)  for file  ./data/train/record_GA_visual121.npz
 Preparing file :  ./data/train/record_GA_visual78_flipped.npz
 (31, 3, 224, 224)  for file  ./data/train/record_GA_visual78_flipped.npz
@@ -522,13 +522,13 @@ Preparing file :  ./data/train/record_GA_visual69_flipped.npz
 Preparing file :  ./data/train/record_GA144_flipped.npz
 (38, 3, 224, 224)  for file  ./data/train/record_GA144_flipped.npz
 Preparing file :  ./data/train/record0_flipped.npz
+(358, 3, 224, 224)  for file  ./data/train/record0_flipped.npz
+Preparing file :  ./data/train/record_GA25.npz
 Preparing file :  ./data/train/record_GA125.npz
 (55, 3, 224, 224)  for file  ./data/train/record_GA125.npz
 Preparing file :  ./data/train/record_GA109_flipped.npz
-(358, 3, 224, 224)  for file  ./data/train/record0_flipped.npz
-Preparing file :  ./data/train/record_GA25.npz
-(54, 3, 224, 224)  for file  ./data/train/record_GA109_flipped.npz
 (78, 3, 224, 224)  for file  ./data/train/record_GA25.npz
+(54, 3, 224, 224)  for file  ./data/train/record_GA109_flipped.npz
 Preparing file :  ./data/train/record_GA_visual92_flipped.npz
 (52, 3, 224, 224)  for file  ./data/train/record_GA_visual92_flipped.npz
 Preparing file :  ./data/train/record_GA_visual76.npz
@@ -620,11 +620,11 @@ Preparing file :  ./data/train/record_GA_visual0.npz
 Preparing file :  ./data/train/record_GA89_flipped.npz
 (65, 3, 224, 224)  for file  ./data/train/record_GA89_flipped.npz
 Preparing file :  ./data/train/record6_flipped.npz
+(829, 3, 224, 224)  for file  ./data/train/record6_flipped.npz
 Preparing file :  ./data/train/record_GA_visual85.npz
 (44, 3, 224, 224)  for file  ./data/train/record_GA_visual85.npz
 Preparing file :  ./data/train/record_GA_Visual4.npz
 (32, 3, 224, 224)  for file  ./data/train/record_GA_Visual4.npz
-(829, 3, 224, 224)  for file  ./data/train/record6_flipped.npz
 Preparing file :  ./data/train/record_GA9_flipped.npz
 (59, 3, 224, 224)  for file  ./data/train/record_GA9_flipped.npz
 Preparing file :  ./data/train/record_GA_visual85_flipped.npz
@@ -654,6 +654,9 @@ Preparing file :  ./data/train/record_GA140_flipped.npz
 Preparing file :  ./data/train/record_GA_visual67_flipped.npz
 (32, 3, 224, 224)  for file  ./data/train/record_GA_visual67_flipped.npz
 Preparing file :  ./data/train/record1_flipped.npz
+(667, 3, 224, 224)  for file  ./data/train/record1_flipped.npz
+Preparing file :  ./data/train/record_GA50_flipped.npz
+(73, 3, 224, 224)  for file  ./data/train/record_GA50_flipped.npz
 Preparing file :  ./data/train/record_GA_visual80_flipped.npz
 (33, 3, 224, 224)  for file  ./data/train/record_GA_visual80_flipped.npz
 Preparing file :  ./data/train/record_GA56.npz
@@ -667,12 +670,9 @@ Preparing file :  ./data/train/record_GA145_flipped.npz
 Preparing file :  ./data/train/record_GA_visual96.npz
 (54, 3, 224, 224)  for file  ./data/train/record_GA_visual96.npz
 Preparing file :  ./data/train/record_GA_visual114_flipped.npz
-(667, 3, 224, 224)  for file  ./data/train/record1_flipped.npz
-Preparing file :  ./data/train/record_GA50_flipped.npz
 (46, 3, 224, 224)  for file  ./data/train/record_GA_visual114_flipped.npz
 Preparing file :  ./data/train/record_GA130.npz
 (38, 3, 224, 224)  for file  ./data/train/record_GA130.npz
-(73, 3, 224, 224)  for file  ./data/train/record_GA50_flipped.npz
 Preparing file :  ./data/train/record_GA93_flipped.npz
 (65, 3, 224, 224)  for file  ./data/train/record_GA93_flipped.npz
 Preparing file :  ./data/train/record_GA58.npz
@@ -721,11 +721,11 @@ Preparing file :  ./data/train/record_GA9.npz
 Preparing file :  ./data/train/record_GA_visual89_flipped.npz
 (53, 3, 224, 224)  for file  ./data/train/record_GA_visual89_flipped.npz
 Preparing file :  ./data/train/record_GA91.npz
-(66, 3, 224, 224)  for file  ./data/train/record_GA91.npz
 (737, 3, 224, 224)  for file  ./data/train/record9.npz
 Preparing file :  ./data/train/record_GA46.npz
-Preparing file :  ./data/train/record_GA18.npz
+(66, 3, 224, 224)  for file  ./data/train/record_GA91.npz
 (71, 3, 224, 224)  for file  ./data/train/record_GA46.npz
+Preparing file :  ./data/train/record_GA18.npz
 (54, 3, 224, 224)  for file  ./data/train/record_GA18.npz
 Preparing file :  ./data/train/record_GA_Visual0.npz
 (59, 3, 224, 224)  for file  ./data/train/record_GA_Visual0.npz
@@ -763,6 +763,9 @@ Preparing file :  ./data/train/record_GA_visual94.npz
 Preparing file :  ./data/train/record_GA_visual98_flipped.npz
 (54, 3, 224, 224)  for file  ./data/train/record_GA_visual98_flipped.npz
 Preparing file :  ./data/train/record_GA53.npz
+(829, 3, 224, 224)  for file  ./data/train/record6.npz
+Preparing file :  ./data/train/record_GA_visual120.npz
+(52, 3, 224, 224)  for file  ./data/train/record_GA_visual120.npz
 (73, 3, 224, 224)  for file  ./data/train/record_GA53.npz
 Preparing file :  ./data/train/record_GA34_flipped.npz
 (83, 3, 224, 224)  for file  ./data/train/record_GA34_flipped.npz
@@ -773,17 +776,14 @@ Preparing file :  ./data/train/record_GA96.npz
 Preparing file :  ./data/train/record_GA_visual83.npz
 (33, 3, 224, 224)  for file  ./data/train/record_GA_visual83.npz
 Preparing file :  ./data/train/record_GA87_flipped.npz
-(829, 3, 224, 224)  for file  ./data/train/record6.npz
-Preparing file :  ./data/train/record_GA_visual120.npz
-(52, 3, 224, 224)  for file  ./data/train/record_GA_visual120.npz
 (65, 3, 224, 224)  for file  ./data/train/record_GA87_flipped.npz
 Preparing file :  ./data/train/record_GA_visual87.npz
 (54, 3, 224, 224)  for file  ./data/train/record_GA_visual87.npz
 Preparing file :  ./data/train/record_GA38.npz
 Preparing file :  ./data/train/record_GA_visual75.npz
+(83, 3, 224, 224)  for file  ./data/train/record_GA38.npz
 (34, 3, 224, 224)  for file  ./data/train/record_GA_visual75.npz
 Preparing file :  ./data/train/record_GA_visual119.npz
-(83, 3, 224, 224)  for file  ./data/train/record_GA38.npz
 (50, 3, 224, 224)  for file  ./data/train/record_GA_visual119.npz
 Preparing file :  ./data/train/record_GA98_flipped.npz
 (67, 3, 224, 224)  for file  ./data/train/record_GA98_flipped.npz
@@ -837,31 +837,31 @@ Preparing file :  ./data/train/record_GA_visual63_flipped.npz
 (32, 3, 224, 224)  for file  ./data/train/record_GA_visual63_flipped.npz
 Preparing file :  ./data/train/record_GA_visual120_flipped.npz
 (52, 3, 224, 224)  for file  ./data/train/record_GA_visual120_flipped.npz
-Preparing file :  ./data/test/record1_flipped.npz
-Preparing file :  ./data/test/record0.npz
-Preparing file :  ./data/test/record1.npz
-Preparing file :  ./data/test/record0_flipped.npz
+Preparing file : Preparing file : Preparing file : Preparing file :    ./data/test/record0.npz./data/test/record1_flipped.npz./data/test/record0_flipped.npz ./data/test/record1.npz
+
+
+
 (552, 3, 224, 224)  for file  ./data/test/record0_flipped.npz
-(564, 3, 224, 224)  for file  ./data/test/record1_flipped.npz
 (564, 3, 224, 224)  for file  ./data/test/record1.npz
 (552, 3, 224, 224)  for file  ./data/test/record0.npz
+(564, 3, 224, 224)  for file  ./data/test/record1_flipped.npz
 Data prepared, 37292 samples
 Target tensor created
 Source tensor created
 Created tensors
-Epoch [1/15], Loss: 0.2217, Acc : 0.8128 - Test loss : 0.24701180226273006, Test Acc : 0.8454301075268817
-Epoch [2/15], Loss: 0.2040, Acc : 0.8249 - Test loss : 0.23336233612563875, Test Acc : 0.8536066308243727
-Epoch [3/15], Loss: 0.2027, Acc : 0.8293 - Test loss : 0.2365146784318818, Test Acc : 0.8506944444444444
-Epoch [4/15], Loss: 0.1858, Acc : 0.8282 - Test loss : 0.2280413872665829, Test Acc : 0.8556227598566308
-Epoch [5/15], Loss: 0.1781, Acc : 0.8338 - Test loss : 0.22977977991104126, Test Acc : 0.8566308243727598
-Epoch [6/15], Loss: 0.1783, Acc : 0.8288 - Test loss : 0.23859247151348326, Test Acc : 0.8561827956989247
-Epoch [7/15], Loss: 0.1982, Acc : 0.8363 - Test loss : 0.24182402508126366, Test Acc : 0.8468862007168458
-Epoch [8/15], Loss: 0.1880, Acc : 0.8381 - Test loss : 0.23860270695553887, Test Acc : 0.8547267025089605
-Epoch [9/15], Loss: 0.2347, Acc : 0.8306 - Test loss : 0.27655909210443497, Test Acc : 0.8293010752688172
-Epoch [10/15], Loss: 0.1918, Acc : 0.8396 - Test loss : 0.2555429091056188, Test Acc : 0.8403897849462365
-Epoch [11/15], Loss: 0.1956, Acc : 0.8322 - Test loss : 0.25460830744769836, Test Acc : 0.8522625448028673
-Epoch [12/15], Loss: 0.2016, Acc : 0.8370 - Test loss : 0.26465655863285065, Test Acc : 0.8465501792114696
-Epoch [13/15], Loss: 0.1904, Acc : 0.8380 - Test loss : 0.2605506488018566, Test Acc : 0.8548387096774194
-Epoch [14/15], Loss: 0.2317, Acc : 0.8378 - Test loss : 0.27855128049850464, Test Acc : 0.808915770609319
-Epoch [15/15], Loss: 0.2329, Acc : 0.8529 - Test loss : 0.26608248468902373, Test Acc : 0.8327732974910395
-Saved model to  ./models/model_8
+Epoch [1/15], Loss: 0.2587, Acc : 0.8096 - Test loss : 0.28898024890157914, Test Acc : 0.8210125448028673
+Epoch [2/15], Loss: 0.2265, Acc : 0.8212 - Test loss : 0.2501545002063115, Test Acc : 0.8433019713261649
+Epoch [3/15], Loss: 0.2262, Acc : 0.8259 - Test loss : 0.2500321865081787, Test Acc : 0.8400537634408602
+Epoch [4/15], Loss: 0.2354, Acc : 0.8266 - Test loss : 0.25832919859223896, Test Acc : 0.8418458781362007
+Epoch [5/15], Loss: 0.2338, Acc : 0.8197 - Test loss : 0.2619343673189481, Test Acc : 0.8338933691756273
+Epoch [6/15], Loss: 0.2394, Acc : 0.8226 - Test loss : 0.26996408734056687, Test Acc : 0.8299731182795699
+Epoch [7/15], Loss: 0.2088, Acc : 0.8394 - Test loss : 0.240224227309227, Test Acc : 0.8450940860215054
+Epoch [8/15], Loss: 0.2485, Acc : 0.8162 - Test loss : 0.279693018231127, Test Acc : 0.8207885304659498
+Epoch [9/15], Loss: 0.2099, Acc : 0.8357 - Test loss : 0.24304099132617316, Test Acc : 0.8496863799283154
+Epoch [10/15], Loss: 0.2208, Acc : 0.8389 - Test loss : 0.24397705909278658, Test Acc : 0.8482302867383512
+Epoch [11/15], Loss: 0.2215, Acc : 0.8365 - Test loss : 0.2547203285826577, Test Acc : 0.8434139784946236
+Epoch [12/15], Loss: 0.2388, Acc : 0.8204 - Test loss : 0.28357911275492775, Test Acc : 0.8182123655913979
+Epoch [13/15], Loss: 0.2183, Acc : 0.8448 - Test loss : 0.25074921051661175, Test Acc : 0.8398297491039427
+Epoch [14/15], Loss: 0.2260, Acc : 0.8444 - Test loss : 0.2618958999713262, Test Acc : 0.834005376344086
+Epoch [15/15], Loss: 0.2302, Acc : 0.8417 - Test loss : 0.2570780110028055, Test Acc : 0.8388216845878136
+Saved model to  ./models/model_9
