@@ -98,7 +98,7 @@ def getDifferenceOfImprovement(minRange, maxRange):
     plt.ylabel("Seconds (s)") 
     plt.savefig(filename)
     plt.close()  
-getDifferenceOfImprovement(80,100)
+getDifferenceOfImprovement(80,120)
 
 for f in [f"ga_{i}" for i in range(75, 146)]:
     stat = StatsGA(f, "simple_track")
