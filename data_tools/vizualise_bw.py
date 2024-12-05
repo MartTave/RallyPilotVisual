@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-file = np.load("./data/train/record_GA80.npz")
+file = np.load("./data/train/record0.npz")
 
 for pic in file["images"]:
     plt.imshow(pic[0], cmap="gray")
