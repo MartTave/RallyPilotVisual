@@ -7,11 +7,14 @@ from conversions import Convertion
 import numpy as np
 
 class StatsGA(): 
-    def __init__(self, folder):
-        
-        conv = Convertion(folder)
+    def __init__(self, folder, track):
+        finalFolder = f"{track}/{folder}"
+        conv = Convertion(finalFolder)
+        self.lenght_controls = len(conv.readJson()["baseControls"])
         self.fitnessValues = conv.readFitnessValues()
-        self.baseFolder = f"./GA/ga_data/{folder}/graphs/"
+        print(self.fitnessValues)
+        os.makedirs(f"./GA/ga_data/{finalFolder}/graphs/", exist_ok=True)
+        self.baseFolder = f"./GA/ga_data/{finalFolder}/graphs/"
 
     def getGetNumberEndedSim(self): 
         savePath = f"{self.baseFolder}/hist"
@@ -41,7 +44,7 @@ class StatsGA():
         plt.close()
     def getBestScores(self): 
         savePath = f"{self.baseFolder}"
-        bestScores = []
+        bestScores = [self.lenght_controls]
         for gen in self.fitnessValues:
             filtered = list(filter(lambda x: x != -1, gen))
             bestScores.append(min(filtered))   
@@ -57,7 +60,7 @@ class StatsGA():
         mean = []
         min_vals = []
         max_vals = []
-        bestScores = []
+        bestScores = [self.lenght_controls]
         
         for gen in self.fitnessValues:
             filtered = list(filter(lambda x: x != -1, gen))
@@ -75,33 +78,31 @@ class StatsGA():
         plt.savefig(filename)
         plt.close()
 
-
-for f in [f"ga_{i}" for i in range(74, 146)]:
-    stat = StatsGA(f)
-    #stat.getGetNumberEndedSim()
-    #stat.getNumOfNotEndedSim()
-    #stat.getBestScores()
-    #stat.getMedianScores()
-
 def getDifferenceOfImprovement(minRange, maxRange): 
-    savePath = f"./GA/ga_data/"
+    savePath = f"./GA/ga_data/simple_track"
     plt.figure()
     for i in range(minRange,maxRange):
         
-        path = f"ga_{i}"
+        path = f"simple_track/ga_{i}"
         conv = Convertion(path)
         fitnessValues = conv.readFitnessValues()
-        start_fitness_value = 0
-        diff = []
+        start_fitness_value = len(conv.readJson()["baseControls"]) / 10
+        diff = [0]
         for j,gen in enumerate(fitnessValues):
             filtered = list(filter(lambda x: x != -1, gen))
-            if j == 0: 
-                start_fitness_value = min(filtered)
-            diff.append(start_fitness_value-min(filtered))
+            diff.append(start_fitness_value-min(filtered) / 10)
         plt.plot(diff, label=i)
-        plt.legend()
-
     filename = os.path.join(savePath, "ala2.png")
+    plt.title("Seconds Won for each GA")
+    plt.xlabel("Generation Number")  
+    plt.ylabel("Seconds (s)") 
     plt.savefig(filename)
     plt.close()  
 getDifferenceOfImprovement(80,100)
+
+for f in [f"ga_{i}" for i in range(75, 146)]:
+    stat = StatsGA(f, "simple_track")
+    #stat.getGetNumberEndedSim()
+    #stat.getNumOfNotEndedSim()
+    stat.getBestScores()
+    stat.getMedianScores()

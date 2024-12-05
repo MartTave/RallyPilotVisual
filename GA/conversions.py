@@ -64,7 +64,6 @@ class Convertion():
 
     def __init__(self, folder:str):
         filePathJson = './GA/ga_data'
-        assert folder.startswith("ga_")
         self.fullPath = os.path.join(filePathJson, folder)
         assert os.path.isdir(self.fullPath)
         self.metadata_file_path = os.path.join(self.fullPath, "metadata.json")

@@ -12,10 +12,10 @@ class AlexNetAtHome(nn.Module):
         super(AlexNetAtHome, self).__init__()
 
         firstLayerSize = 64
-        secondLayerSize = 75
-        thirdLayerSize = 90
-        fourthLayerSize = 90
-        fifthLayerSize = 75
+        secondLayerSize = 120
+        thirdLayerSize = 180
+        fourthLayerSize = 180
+        fifthLayerSize = 120
         # Calculate the input size of the predictor layer, this is the size of the last layer of the features flattenend
         predictorInputSize = 2700
 
@@ -43,19 +43,19 @@ class AlexNetAtHome(nn.Module):
         )
         self.predictor = nn.Sequential(
             nn.Dropout(0.5),
-            nn.Linear(predictorInputSize, 256),
+            nn.Linear(predictorInputSize, 500),
             nn.ReLU(),
             nn.Dropout(0.5),
-            nn.Linear(256, 256),
+            nn.Linear(500, 350),
             nn.ReLU(),
             nn.Dropout(0.5),
-            nn.Linear(256, 256),
+            nn.Linear(350, 200),
             nn.ReLU(),
             nn.Dropout(0.5),
-            nn.Linear(256, 256),
+            nn.Linear(200, 100),
             nn.ReLU(),
             nn.Dropout(0.5),
-            nn.Linear(256, 4),
+            nn.Linear(100, 4),
         )
 
     def forward(self, x):
