@@ -17,7 +17,7 @@ class AlexNetAtHome(nn.Module):
         fourthLayerSize = 220
         fifthLayerSize = 180
         # Calculate the input size of the predictor layer, this is the size of the last layer of the features flattenend
-        predictorInputSize = 4320
+        predictorInputSize = 6480
 
         # Maybe diminish stride -> reduce kernel size and
 
