@@ -43,7 +43,6 @@ if len(sys.argv) > 1:
         #     DATA_INDEXES = [int(i) for i in sys.argv[3 :]]
 
 
-
 num_epochs = 15 
 
 BASE_FOLDER = "./data/"
@@ -59,15 +58,14 @@ for f in [(TRAIN_FOLDER, train_files), (TEST_FOLDER, test_files)]:
         curr_path = f"{f[0]}/{fi}"
         if os.path.isfile(curr_path):
             f[1].append(curr_path)
-            
+            break
+
 
 print(f"Loading {train_files} for training")
 print(f"Loading {test_files} for testing")
 
 xData = []
 yData = []
-
-
 
 
 def prepareData(npData):
@@ -94,7 +92,7 @@ with Pool() as pool:
     results = pool.map(loadFile, train_files)
     xData = np.concatenate([x for x, _ in results])
     yData = np.concatenate([y for _, y in results])
-    
+
 with Pool() as pool:
     results = pool.map(loadFile, test_files)
     testX = np.concatenate([x for x, _ in results])
