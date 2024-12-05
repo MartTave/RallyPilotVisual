@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from PIL import Image
 
-file = np.load("data/train/record0_flipped.npz")
+file = np.load("data/train/record0.npz")
 
 distances = file["distances"]
 images = file["images"]
