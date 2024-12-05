@@ -11,13 +11,13 @@ class AlexNetAtHome(nn.Module):
     def __init__(self):
         super(AlexNetAtHome, self).__init__()
 
-        firstLayerSize = 100
-        secondLayerSize = 180
-        thirdLayerSize = 220
-        fourthLayerSize = 220
-        fifthLayerSize = 180
+        firstLayerSize = 64
+        secondLayerSize = 120
+        thirdLayerSize = 180
+        fourthLayerSize = 180
+        fifthLayerSize = 120
         # Calculate the input size of the predictor layer, this is the size of the last layer of the features flattenend
-        predictorInputSize = 6480
+        predictorInputSize = 4320
 
         # Maybe diminish stride -> reduce kernel size and
 
@@ -43,16 +43,16 @@ class AlexNetAtHome(nn.Module):
         )
         self.predictor = nn.Sequential(
             nn.Dropout(0.5),
-            nn.Linear(predictorInputSize, 1000),
+            nn.Linear(predictorInputSize, 500),
             nn.ReLU(),
             nn.Dropout(0.5),
-            nn.Linear(1000, 650),
+            nn.Linear(500, 350),
             nn.ReLU(),
             nn.Dropout(0.5),
-            nn.Linear(650, 350),
+            nn.Linear(350, 200),
             nn.ReLU(),
             nn.Dropout(0.5),
-            nn.Linear(350, 100),
+            nn.Linear(200, 100),
             nn.ReLU(),
             nn.Dropout(0.5),
             nn.Linear(100, 4),
