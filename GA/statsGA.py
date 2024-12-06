@@ -1,6 +1,6 @@
 import os
 import matplotlib
-#matplotlib.use('Agg')
+# matplotlib.use('Agg')
 
 import matplotlib.pyplot as plt
 from conversions import Convertion
@@ -82,7 +82,7 @@ def getDifferenceOfImprovement(minRange, maxRange):
     savePath = f"./GA/ga_data/simple_track"
     plt.figure()
     for i in range(minRange,maxRange):
-        
+
         path = f"simple_track/ga_{i}"
         conv = Convertion(path)
         fitnessValues = conv.readFitnessValues()
@@ -98,11 +98,11 @@ def getDifferenceOfImprovement(minRange, maxRange):
     plt.ylabel("Seconds (s)") 
     plt.savefig(filename)
     plt.close()  
-getDifferenceOfImprovement(80,120)
+getDifferenceOfImprovement(74, 145)
 
-for f in [f"ga_{i}" for i in range(75, 146)]:
+for f in [f"ga_{i}" for i in range(74, 145)]:
     stat = StatsGA(f, "simple_track")
-    #stat.getGetNumberEndedSim()
-    #stat.getNumOfNotEndedSim()
+    # stat.getGetNumberEndedSim()
+    # stat.getNumOfNotEndedSim()
     stat.getBestScores()
     stat.getMedianScores()
